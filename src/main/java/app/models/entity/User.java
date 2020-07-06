@@ -29,7 +29,7 @@ public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false, unique = true)
     @Email
     private String email;
-    @Column(nullable = false, unique = true, updatable = false)
+    @Column(nullable = false,updatable = false)
     @Length(min = 3, message = "Password must be at least 3 characters.")
     private String password;
     @ManyToMany

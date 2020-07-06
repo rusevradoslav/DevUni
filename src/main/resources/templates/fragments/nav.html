@@ -1,6 +1,6 @@
 <th:block th:fragment>
-    <div class="container">
-        <a class="navbar-brand absolute" href="index.html">University</a>
+    <div class="container navbar-change">
+        <a class="navbar-brand absolute" href="index.html">DevUni</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -31,24 +31,16 @@
                         <a class="dropdown-item" href="#">JavaScript</a>
                         <a class="dropdown-item" href="#">Python</a>
                     </div>
-
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="blog.html">Blog</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="about.html">About</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="contact.html">Contact</a>
-                </li>
             </ul>
             <ul class="navbar-nav absolute-right">
                 <li>
-                    <a href="login.html">Login</a> / <a href="register.html">Register</a>
+                    <a href="login.html">Login</a> / <a th:href="@{/user}">Register</a>
                 </li>
             </ul>
-
         </div>
     </div>
 </th:block>

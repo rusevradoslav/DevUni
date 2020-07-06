@@ -39,6 +39,7 @@ header .navbar-brand {
   letter-spacing: .2em;
   font-weight: 400;
   color: #000 !important;
+  font-size: 1.75rem;
 }
 
 header .navbar-collapse {
@@ -72,7 +73,7 @@ header .navbar .navbar-nav.absolute-right {
 
 header .navbar .nav-link {
   padding: 1.7rem 1rem;
-  font-size: 15px;
+  font-size: 16px;
   outline: none !important;
   opacity: 1 !important;
   color: #000 !important;

@@ -1,6 +1,6 @@
 package app.config;
 
-import app.UniversityAppApplication;
+import app.DevUniApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -16,7 +16,7 @@ public class ApplicationSwaggerConfig {
     public Docket petApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage(UniversityAppApplication.class.getPackageName()))
+                .apis(RequestHandlerSelectors.basePackage(DevUniApplication.class.getPackageName()))
                 .build();
 
     }
