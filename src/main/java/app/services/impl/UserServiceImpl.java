@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -25,10 +26,11 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final RoleService roleService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        return null;
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return this.userRepository.findFirstByUsername(username).orElseThrow(()->new UsernameNotFoundException("User not found exception!"));
     }
 
     @Override
@@ -52,9 +54,10 @@ public class UserServiceImpl implements UserService {
         if (usernameExist(userServiceModel.getUsername())) {
             throw new UserAlreadyExistException(
                     "There is an account with that username address: "
-                            + userServiceModel.getEmail());
+                            + userServiceModel.getUsername());
         }
         User user = this.modelMapper.map(userServiceModel, User.class);
+        user.setPassword(bCryptPasswordEncoder.encode(userServiceModel.getPassword()));
         this.userRepository.saveAndFlush(user);
         return this.modelMapper.map(user, UserServiceModel.class);
     }

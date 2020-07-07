@@ -14,12 +14,12 @@ public class HomeController {
     @PageTitle("Index")
     public ModelAndView index(ModelAndView modelAndView) {
         modelAndView.setViewName("index");
-        return modelAndView ;
+        return modelAndView;
     }
 
     @GetMapping("/home")
     @PreAuthorize("isAuthenticated()")
-    @PageTitle("Index")
+    @PageTitle("Home")
     public ModelAndView home(ModelAndView modelAndView) {
         modelAndView.setViewName("home");
         return modelAndView;
