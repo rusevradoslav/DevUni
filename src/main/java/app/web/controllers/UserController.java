@@ -1,11 +1,10 @@
 package app.web.controllers;
 
-import app.constants.GlobalConstants.*;
 import app.exceptions.UserAlreadyExistException;
 import app.models.binding.UserRegisterBindingModel;
 import app.models.service.UserServiceModel;
 import app.services.UserService;
-import app.web.controllers.annotations.PageTitle;
+import app.validations.anotations.PageTitle;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

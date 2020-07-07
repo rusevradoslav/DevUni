@@ -1,6 +1,6 @@
 package app.web.controllers;
 
-import app.web.controllers.annotations.PageTitle;
+import app.validations.anotations.PageTitle;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +19,7 @@ public class HomeController {
 
     @GetMapping("/home")
     @PreAuthorize("isAuthenticated()")
-    @PageTitle("Home")
+    @PageTitle("Index")
     public ModelAndView home(ModelAndView modelAndView) {
         modelAndView.setViewName("home");
         return modelAndView;

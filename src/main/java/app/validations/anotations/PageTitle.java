@@ -1,4 +1,4 @@
-package app.web.controllers.annotations;
+package app.validations.anotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
