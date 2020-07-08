@@ -2151,3 +2151,10 @@ blockquote p {
 body > footer > div > div.pt-5{
   padding-top: 1rem!important;
 }
+#navbarsExample05 > ul.navbar-nav.absolute-right > li > form > button{
+  color: #11cbd7;
+  text-decoration: none;
+  background-color: transparent;
+  border: #fff;
+  font-family: "Rubik", arial, sans-serif;
+}

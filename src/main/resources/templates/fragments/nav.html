@@ -1,9 +1,9 @@
-
 <th:block>
     <th:block th:fragment sec:authorize="isAnonymous()">
         <div class="container navbar-change">
             <a class="navbar-brand absolute" th:href="@{/}">DevUni</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample05"
+                    aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -13,7 +13,8 @@
                         <a class="nav-link active" th:href="@{/}">Home</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="courses.html" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Courses</a>
+                        <a class="nav-link dropdown-toggle" href="courses.html" id="dropdown04" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">Courses</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown04">
                             <a class="dropdown-item" href="courses.html">HTML</a>
                             <a class="dropdown-item" href="courses.html">WordPress</a>
@@ -25,7 +26,8 @@
                     </li>
 
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="dropdown05" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categories</a>
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown05" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">Categories</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown05">
                             <a class="dropdown-item" href="#">HTML</a>
                             <a class="dropdown-item" href="#">WordPress</a>
@@ -49,7 +51,8 @@
     <th:block th:fragment sec:authorize="isAuthenticated()">
         <div class="container navbar-change">
             <a class="navbar-brand absolute" th:href="@{/}">DevUni</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample05"
+                    aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -59,7 +62,8 @@
                         <a class="nav-link active" th:href="@{/}">Home</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="courses.html" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Courses</a>
+                        <a class="nav-link dropdown-toggle" href="courses.html" id="dropdown04" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">Courses</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown04">
                             <a class="dropdown-item" href="courses.html">HTML</a>
                             <a class="dropdown-item" href="courses.html">WordPress</a>
@@ -71,7 +75,8 @@
                     </li>
 
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="dropdown05" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categories</a>
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown05" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">Categories</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown05">
                             <a class="dropdown-item" href="#">HTML</a>
                             <a class="dropdown-item" href="#">WordPress</a>
@@ -86,7 +91,9 @@
                 </ul>
                 <ul class="navbar-nav absolute-right">
                     <li>
-                        <a th:href="@{/users/login}">Login</a> / <a th:href="@{/users/register}">Register</a>
+                        <form th:action="@{/logout}" th:method="post">
+                            <button th:href="@{/logout}">Logout</button>
+                        </form>
                     </li>
                 </ul>
             </div>

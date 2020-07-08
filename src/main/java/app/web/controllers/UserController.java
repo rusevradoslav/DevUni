@@ -36,8 +36,9 @@ public class UserController {
     @PreAuthorize("isAnonymous()")
     @PageTitle("Login")
     public String login(@ModelAttribute("userLoginBindingModel") UserLoginBindingModel userLoginBindingModel, Model model) {
-
+        System.out.println();
         model.addAttribute("userLoginBindingModel", userLoginBindingModel);
+        System.out.println();
         return "login";
     }
 
