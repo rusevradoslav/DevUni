@@ -1,6 +1,7 @@
 package app.web.controllers;
 
 import app.exceptions.UserAlreadyExistException;
+import app.models.binding.UserLoginBindingModel;
 import app.models.binding.UserRegisterBindingModel;
 import app.models.service.UserServiceModel;
 import app.services.UserService;
@@ -34,7 +35,9 @@ public class UserController {
     @GetMapping("/login")
     @PreAuthorize("isAnonymous()")
     @PageTitle("Login")
-    public String login() {
+    public String login(@ModelAttribute("userLoginBindingModel") UserLoginBindingModel userLoginBindingModel, Model model) {
+
+        model.addAttribute("userLoginBindingModel", userLoginBindingModel);
         return "login";
     }
 
@@ -54,15 +57,15 @@ public class UserController {
     public String registerConfirm(@Valid @ModelAttribute("userRegisterBindingModel") UserRegisterBindingModel userRegisterBindingModel
             , BindingResult bindingResult
             , RedirectAttributes redirectAttributes) {
-        System.out.println();
+
 
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("userRegisterBindingModel", userRegisterBindingModel);
-            redirectAttributes.addFlashAttribute(String.format(BINDING_RESULT + "userRegisterBindingModel"),bindingResult);
+            redirectAttributes.addFlashAttribute(String.format(BINDING_RESULT + "userRegisterBindingModel"), bindingResult);
             return "redirect:/users/register";
         }
         try {
-            UserServiceModel registered = userService.registerNewUserAccount(this.modelMapper.map(userRegisterBindingModel,UserServiceModel.class));
+            UserServiceModel registered = userService.registerNewUserAccount(this.modelMapper.map(userRegisterBindingModel, UserServiceModel.class));
         } catch (UserAlreadyExistException e) {
             redirectAttributes.addFlashAttribute("userRegisterBindingModel", userRegisterBindingModel);
             redirectAttributes.addFlashAttribute("exceptionMessage", e.getMessage());

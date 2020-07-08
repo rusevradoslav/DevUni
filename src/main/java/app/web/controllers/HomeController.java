@@ -21,6 +21,7 @@ public class HomeController {
     @PreAuthorize("isAuthenticated()")
     @PageTitle("Home")
     public ModelAndView home(ModelAndView modelAndView) {
+        System.out.println();
         modelAndView.setViewName("home");
         return modelAndView;
     }

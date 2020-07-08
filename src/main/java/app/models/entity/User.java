@@ -32,7 +32,8 @@ public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false,updatable = false)
     @Length(min = 3, message = "Password must be at least 3 characters.")
     private String password;
-    @ManyToMany
+
+    @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
     private Set<Role> authorities;
 
     @Override
