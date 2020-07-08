@@ -1,7 +1,6 @@
 package app.web.controllers;
 
 import app.exceptions.UserAlreadyExistException;
-import app.models.binding.UserLoginBindingModel;
 import app.models.binding.UserRegisterBindingModel;
 import app.models.service.UserServiceModel;
 import app.services.UserService;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-
 import javax.validation.Valid;
 
 import static app.constants.GlobalConstants.BINDING_RESULT;
@@ -35,10 +33,10 @@ public class UserController {
     @GetMapping("/login")
     @PreAuthorize("isAnonymous()")
     @PageTitle("Login")
-    public String login(@ModelAttribute("userLoginBindingModel") UserLoginBindingModel userLoginBindingModel, Model model) {
-        System.out.println();
+    public String login() {
+    /*    System.out.println();
         model.addAttribute("userLoginBindingModel", userLoginBindingModel);
-        System.out.println();
+        System.out.println();*/
         return "login";
     }
 

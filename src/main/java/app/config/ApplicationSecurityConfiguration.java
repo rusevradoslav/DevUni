@@ -38,6 +38,8 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
                 .defaultSuccessUrl("/home")
                 .and()
                 .logout()
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
                 .logoutSuccessUrl("/");
 
     }
