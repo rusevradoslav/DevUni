@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -28,16 +29,18 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
                 .and()
                 .authorizeRequests()
                 .antMatchers("/css/**", "/images/**", "/fonts/**", "/js/**", "/scss/**").permitAll()
-                .antMatchers("/", "/users/register", "/users/login", "/v2/api-docs", "/swagger-ui.html").permitAll()
-                .anyRequest().authenticated()
+                .antMatchers("/", "/users/register", "/users/login", "/users/user-details","/v2/api-docs", "/swagger-ui.html").permitAll()
+                .anyRequest()
+                .authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/users/login")
                 .usernameParameter("email")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/home")
+                .defaultSuccessUrl("/")
                 .and()
                 .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
                 .logoutSuccessUrl("/");

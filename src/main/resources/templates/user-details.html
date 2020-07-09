@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:include="~{/fragments/head}"></th:block>
+</head>
+<body>
+
+<header role="banner">
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <th:block th:include="~{/fragments/nav}"></th:block>
+  </nav>
+</header>
+
+<section class="site-section ">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 order-md-1">
+        <div class="block-16">
+          <figure>
+            <img src="/images/img_1.jpg" alt="Image placeholder" class="img-fluid">
+          </figure>
+        </div>
+      </div>
+      <div class="col-md-1 order-md-1">
+      </div>
+      <div class="col-md-7 order-md-2">
+
+                <form action="#" method="post">
+
+                  <div class="row">
+                    <div class="col-md-12 form-group">
+                      <label for="name">Email Address</label>
+                      <input type="text" id="name" class="form-control py-2">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12 form-group">
+                      <label for="name">Password</label>
+                      <input type="password" id="name" class="form-control py-2 ">
+                    </div>
+                  </div>
+                  <div class="row mb-5">
+                    <div class="col-md-12 form-group">
+                      <label for="name">Re-type Password</label>
+                      <input type="password" id="name" class="form-control py-2">
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6 form-group">
+                      <input type="submit" value="Register" class="btn btn-primary px-5 py-2">
+                    </div>
+                  </div>
+
+                </form>
+              </div>
+            </div>
+          </div>
+</section>
+
+<footer class="site-footer  bg-dark">
+  <th:block th:include="~{/fragments/footer}"></th:block>
+</footer>
+<!-- END footer -->
+
+<!-- loader -->
+<th:block th:include="~{/fragments/script-loaders}"></th:block>
+</body>
+</html>

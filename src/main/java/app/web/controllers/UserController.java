@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,17 +32,22 @@ public class UserController {
     private final ModelMapper modelMapper;
 
     @GetMapping("/login")
-    @PreAuthorize("isAnonymous()")
     @PageTitle("Login")
     public String login() {
+
+        if (!SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
+            return "redirect:/";
+        }
         return "login";
     }
 
 
     @GetMapping("/register")
-    @PreAuthorize("isAnonymous()")
     @PageTitle("Register")
     public String register(Model model) {
+        if (!SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
+            return "redirect:/";
+        }
         if (!model.containsAttribute("userRegisterBindingModel")) {
             model.addAttribute("userRegisterBindingModel", new UserRegisterBindingModel());
         }
@@ -71,5 +77,13 @@ public class UserController {
 
         return "redirect:/users/login";
     }
+
+    @GetMapping("/user-details")
+    @PreAuthorize("isAnonymous()")
+    @PageTitle("User Details")
+    public String userDetails() {
+        return "user-details";
+    }
+
 }
 

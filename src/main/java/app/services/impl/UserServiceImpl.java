@@ -30,18 +30,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        System.out.println();
+
         UserDetails user = this.userRepository.findFirstByEmail(email).orElse(null);
         if (user == null){
             throw new UsernameNotFoundException("Invalid user");
         }
-            System.out.println();
         return user;
     }
 
     @Override
     public UserServiceModel registerNewUserAccount(UserServiceModel userServiceModel) throws UserAlreadyExistException {
-        System.out.println();
+
         Set<RoleServiceModel> authorities = new HashSet<>();
         long count = this.userRepository.count();
         if (count == 0) {
@@ -66,6 +65,16 @@ public class UserServiceImpl implements UserService {
         user.setPassword(bCryptPasswordEncoder.encode(userServiceModel.getPassword()));
         this.userRepository.saveAndFlush(user);
         return this.modelMapper.map(user, UserServiceModel.class);
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return this.userRepository.findFirstByEmail(email).orElse(null);
+    }
+
+    @Override
+    public User findByName(String username) {
+        return this.userRepository.findFirstByUsername(username).orElse(null);
     }
 
     private boolean usernameExist(String username) {

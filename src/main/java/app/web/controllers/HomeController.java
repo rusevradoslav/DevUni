@@ -1,28 +1,38 @@
 package app.web.controllers;
 
+import app.models.entity.User;
+import app.services.ContractService;
 import app.validations.anotations.PageTitle;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class HomeController {
+    private final ContractService contractService;
 
-    @GetMapping("/")
-    @PreAuthorize("isAnonymous()")
-    @PageTitle("Index")
-    public ModelAndView index(ModelAndView modelAndView) {
-        modelAndView.setViewName("index");
-        return modelAndView;
+    public HomeController(ContractService contractService) {
+        this.contractService = contractService;
     }
 
-    @GetMapping("/home")
+
+    @GetMapping("/")
+  /*  @PreAuthorize("isAnonymous()")*/
+    @PageTitle("Index")
+    public String index() {
+        System.out.println();
+        User loggedUser = contractService.currentUser();
+        if (loggedUser!=null){
+            return "home";
+        }else {
+            return "index";
+        }
+    }
+
+  /*  @GetMapping("/home")
     @PreAuthorize("isAuthenticated()")
     @PageTitle("Home")
     public ModelAndView home(ModelAndView modelAndView) {
-        System.out.println();
         modelAndView.setViewName("home");
         return modelAndView;
-    }
+    }*/
 }
