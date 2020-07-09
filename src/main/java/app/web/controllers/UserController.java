@@ -34,8 +34,6 @@ public class UserController {
     @PreAuthorize("isAnonymous()")
     @PageTitle("Login")
     public String login() {
-
-        System.out.println();
         return "login";
     }
 

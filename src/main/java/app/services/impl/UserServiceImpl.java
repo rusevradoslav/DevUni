@@ -29,9 +29,9 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         System.out.println();
-        UserDetails user = this.userRepository.findByUsername(username);
+        UserDetails user = this.userRepository.findFirstByEmail(email).orElse(null);
         if (user == null){
             throw new UsernameNotFoundException("Invalid user");
         }

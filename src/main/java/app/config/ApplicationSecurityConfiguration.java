@@ -33,7 +33,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
                 .and()
                 .formLogin()
                 .loginPage("/users/login")
-                .usernameParameter("username")
+                .usernameParameter("email")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/home")
                 .and()
