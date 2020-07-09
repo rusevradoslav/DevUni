@@ -38,20 +38,23 @@
               <h2 class="mb-4">Log in with your account</h2>
               <form th:action="@{/users/login}" th:method="POST">
 
-                <div class="text-center" th:if="${param.error}" style="color: red">
+             <!--   <p th:if="${loginError}" class="error">Wrong user or password</p>-->
+
+                <div th:if="${param.error}" class="text-center" style="color: red">
                   Wrong email or password.
                 </div>
                 <div class="row">
                   <div class="col-md-12 form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" class="form-control py-2" placeholder="Enter username.." aria-label="Enter username.."/> <!--th:field="*{username}" required>-->
+                    <input name="username" type="text" id="username" class="form-control py-2" placeholder="Enter username.."/>
+                        <!--   th:field="*{username}" required-->
                   </div>
                 </div>
                 <div class="row mb-5">
                   <div class="col-md-12 form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" class="form-control py-2" placeholder="Enter password.." aria-label="Enter password.."/>
-                  <!--         th:field="*{password}" required>-->
+                    <input name="password" type="password" id="password" class="form-control py-2" placeholder="Enter password.." aria-label="Recipient's username"/>
+                        <!--   th:field="*{password}" required-->
                   </div>
                 </div>
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">

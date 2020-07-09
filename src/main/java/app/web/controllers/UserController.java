@@ -34,11 +34,11 @@ public class UserController {
     @PreAuthorize("isAnonymous()")
     @PageTitle("Login")
     public String login() {
-    /*    System.out.println();
-        model.addAttribute("userLoginBindingModel", userLoginBindingModel);
-        System.out.println();*/
+
+        System.out.println();
         return "login";
     }
+
 
     @GetMapping("/register")
     @PreAuthorize("isAnonymous()")
