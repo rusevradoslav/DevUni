@@ -28,11 +28,14 @@ public class HomeController {
         }
     }
 
-  /*  @GetMapping("/home")
-    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/home")
     @PageTitle("Home")
-    public ModelAndView home(ModelAndView modelAndView) {
-        modelAndView.setViewName("home");
-        return modelAndView;
-    }*/
+    public String home() {
+        User loggedUser = contractService.currentUser();
+        if (loggedUser!=null){
+            return "home";
+        }else {
+            return "index";
+        }
+    }
 }

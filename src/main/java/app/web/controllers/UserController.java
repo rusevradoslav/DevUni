@@ -36,7 +36,7 @@ public class UserController {
     public String login() {
 
         if (!SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
-            return "redirect:/";
+            return "redirect:/home";
         }
         return "login";
     }
@@ -46,7 +46,7 @@ public class UserController {
     @PageTitle("Register")
     public String register(Model model) {
         if (!SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
-            return "redirect:/";
+            return "redirect:/home";
         }
         if (!model.containsAttribute("userRegisterBindingModel")) {
             model.addAttribute("userRegisterBindingModel", new UserRegisterBindingModel());
