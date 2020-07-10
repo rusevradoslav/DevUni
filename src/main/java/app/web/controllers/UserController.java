@@ -68,7 +68,7 @@ public class UserController {
             return "redirect:/users/register";
         }
         try {
-            UserServiceModel registered = userService.registerNewUserAccount(this.modelMapper.map(userRegisterBindingModel, UserServiceModel.class));
+            userService.registerNewUserAccount(this.modelMapper.map(userRegisterBindingModel, UserServiceModel.class));
         } catch (UserAlreadyExistException e) {
             redirectAttributes.addFlashAttribute("userRegisterBindingModel", userRegisterBindingModel);
             redirectAttributes.addFlashAttribute("exceptionMessage", e.getMessage());
@@ -82,6 +82,7 @@ public class UserController {
     @PreAuthorize("isAnonymous()")
     @PageTitle("User Details")
     public String userDetails() {
+
         return "user-details";
     }
 
