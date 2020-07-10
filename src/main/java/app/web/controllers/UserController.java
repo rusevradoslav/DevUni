@@ -3,6 +3,7 @@ package app.web.controllers;
 import app.exceptions.UserAlreadyExistException;
 import app.models.binding.UserRegisterBindingModel;
 import app.models.service.UserServiceModel;
+import app.models.view.UserDetailsViewModel;
 import app.services.UserService;
 import app.validations.anotations.PageTitle;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+
+import java.security.Principal;
 
 import static app.constants.GlobalConstants.BINDING_RESULT;
 
@@ -79,9 +82,12 @@ public class UserController {
     }
 
     @GetMapping("/user-details")
-    @PreAuthorize("isAnonymous()")
+    @PreAuthorize("isAuthenticated()")
     @PageTitle("User Details")
-    public String userDetails() {
+    public String userDetails(Principal principal) {
+
+        String username = principal.getName();
+        UserDetailsViewModel userProfile = this.userService.getUserDetailsByUsername(username);
 
         return "user-details";
     }

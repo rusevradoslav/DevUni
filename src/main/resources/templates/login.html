@@ -38,22 +38,22 @@
               <h2 class="mb-4">Log in with your account</h2>
               <form th:action="@{/users/login}" th:method="POST">
 
-             <!--   <p th:if="${loginError}" class="error">Wrong user or password</p>-->
 
-                <div th:if="${param.error}" class="text-center" style="color: red">
+                <div th:if="${param.error}"  class="alert alert-danger text-center" role="alert">
                   Wrong email or password.
                 </div>
+
                 <div class="row">
                   <div class="col-md-12 form-group">
                     <label for="email">Email</label>
-                    <input name="email" type="text" id="email" class="form-control py-2" placeholder="Enter email.."/>
+                    <input name="email" type="text" id="email" class="form-control py-2" placeholder="Enter email.." required="Username is required"/>
                         <!--   th:field="*{username}" required-->
                   </div>
                 </div>
                 <div class="row mb-5">
                   <div class="col-md-12 form-group">
                     <label for="password">Password</label>
-                    <input name="password" type="password" id="password" class="form-control py-2" placeholder="Enter password.." aria-label="Recipient's username"/>
+                    <input  name="password" type="password" id="password" class="form-control py-2" placeholder="Enter password.."  required="Password is required"/>
                         <!--   th:field="*{password}" required-->
                   </div>
                 </div>

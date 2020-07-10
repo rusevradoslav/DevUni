@@ -30,6 +30,7 @@ public class HomeController {
     }
 
     private String getCorrectURL() {
+        System.out.println();
         UserServiceModel loggedUser = contractService.currentUser();
         if (loggedUser != null) {
             return "home";

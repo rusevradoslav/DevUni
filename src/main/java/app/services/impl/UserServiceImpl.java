@@ -4,6 +4,7 @@ import app.exceptions.UserAlreadyExistException;
 import app.models.entity.User;
 import app.models.service.RoleServiceModel;
 import app.models.service.UserServiceModel;
+import app.models.view.UserDetailsViewModel;
 import app.repositories.UserRepository;
 import app.services.RoleService;
 import app.services.UserService;
@@ -32,7 +33,7 @@ public class UserServiceImpl implements UserService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
         UserDetails user = this.userRepository.findFirstByEmail(email).orElse(null);
-        if (user == null){
+        if (user == null) {
             throw new UsernameNotFoundException("Invalid user");
         }
         return user;
@@ -68,13 +69,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByEmail(String email) {
-        return this.userRepository.findFirstByEmail(email).orElse(null);
+    public UserServiceModel findByEmail(String email) {
+        return this.modelMapper.map(this.userRepository.findFirstByEmail(email).orElse(null), UserServiceModel.class);
     }
 
     @Override
-    public User findByName(String username) {
-        return this.userRepository.findFirstByUsername(username).orElse(null);
+    public UserServiceModel findByName(String username) {
+        System.out.println();
+        User user = this.userRepository.findFirstByUsername(username).orElse(null);
+        if (user == null) {
+            return null;
+        }else {
+            return this.modelMapper.map(user, UserServiceModel.class);
+        }
+    }
+
+    @Override
+    public UserDetailsViewModel getUserDetailsByUsername(String username) {
+        return null;
     }
 
     private boolean usernameExist(String username) {

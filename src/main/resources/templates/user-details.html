@@ -30,11 +30,15 @@
 
                     <div class="row">
                         <div class="col-md-12 form-group">
-                            <label for="fullName">Full Name</label>
+                            <label th:object="${username}" for="username">Full Name</label>
+                            <input type="text" id="username" name="username" class="form-control py-2">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <label th:object="${fullName}" for="fullName">Full Name</label>
                             <input type="text" id="fullName" name="fullName" class="form-control py-2">
                         </div>
                         <div class="col-md-12 form-group">
-                            <label for="email">Email Address</label>
+                            <label th:object="${email}" for="email">Email Address</label>
                             <input type="text" id="email" class="form-control py-2">
                         </div>
                         <div class="col-md-12 form-group">

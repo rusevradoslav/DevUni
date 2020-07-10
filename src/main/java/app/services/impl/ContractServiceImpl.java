@@ -1,6 +1,5 @@
 package app.services.impl;
 
-import app.models.entity.User;
 import app.models.service.UserServiceModel;
 import app.services.ContractService;
 import app.services.UserService;
@@ -21,10 +20,10 @@ public class ContractServiceImpl implements ContractService {
     public UserServiceModel currentUser() {
         System.out.println();
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = this.userService.findByName(username);
+        UserServiceModel user = this.userService.findByName(username);
         System.out.println();
         if (!username.equals("anonymousUser") && user != null) {
-            return modelMapper.map(user, UserServiceModel.class);
+            return user;
         }
         return null;
     }

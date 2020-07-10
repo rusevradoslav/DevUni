@@ -20,9 +20,11 @@ public class UserRegisterBindingModel {
     private String username;
 
     @NotNull(message = "This field is required")
+    @Length(min = 1, message = "First Name must be at least 1 character.")
     private String firstName;
 
     @NotNull(message = "This field is required")
+    @Length(min = 1, message = "Last Name must be at least 1 character.")
     private String lastName;
 
     @NotNull(message = "This field is required")
