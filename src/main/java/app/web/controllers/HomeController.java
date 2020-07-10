@@ -1,6 +1,6 @@
 package app.web.controllers;
 
-import app.models.entity.User;
+import app.models.service.UserServiceModel;
 import app.services.ContractService;
 import app.validations.anotations.PageTitle;
 import org.springframework.stereotype.Controller;
@@ -16,25 +16,24 @@ public class HomeController {
 
 
     @GetMapping("/")
-  /*  @PreAuthorize("isAnonymous()")*/
     @PageTitle("Index")
     public String index() {
-        System.out.println();
-        User loggedUser = contractService.currentUser();
-        if (loggedUser!=null){
-            return "home";
-        }else {
-            return "index";
-        }
+
+        return getCorrectURL();
     }
 
     @GetMapping("/home")
     @PageTitle("Home")
     public String home() {
-        User loggedUser = contractService.currentUser();
-        if (loggedUser!=null){
+        return getCorrectURL();
+
+    }
+
+    private String getCorrectURL() {
+        UserServiceModel loggedUser = contractService.currentUser();
+        if (loggedUser != null) {
             return "home";
-        }else {
+        } else {
             return "index";
         }
     }

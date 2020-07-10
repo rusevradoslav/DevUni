@@ -1,7 +1,7 @@
 package app.services;
 
-import app.models.entity.User;
+import app.models.service.UserServiceModel;
 
 public interface ContractService {
-    User currentUser();
+    UserServiceModel currentUser();
 }
