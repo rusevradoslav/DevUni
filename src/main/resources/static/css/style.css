@@ -2164,6 +2164,11 @@ body > footer > div > div.pt-5{
 .container-user-details{
   padding-left: 15px;
   padding-right: 15px;
-  margin-left: 9%;
+  margin-left: 15%;
   margin-right: 6%;
+}
+body > section > div > div > div.col-md-5.order-md-1{
+  padding-left: 140px;
+  padding-right: 0px;
+
 }
