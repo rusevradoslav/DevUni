@@ -1,5 +1,6 @@
 package app.models.entity;
 
+import app.validations.anotations.ValidEmail;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,7 +8,6 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import java.util.Set;
 
 @Getter
@@ -27,7 +27,7 @@ public class User extends BaseEntity implements UserDetails {
     @Length(min = 3, max = 30, message = "Username must be at least 3 characters.")
     private String username;
     @Column(nullable = false, unique = true)
-    @Email
+    @ValidEmail
     private String email;
     @Column(nullable = false,updatable = false)
     @Length(min = 3, message = "Password must be at least 3 characters.")

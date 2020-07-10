@@ -2172,3 +2172,10 @@ body > section > div > div > div.col-md-5.order-md-1{
   padding-right: 100px;
 
 }
+
+body > section > div > div > div.col-md-5.order-md-2 > form:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div {
+  position: relative;
+  padding: 0.2rem 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+}

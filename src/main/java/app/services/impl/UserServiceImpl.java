@@ -1,5 +1,6 @@
 package app.services.impl;
 
+import app.exceptions.InvalidEmailException;
 import app.exceptions.UserAlreadyExistException;
 import app.models.entity.User;
 import app.models.service.RoleServiceModel;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import javax.validation.ConstraintViolationException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,7 +42,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserServiceModel registerNewUserAccount(UserServiceModel userServiceModel) throws UserAlreadyExistException {
+    public void registerNewUserAccount(UserServiceModel userServiceModel) throws UserAlreadyExistException {
 
         Set<RoleServiceModel> authorities = new HashSet<>();
         long count = this.userRepository.count();
@@ -65,7 +67,6 @@ public class UserServiceImpl implements UserService {
         User user = this.modelMapper.map(userServiceModel, User.class);
         user.setPassword(bCryptPasswordEncoder.encode(userServiceModel.getPassword()));
         this.userRepository.saveAndFlush(user);
-        return this.modelMapper.map(user, UserServiceModel.class);
     }
 
     @Override
@@ -79,14 +80,40 @@ public class UserServiceImpl implements UserService {
         User user = this.userRepository.findFirstByUsername(username).orElse(null);
         if (user == null) {
             return null;
-        }else {
+        } else {
             return this.modelMapper.map(user, UserServiceModel.class);
         }
     }
 
     @Override
     public UserDetailsViewModel getUserDetailsByUsername(String username) {
-        return null;
+        User user = this.userRepository.findFirstByUsername(username).orElse(null);
+        UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
+        userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
+        return userDetailsViewModel;
+    }
+
+    @Override
+    public void changePassword(String newPassword) {
+
+    }
+
+    @Override
+    public void changeUserEmail(UserServiceModel user, String newEmail) throws InvalidEmailException {
+
+        System.out.println();
+
+        user.setEmail(newEmail);
+
+        User user1 = this.modelMapper.map(user, User.class);
+
+        try {
+            this.userRepository.saveAndFlush(user1);
+        } catch (ConstraintViolationException exception) {
+            throw new InvalidEmailException("Invalid email");
+        }
+
+
     }
 
     private boolean usernameExist(String username) {

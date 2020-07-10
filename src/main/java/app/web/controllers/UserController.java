@@ -1,9 +1,9 @@
 package app.web.controllers;
 
 import app.exceptions.UserAlreadyExistException;
+import app.models.binding.UserDetailsBindingModel;
 import app.models.binding.UserRegisterBindingModel;
 import app.models.service.UserServiceModel;
-import app.models.view.UserDetailsViewModel;
 import app.services.UserService;
 import app.validations.anotations.PageTitle;
 import lombok.AllArgsConstructor;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-
 import java.security.Principal;
 
 import static app.constants.GlobalConstants.BINDING_RESULT;
@@ -84,13 +83,45 @@ public class UserController {
     @GetMapping("/user-details")
     @PreAuthorize("isAuthenticated()")
     @PageTitle("User Details")
-    public String userDetails(Principal principal) {
+    public String userDetails(Principal principal, Model model) {
+        System.out.println();
 
-        String username = principal.getName();
-        UserDetailsViewModel userProfile = this.userService.getUserDetailsByUsername(username);
-
+        model.addAttribute("userDetailsViewModel", this.userService.getUserDetailsByUsername(principal.getName()));
+        if (!model.containsAttribute("userDetailsBindingModel")) {
+            model.addAttribute("userDetailsBindingModel", new UserDetailsBindingModel());
+        }
         return "user-details";
     }
 
+    @PostMapping("user-details")
+    @PreAuthorize("isAuthenticated()")
+    @PageTitle("User Details")
+    public String userDetailsConfirm(@Valid @ModelAttribute("userDetailsBindingModel") UserDetailsBindingModel userDetailsBindingModel,
+                                     RedirectAttributes redirectAttributes,
+                                     Principal principal) {
+       /* System.out.println();
+        UserServiceModel user = this.userService.findByName(principal.getName());
+
+        if (!userDetailsBindingModel.getNewEmail().isEmpty()) {
+            try {
+                userService.changeUserEmail(user, userDetailsBindingModel.getNewEmail());
+            } catch (InvalidEmailException e) {
+                redirectAttributes.addFlashAttribute("userDetailsBindingModel",userDetailsBindingModel);
+                redirectAttributes.addFlashAttribute("invalidEmail",true);
+                redirectAttributes.addFlashAttribute("message",e.getMessage());
+                return "redirect:/users/user-details";
+            }
+        }
+        if (user.getPassword().equals(userDetailsBindingModel.getPassword())){
+
+        }else {
+            redirectAttributes.addFlashAttribute("invalidUserPassword", true);
+            return "redirect:/users/user-details";
+        }
+
+        return "redirect:/home";
+    }*/
+        return "redirect:/home";
+    }
 }
 

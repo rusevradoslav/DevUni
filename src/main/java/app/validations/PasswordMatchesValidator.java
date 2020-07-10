@@ -20,14 +20,17 @@ public class PasswordMatchesValidator implements ConstraintValidator<PasswordMat
         final UserRegisterBindingModel userRegisterBindingModel = (UserRegisterBindingModel) obj;
         boolean isValid = userRegisterBindingModel.getPassword().equals(userRegisterBindingModel.getConfirmPassword());
 
+
         if (!isValid) {
             context.disableDefaultConstraintViolation();
             context
                     .buildConstraintViolationWithTemplate(message)
-                    .addPropertyNode("password").addConstraintViolation();
-        }
+                    .addPropertyNode("password").
+                    addConstraintViolation();
 
+        }
         return isValid;
+
 
     }
 
