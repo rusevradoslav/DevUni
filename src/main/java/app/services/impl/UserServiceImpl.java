@@ -18,7 +18,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import javax.validation.ConstraintViolationException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -71,7 +70,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserServiceModel findByEmail(String email) {
-        return this.modelMapper.map(this.userRepository.findFirstByEmail(email).orElse(null), UserServiceModel.class);
+        System.out.println();
+        User user = this.userRepository.findFirstByEmail(email).orElse(null);
+        if (user == null) {
+            throw new InvalidEmailException("User with that email address does't exist !");
+        } else {
+            return this.modelMapper.map(user, UserServiceModel.class);
+        }
     }
 
     @Override
@@ -99,22 +104,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changeUserEmail(UserServiceModel user, String newEmail) throws InvalidEmailException {
-
-        System.out.println();
-
-        user.setEmail(newEmail);
-
-        User user1 = this.modelMapper.map(user, User.class);
-
-        try {
-            this.userRepository.saveAndFlush(user1);
-        } catch (ConstraintViolationException exception) {
-            throw new InvalidEmailException("Invalid email");
+    public void changeEmail(UserServiceModel userServiceModel, String newEmail) {
+        if (emailExist(newEmail)) {
+            throw new UserAlreadyExistException(
+                    "There is an account with that email address: "
+                            + newEmail);
         }
-
-
+        userServiceModel.setEmail(newEmail);
+        this.userRepository.saveAndFlush(this.modelMapper.map(userServiceModel, User.class));
     }
+
 
     private boolean usernameExist(String username) {
         return this.userRepository.findFirstByUsername(username).orElse(null) != null;

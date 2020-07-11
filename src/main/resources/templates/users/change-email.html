@@ -39,18 +39,31 @@
             <div class="col-md-7">
                 <div class="form-wrap">
                     <h2 class="mb-4">Change your email address</h2>
-                    <form th:action="@{/users/change-email}" th:method="POST" th:object="${userChangeEmailBindingModel}">
+                    <form th:action="@{/users/change-email}" th:method="POST"
+                          th:object="${userChangeEmailBindingModel}">
 
 
-                        <div th:if="${param.error}" class="alert alert-danger text-center" role="alert">
-                            Wrong email
+                        <div th:if="${invalidOldEmail}" class="alert alert-danger text-center" role="alert">
+                            Invalid Old Email !
                         </div>
+
+                        <th:block th:if="${exceptionMessage != null}">
+                            <div th:text="${exceptionMessage}" class="alert alert-danger text-center" role="alert">
+                            </div>
+                        </th:block>
+
 
                         <div class="row">
                             <div class="col-md-12 form-group">
                                 <label for="oldEmail">Old Email</label>
                                 <input name="oldEmail" type="text" id="oldEmail" class="form-control py-2"
                                        placeholder="Enter old email.." required th:field="*{oldEmail}"/>
+
+                                <th:block th:each="e : ${#fields.errors('oldEmail')}">
+                                    <div class="mx-auto">
+                                        <small th:text="${e}" class="text-danger"></small>
+                                    </div>
+                                </th:block>
                             </div>
                         </div>
 
@@ -58,7 +71,13 @@
                             <div class="col-md-12 form-group">
                                 <label for="newEmail">New Email</label>
                                 <input name="newEmail" type="text" id="newEmail" class="form-control py-2"
-                                       placeholder="Enter new email.." required th:field="*{newEmail}" />
+                                       placeholder="Enter new email.." required th:field="*{newEmail}"/>
+
+                                <th:block th:each="e : ${#fields.errors('newEmail')}">
+                                    <div class="mx-auto">
+                                        <small th:text="${e}" class="text-danger"></small>
+                                    </div>
+                                </th:block>
                             </div>
                         </div>
 

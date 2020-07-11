@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface UserService extends UserDetailsService{
     void registerNewUserAccount(UserServiceModel map) throws UserAlreadyExistException;
 
-    UserServiceModel findByEmail(String email);
+    UserServiceModel findByEmail(String email) throws InvalidEmailException;
 
     UserServiceModel findByName(String username);
 
@@ -18,5 +18,5 @@ public interface UserService extends UserDetailsService{
     void changePassword(String newPassword);
 
 
-    void changeUserEmail(UserServiceModel user, String newEmail) throws InvalidEmailException;
+    void changeEmail(UserServiceModel user, String newEmail);
 }

@@ -92,11 +92,44 @@ public class UserController {
     @GetMapping("change-email")
     @PreAuthorize("isAuthenticated()")
     @PageTitle("Change Email")
-    public String changeEmail(Model model){
-        if (!model.containsAttribute("userChangeEmailBindingModel")){
-            model.addAttribute("userChangeEmailBindingModel",new UserChangeEmailBindingModel());
+    public String changeEmail(Model model) {
+        if (!model.containsAttribute("userChangeEmailBindingModel")) {
+            model.addAttribute("userChangeEmailBindingModel", new UserChangeEmailBindingModel());
         }
         return "users/change-email";
+    }
+
+    @PostMapping("/change-email")
+    @PreAuthorize("isAuthenticated()")
+    @PageTitle("Change Email")
+    public String changeEmailConfirm(@Valid @ModelAttribute("userChangeEmailBindingModel") UserChangeEmailBindingModel userChangeEmailBindingModel,
+                                     BindingResult bindingResult,
+                                     RedirectAttributes redirectAttributes,
+                                     Principal principal
+    ) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("userChangeEmailBindingModel", userChangeEmailBindingModel);
+            redirectAttributes.addFlashAttribute(String.format(BINDING_RESULT + "userChangeEmailBindingModel"), bindingResult);
+            return "redirect:/users/change-email";
+        }
+        UserServiceModel user = this.userService.findByName(principal.getName());
+
+        if (user.getEmail().equals(userChangeEmailBindingModel.getOldEmail())) {
+            try {
+                userService.changeEmail(user, userChangeEmailBindingModel.getNewEmail());
+            } catch (UserAlreadyExistException e) {
+                redirectAttributes.addFlashAttribute("userChangeEmailBindingModel", userChangeEmailBindingModel);
+                redirectAttributes.addFlashAttribute("exceptionMessage", e.getMessage());
+                return "redirect:/users/change-email";
+            }
+        } else {
+            redirectAttributes.addFlashAttribute("userChangeEmailBindingModel", userChangeEmailBindingModel);
+            redirectAttributes.addFlashAttribute("invalidOldEmail", true);
+            return "redirect:/users/change-email";
+        }
+
+        System.out.println();
+        return "redirect:/users/user-details";
     }
 
 }
