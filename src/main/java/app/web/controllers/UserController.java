@@ -1,7 +1,7 @@
 package app.web.controllers;
 
 import app.exceptions.UserAlreadyExistException;
-import app.models.binding.UserDetailsBindingModel;
+import app.models.binding.UserChangeEmailBindingModel;
 import app.models.binding.UserRegisterBindingModel;
 import app.models.service.UserServiceModel;
 import app.services.UserService;
@@ -40,7 +40,7 @@ public class UserController {
         if (!SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
             return "redirect:/home";
         }
-        return "login";
+        return "users/login";
     }
 
 
@@ -53,7 +53,7 @@ public class UserController {
         if (!model.containsAttribute("userRegisterBindingModel")) {
             model.addAttribute("userRegisterBindingModel", new UserRegisterBindingModel());
         }
-        return "register";
+        return "/users/register";
     }
 
     @PostMapping("/register")
@@ -84,44 +84,20 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     @PageTitle("User Details")
     public String userDetails(Principal principal, Model model) {
-        System.out.println();
 
         model.addAttribute("userDetailsViewModel", this.userService.getUserDetailsByUsername(principal.getName()));
-        if (!model.containsAttribute("userDetailsBindingModel")) {
-            model.addAttribute("userDetailsBindingModel", new UserDetailsBindingModel());
-        }
-        return "user-details";
+        return "users/user-details";
     }
 
-    @PostMapping("user-details")
+    @GetMapping("change-email")
     @PreAuthorize("isAuthenticated()")
-    @PageTitle("User Details")
-    public String userDetailsConfirm(@Valid @ModelAttribute("userDetailsBindingModel") UserDetailsBindingModel userDetailsBindingModel,
-                                     RedirectAttributes redirectAttributes,
-                                     Principal principal) {
-       /* System.out.println();
-        UserServiceModel user = this.userService.findByName(principal.getName());
-
-        if (!userDetailsBindingModel.getNewEmail().isEmpty()) {
-            try {
-                userService.changeUserEmail(user, userDetailsBindingModel.getNewEmail());
-            } catch (InvalidEmailException e) {
-                redirectAttributes.addFlashAttribute("userDetailsBindingModel",userDetailsBindingModel);
-                redirectAttributes.addFlashAttribute("invalidEmail",true);
-                redirectAttributes.addFlashAttribute("message",e.getMessage());
-                return "redirect:/users/user-details";
-            }
+    @PageTitle("Change Email")
+    public String changeEmail(Model model){
+        if (!model.containsAttribute("userChangeEmailBindingModel")){
+            model.addAttribute("userChangeEmailBindingModel",new UserChangeEmailBindingModel());
         }
-        if (user.getPassword().equals(userDetailsBindingModel.getPassword())){
-
-        }else {
-            redirectAttributes.addFlashAttribute("invalidUserPassword", true);
-            return "redirect:/users/user-details";
-        }
-
-        return "redirect:/home";
-    }*/
-        return "redirect:/home";
+        return "users/change-email";
     }
+
 }
 

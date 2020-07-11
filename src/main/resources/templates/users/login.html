@@ -21,7 +21,7 @@
   
             <div class="mb-5 element-animate">
               <h1 class="mb-2">Log in</h1>
-              <p class="bcrumb"><a href="index.html">Home</a> <span class="sep ion-android-arrow-dropright px-2"></span>  <span class="current">Log in</span></p>
+              <p class="bcrumb"><a th:href="@{/}">Home</a> <span class="sep ion-android-arrow-dropright px-2"></span>  <span class="current">Log in</span></p>
             </div>
             
           </div>
@@ -30,7 +30,7 @@
     </section>
     <!-- END section -->
     
-    <section class="site-section">
+    <section id="userLogin" class="site-section">
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-md-7">
@@ -68,7 +68,7 @@
           </div>
         </div>
       </div>
-    </section>
+    </section >
 
     <footer class="site-footer bg-dark">
       <th:block th:include="~{/fragments/footer}"></th:block>

@@ -7,13 +7,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserDetailsBindingModel {
-
+public class UserChangeEmailBindingModel {
+    private String oldEmail;
     private String newEmail;
-
-    private String password;
-
-    private String newPassword;
-
-    private String confirmNewPassword;
+    private String confirmNewEmail;
 }

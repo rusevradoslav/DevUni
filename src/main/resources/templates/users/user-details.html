@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="~{/fragments/head}"></th:block>
+</head>
+<body>
+
+<header role="banner">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <th:block th:include="~{/fragments/nav}"></th:block>
+    </nav>
+</header>
+
+<section id="userDetails" class="site-section ">
+    <div class="container-user-details">
+        <div class="row">
+            <div class="col-md-5 order-md-1">
+                <div class="block-16">
+                    <figure>
+                        <img src="/images/img_1.jpg" alt="Image placeholder" class="rounded-circle" width="350"
+                             height="350">
+                    </figure>
+                </div>
+            </div>
+
+            <div class="col-md-5 order-md-2">
+
+                <form th:object="${userDetailsViewModel}">
+                    <div class="row">
+                        <div class="col-md-12 form-group">
+                            <label for="username">Username</label>
+                            <input th:field="*{username}" disabled type="text" id="username" name="username"
+                                   class="form-control py-2">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <label for="fullName">Full Name</label>
+                            <input th:field="*{fullName}" disabled type="text" id="fullName" name="fullName"
+                                   class="form-control py-2">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <label for="email">Email Address</label>
+                            <input th:field="*{email}" disabled type="text" id="email" class="form-control py-2">
+                        </div>
+                    </div>
+                </form>
+
+                <div class="row">
+                    <div class="col-md-4 form-group">
+                        <a id="changeEmail" type="button" class="btn btn-primary" th:href="@{/edit/user-email}">Change Email</a>
+                    </div>
+
+                    <div class="col-md-6 col-md-offset-2 form-group">
+                        <a id="changePassword" type="button" class="btn btn-primary" th:href="@{/edit/user-password}">Change Password</a>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+</section>
+
+<footer class="site-footer  bg-dark">
+    <th:block th:include="~{/fragments/footer}"></th:block>
+</footer>
+<!-- END footer -->
+
+<!-- loader -->
+<th:block th:include="~{/fragments/script-loaders}"></th:block>
+</body>
+</html>
+
+<!--
+<th:block th:if="${invalidEmail}">
+
+    <div th:text="${message}" class="alert alert-danger text-center " role="alert">
+    </div>
+
+</th:block>-->
