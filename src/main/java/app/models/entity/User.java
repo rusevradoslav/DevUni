@@ -26,10 +26,10 @@ public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false, unique = true, updatable = false)
     @Length(min = 3, max = 30, message = "Username must be at least 3 characters.")
     private String username;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true,updatable = true)
     @ValidEmail
     private String email;
-    @Column(nullable = false,updatable = false)
+    @Column(nullable = false,updatable = true)
     @Length(min = 3, message = "Password must be at least 3 characters.")
     private String password;
 

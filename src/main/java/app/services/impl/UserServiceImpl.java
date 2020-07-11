@@ -99,8 +99,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePassword(String newPassword) {
+    public void changePassword(UserServiceModel userServiceModel, String newPassword) {
+        System.out.println();
+        User user = this.modelMapper.map(userServiceModel, User.class);
+        String encodeNewPass = bCryptPasswordEncoder.encode(newPassword);
+        user.setPassword(encodeNewPass);
 
+        this.userRepository.saveAndFlush(user);
     }
 
     @Override

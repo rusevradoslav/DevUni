@@ -15,7 +15,7 @@ public interface UserService extends UserDetailsService{
 
     UserDetailsViewModel getUserDetailsByUsername(String username);
 
-    void changePassword(String newPassword);
+    void changePassword(UserServiceModel user, String newPassword);
 
 
     void changeEmail(UserServiceModel user, String newEmail);

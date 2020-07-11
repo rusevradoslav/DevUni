@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -129,7 +130,7 @@ public class UserController {
             return "redirect:/users/change-email";
         }
 
-        System.out.println();
+
         return "redirect:/users/user-details";
     }
 
@@ -137,11 +138,37 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     @PageTitle("Change Password")
     public String changePassword(Model model) {
-        if (!model.containsAttribute("userChangePasswordBindingModel")){
-            model.addAttribute("userChangePasswordBindingModel",new UserChangePasswordBindingModel());
+        if (!model.containsAttribute("userChangePasswordBindingModel")) {
+            model.addAttribute("userChangePasswordBindingModel", new UserChangePasswordBindingModel());
         }
         return "users/change-password";
     }
 
+    @PostMapping("/change-password")
+    @PreAuthorize("isAuthenticated()")
+    @PageTitle("Change Password")
+    public String changePasswordConfirm(@Valid @ModelAttribute("userChangePasswordBindingModel") UserChangePasswordBindingModel userChangePasswordBindingModel,
+                                        BindingResult bindingResult,
+                                        RedirectAttributes redirectAttributes,
+                                        Principal principal,
+                                        BCryptPasswordEncoder bCryptPasswordEncoder) {
+        System.out.println();
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("userChangePasswordBindingModel", userChangePasswordBindingModel);
+            redirectAttributes.addFlashAttribute(String.format(BINDING_RESULT + "userChangePasswordBindingModel"), bindingResult);
+            return "redirect:/users/change-password";
+        }
+        UserServiceModel user = this.userService.findByName(principal.getName());
+
+
+        if (bCryptPasswordEncoder.matches(userChangePasswordBindingModel.getOldPassword(),user.getPassword())) {
+            userService.changePassword(user, userChangePasswordBindingModel.getNewPassword());
+        } else {
+            redirectAttributes.addFlashAttribute("userChangePasswordBindingModel", userChangePasswordBindingModel);
+            redirectAttributes.addFlashAttribute("invalidOldPassword", true);
+            return "redirect:/users/change-password";
+        }
+        return "redirect:/users/user-details";
+    }
 }
 
