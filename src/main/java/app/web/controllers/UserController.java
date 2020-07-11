@@ -2,6 +2,7 @@ package app.web.controllers;
 
 import app.exceptions.UserAlreadyExistException;
 import app.models.binding.UserChangeEmailBindingModel;
+import app.models.binding.UserChangePasswordBindingModel;
 import app.models.binding.UserRegisterBindingModel;
 import app.models.service.UserServiceModel;
 import app.services.UserService;
@@ -130,6 +131,16 @@ public class UserController {
 
         System.out.println();
         return "redirect:/users/user-details";
+    }
+
+    @GetMapping("/change-password")
+    @PreAuthorize("isAuthenticated()")
+    @PageTitle("Change Password")
+    public String changePassword(Model model) {
+        if (!model.containsAttribute("userChangePasswordBindingModel")){
+            model.addAttribute("userChangePasswordBindingModel",new UserChangePasswordBindingModel());
+        }
+        return "users/change-password";
     }
 
 }
