@@ -40,7 +40,7 @@
                         <a class="nav-link" href="about.html">About</a>
                     </li>
                 </ul>
-                <ul class="navbar-nav absolute-right">
+                <ul id="logoutButton" class="navbar-nav absolute-right">
                     <li>
                         <a th:href="@{/users/login}">Login</a> / <a th:href="@{/users/register}">Register</a>
                     </li>
@@ -48,6 +48,7 @@
             </div>
         </div>
     </th:block>
+
     <th:block th:fragment sec:authorize="isAuthenticated()">
         <div class="container navbar-change">
             <a class="navbar-brand absolute" th:href="@{/}">DevUni</a>
@@ -89,14 +90,21 @@
                         <a class="nav-link" href="about.html">About</a>
                     </li>
                 </ul>
-                <ul class="navbar-nav absolute-right">
-                    <li>
-                        <form th:action="@{/logout}" th:method="post">
-                            <button th:href="@{/logout}">Logout</button>
-                        </form>
-                    </li>
-                </ul>
             </div>
         </div>
+        <ul class="navbar-nav absolute">
+            <li>
+                <a th:href="@{/users/user-details}">
+                    <img src="images/person_2.jpg" alt="Avatar" class="avatar">
+                </a>
+            </li>
+
+            <li>
+                <form th:action="@{/logout}" th:method="post">
+                    <a type="button" class="btn" th:href="@{/logout}">Logout</a>
+                </form>
+            </li>
+        </ul>
     </th:block>
 </th:block>
+

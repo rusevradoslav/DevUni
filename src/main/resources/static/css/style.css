@@ -2164,12 +2164,15 @@ body > footer > div > div.pt-5 {
 }
 
 /* Logout button*/
-#navbarsExample05 > ul.navbar-nav.absolute-right > li > form > button {
+body > header > nav > ul > li:nth-child(2) > form > a{
     color: #11cbd7;
     text-decoration: none;
     background-color: transparent;
     border: #fff;
     font-family: "Rubik", arial, sans-serif;
+    margin-left: 10%;
+    margin-top: 9px;
+    font-size: 18px;
 }
 
 
@@ -2198,8 +2201,23 @@ body > section > div > div > div.col-md-5.order-md-2 > form:nth-child(2) > div:n
   font-size: 16px;
   padding: 15px 25px;
 }
-
+/*Change Email Button*/
 #changePassword{
   font-size: 16px;
   padding: 15px 25px;
+}
+
+/*Avatar Image*/
+.avatar{
+    vertical-align: middle;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+/*Navbar Change*/
+body > header > nav > div.navbar-change{
+    flex-wrap: nowrap;
+    margin-left: 15%;
+    margin-right: 15%;
 }

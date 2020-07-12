@@ -4,7 +4,6 @@ import app.models.service.UserServiceModel;
 import app.services.ContractService;
 import app.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 public class ContractServiceImpl implements ContractService {
 
     private final UserService userService;
-    private final ModelMapper modelMapper;
 
     @Override
     public UserServiceModel currentUser() {
