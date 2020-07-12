@@ -2221,3 +2221,6 @@ body > header > nav > div.navbar-change{
     margin-left: 15%;
     margin-right: 15%;
 }
+.avatar-pic {
+    width: 150px;
+}

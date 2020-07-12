@@ -1,12 +1,13 @@
 package app.services.impl;
 
-import app.exceptions.InvalidEmailException;
-import app.exceptions.UserAlreadyExistException;
+import app.error.InvalidEmailException;
+import app.error.UserAlreadyExistException;
 import app.models.entity.User;
 import app.models.service.RoleServiceModel;
 import app.models.service.UserServiceModel;
 import app.models.view.UserDetailsViewModel;
 import app.repositories.UserRepository;
+import app.services.CloudinaryService;
 import app.services.RoleService;
 import app.services.UserService;
 import lombok.AllArgsConstructor;
@@ -16,10 +17,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+
+import static app.constants.GlobalConstants.DEFAULT_PROFILE_PICTURE;
 
 @Service
 @Transactional
@@ -29,6 +34,7 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
     private final RoleService roleService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final CloudinaryService cloudinaryService;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -65,6 +71,7 @@ public class UserServiceImpl implements UserService {
         }
         User user = this.modelMapper.map(userServiceModel, User.class);
         user.setPassword(bCryptPasswordEncoder.encode(userServiceModel.getPassword()));
+        user.setProfilePicture(DEFAULT_PROFILE_PICTURE);
         this.userRepository.saveAndFlush(user);
     }
 
@@ -117,6 +124,14 @@ public class UserServiceImpl implements UserService {
         }
         userServiceModel.setEmail(newEmail);
         this.userRepository.saveAndFlush(this.modelMapper.map(userServiceModel, User.class));
+    }
+
+    @Override
+    public void addProfilePicture(UserServiceModel user, MultipartFile profilePicture) throws IOException {
+        System.out.println();
+        user.setProfilePicture(this.cloudinaryService.uploadImage(profilePicture));
+        System.out.println();
+        this.userRepository.saveAndFlush(this.modelMapper.map(user, User.class));
     }
 
 

@@ -1,10 +1,13 @@
 package app.services;
 
-import app.exceptions.InvalidEmailException;
-import app.exceptions.UserAlreadyExistException;
+import app.error.InvalidEmailException;
+import app.error.UserAlreadyExistException;
 import app.models.service.UserServiceModel;
 import app.models.view.UserDetailsViewModel;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 public interface UserService extends UserDetailsService{
     void registerNewUserAccount(UserServiceModel map) throws UserAlreadyExistException;
@@ -19,4 +22,6 @@ public interface UserService extends UserDetailsService{
 
 
     void changeEmail(UserServiceModel user, String newEmail);
+
+    void addProfilePicture(UserServiceModel user, MultipartFile profilePicture) throws IOException;
 }

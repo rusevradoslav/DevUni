@@ -1,4 +1,4 @@
-package app.exceptions;
+package app.error;
 
 public final class InvalidEmailException extends RuntimeException {
     public InvalidEmailException(final String message, final Throwable cause) {

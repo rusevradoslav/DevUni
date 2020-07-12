@@ -1,6 +1,7 @@
 package app.web.controllers;
 
-import app.exceptions.UserAlreadyExistException;
+import app.error.UserAlreadyExistException;
+import app.models.binding.UserAddProfilePictureBindingModel;
 import app.models.binding.UserChangeEmailBindingModel;
 import app.models.binding.UserChangePasswordBindingModel;
 import app.models.binding.UserRegisterBindingModel;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.security.Principal;
 
 import static app.constants.GlobalConstants.BINDING_RESULT;
@@ -88,7 +90,20 @@ public class UserController {
     public String userDetails(Principal principal, Model model) {
 
         model.addAttribute("userDetailsViewModel", this.userService.getUserDetailsByUsername(principal.getName()));
+
+        if (!model.containsAttribute("userAddProfilePictureBindingModel")) {
+            model.addAttribute("userAddProfilePictureBindingModel", new UserAddProfilePictureBindingModel());
+        }
         return "users/user-details";
+    }
+
+    @PostMapping("/user-details")
+    @PreAuthorize("isAuthenticated()")
+    @PageTitle("User Details")
+    public String userDetails(@ModelAttribute UserAddProfilePictureBindingModel userAddProfilePictureBindingModel, Principal principal) throws IOException {
+        UserServiceModel user = this.userService.findByName(principal.getName());
+        this.userService.addProfilePicture(user,userAddProfilePictureBindingModel.getProfilePicture());
+        return "redirect:/users/user-details";
     }
 
     @GetMapping("change-email")
@@ -161,7 +176,7 @@ public class UserController {
         UserServiceModel user = this.userService.findByName(principal.getName());
 
 
-        if (bCryptPasswordEncoder.matches(userChangePasswordBindingModel.getOldPassword(),user.getPassword())) {
+        if (bCryptPasswordEncoder.matches(userChangePasswordBindingModel.getOldPassword(), user.getPassword())) {
             userService.changePassword(user, userChangePasswordBindingModel.getNewPassword());
         } else {
             redirectAttributes.addFlashAttribute("userChangePasswordBindingModel", userChangePasswordBindingModel);

@@ -18,10 +18,20 @@
         <div class="row">
             <div class="col-md-5 order-md-1">
                 <div class="block-16">
-                    <figure>
-                        <img src="/images/img_1.jpg" alt="Image placeholder" class="rounded-circle" width="350"
-                             height="350">
-                    </figure>
+                    <form th:object="${userDetailsViewModel}">
+                        <figure>
+                            <img th:src="*{profilePicture}" alt="Image placeholder" class="rounded-circle" width="340"
+                                 height="340">
+                            <br>
+                        </figure>
+                    </form>
+                    <form th:action="@{/users/user-details}" th:method="post"
+                          th:object="${userAddProfilePictureBindingModel}"
+                          enctype="multipart/form-data" >
+                        <input th:field="*{profilePicture}" type="file" class="form-control-file" id="profilePicture" name="profilePicture">
+                        <br>
+                        <input class="btn btn-primary" type="submit">
+                    </form>
                 </div>
             </div>
 
@@ -48,11 +58,13 @@
 
                 <div class="row">
                     <div class="col-md-4 form-group">
-                        <a id="changeEmail" type="button" class="btn btn-primary" th:href="@{/users/change-email}">Change Email</a>
+                        <a id="changeEmail" type="button" class="btn btn-primary" th:href="@{/users/change-email}">Change
+                            Email</a>
                     </div>
 
                     <div class="col-md-6 col-md-offset-2 form-group">
-                        <a id="changePassword" type="button" class="btn btn-primary" th:href="@{/users/change-password}">Change Password</a>
+                        <a id="changePassword" type="button" class="btn btn-primary"
+                           th:href="@{/users/change-password}">Change Password</a>
                     </div>
                 </div>
 

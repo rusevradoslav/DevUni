@@ -33,8 +33,12 @@ public class User extends BaseEntity implements UserDetails {
     @Length(min = 3, message = "Password must be at least 3 characters.")
     private String password;
 
+    @Column
+    private String profilePicture;
+
     @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
     private Set<Role> authorities;
+
 
     @Override
     @Transient

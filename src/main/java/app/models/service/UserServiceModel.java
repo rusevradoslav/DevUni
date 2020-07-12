@@ -29,5 +29,7 @@ public class UserServiceModel extends BaseServiceModel {
     @Length(min = 3, message = "Password must be at least 3 characters.")
     private String password;
 
+    private String profilePicture;
+
     private Set<RoleServiceModel> authorities;
 }
