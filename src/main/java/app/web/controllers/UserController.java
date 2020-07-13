@@ -102,6 +102,7 @@ public class UserController {
     @PageTitle("User Details")
     public String userDetails(@ModelAttribute UserAddProfilePictureBindingModel userAddProfilePictureBindingModel, Principal principal) throws IOException {
         UserServiceModel user = this.userService.findByName(principal.getName());
+        System.out.println();
         this.userService.addProfilePicture(user,userAddProfilePictureBindingModel.getProfilePicture());
         return "redirect:/users/user-details";
     }

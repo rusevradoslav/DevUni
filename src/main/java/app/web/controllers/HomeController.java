@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class HomeController {
@@ -32,10 +34,9 @@ public class HomeController {
     @GetMapping("/home")
     @PreAuthorize("isAuthenticated()")
     @PageTitle("Home")
-    public String home(Model model) {
-        System.out.println();
+    public String home(Model model, HttpSession httpSession) {
         UserServiceModel loggedUser = contractService.currentUser();
-        model.addAttribute("profilePicture",loggedUser.getProfilePicture());
+        httpSession.setAttribute("avatarImg", loggedUser.getProfilePicture());
         return "home";
 
     }

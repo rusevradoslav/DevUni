@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <th:block th:include="~{/fragments/head}"></th:block>
 </head>
@@ -51,7 +52,7 @@
                         </div>
                         <div class="col-md-12 form-group">
                             <label for="email">Email Address</label>
-                            <input th:field="*{email}" disabled type="text" id="email" class="form-control py-2">
+                            <input th:field="*{email}" disabled type="text" id="email" name="email" class="form-control py-2">
                         </div>
                     </div>
                 </form>

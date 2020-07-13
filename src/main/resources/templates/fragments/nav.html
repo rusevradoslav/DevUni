@@ -93,10 +93,13 @@
             </div>
         </div>
         <ul class="navbar-nav absolute">
-            <li >
+
+            <li>
                 <a th:href="@{/users/user-details}">
-                    <img th:src="${profilePicture}" alt="Avatar" class="avatar">
+                    <img id="profilePicture" name="profilePicture" th:src="*{#session.getAttribute('avatarImg')}"
+                         alt="Avatar" class="avatar">
                 </a>
+
             </li>
 
             <li>
