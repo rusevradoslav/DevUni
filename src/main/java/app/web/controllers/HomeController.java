@@ -41,5 +41,9 @@ public class HomeController {
 
     }
 
-
+    @GetMapping("/about")
+    @PageTitle("About")
+    public String about(){
+        return "about";
+    }
 }

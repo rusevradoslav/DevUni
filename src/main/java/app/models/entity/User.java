@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Getter
@@ -35,6 +36,9 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column
     private String profilePicture;
+
+     @Column(nullable = false)
+     private LocalDateTime registrationDate;
 
     @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
     private Set<Role> authorities;

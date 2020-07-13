@@ -100,11 +100,19 @@ public class UserController {
     @PostMapping("/user-details")
     @PreAuthorize("isAuthenticated()")
     @PageTitle("User Details")
-    public String userDetails(@ModelAttribute UserAddProfilePictureBindingModel userAddProfilePictureBindingModel, Principal principal) throws IOException {
+    public String userDetails(@ModelAttribute UserAddProfilePictureBindingModel userAddProfilePictureBindingModel,
+                              Principal principal,
+                              RedirectAttributes redirectAttributes)  {
         UserServiceModel user = this.userService.findByName(principal.getName());
         System.out.println();
-        this.userService.addProfilePicture(user,userAddProfilePictureBindingModel.getProfilePicture());
-        return "redirect:/users/user-details";
+        try {
+            this.userService.addProfilePicture(user,userAddProfilePictureBindingModel.getProfilePicture());
+
+        } catch (IOException e) {
+            redirectAttributes.addFlashAttribute("imageSizeException",e.getMessage());
+            return "redirect:/users/user-details";
+        }
+        return "redirect:/home";
     }
 
     @GetMapping("change-email")

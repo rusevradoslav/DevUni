@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,10 +32,10 @@ import static app.constants.GlobalConstants.DEFAULT_PROFILE_PICTURE;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
     private final RoleService roleService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final CloudinaryService cloudinaryService;
+    private final ModelMapper modelMapper;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -52,13 +53,14 @@ public class UserServiceImpl implements UserService {
         Set<RoleServiceModel> authorities = new HashSet<>();
         long count = this.userRepository.count();
         if (count == 0) {
-            authorities.add(this.roleService.findByAuthority("ADMIN"));
+            authorities.add(this.roleService.findByAuthority("ROLE_ADMIN"));
         } else if (count == 1) {
-            authorities.add(this.roleService.findByAuthority("TEACHER"));
+            authorities.add(this.roleService.findByAuthority("ROLE_TEACHER"));
         } else {
-            authorities.add(this.roleService.findByAuthority("STUDENT"));
+            authorities.add(this.roleService.findByAuthority("ROLE_STUDENT"));
         }
         userServiceModel.setAuthorities(authorities);
+        userServiceModel.setRegistrationDate(LocalDateTime.now());
         if (emailExist(userServiceModel.getEmail())) {
             throw new UserAlreadyExistException(
                     "There is an account with that email address: "
@@ -72,6 +74,8 @@ public class UserServiceImpl implements UserService {
         User user = this.modelMapper.map(userServiceModel, User.class);
         user.setPassword(bCryptPasswordEncoder.encode(userServiceModel.getPassword()));
         user.setProfilePicture(DEFAULT_PROFILE_PICTURE);
+
+
         this.userRepository.saveAndFlush(user);
     }
 
@@ -102,6 +106,7 @@ public class UserServiceImpl implements UserService {
         User user = this.userRepository.findFirstByUsername(username).orElse(null);
         UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
         userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
+        userDetailsViewModel.setRegistrationDate(user.getRegistrationDate());
         return userDetailsViewModel;
     }
 

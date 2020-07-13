@@ -32,6 +32,10 @@
                         <input th:field="*{profilePicture}" type="file" class="form-control-file" id="profilePicture" name="profilePicture">
                         <br>
                         <input class="btn btn-primary" type="submit">
+                        <th:block th:if="${imageSizeException != null}">
+                            <div th:text="${imageSizeException}" class="alert alert-danger text-center" role="alert">
+                            </div>
+                        </th:block>
                     </form>
                 </div>
             </div>
@@ -53,6 +57,10 @@
                         <div class="col-md-12 form-group">
                             <label for="email">Email Address</label>
                             <input th:field="*{email}" disabled type="text" id="email" name="email" class="form-control py-2">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <label for="registrationDate">Registration Date</label>
+                            <input th:field="*{registrationDate}" disabled type="text" id="registrationDate" name="registrationDate" class="form-control py-2">
                         </div>
                     </div>
                 </form>

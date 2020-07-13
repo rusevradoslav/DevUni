@@ -5,8 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Getter
@@ -31,5 +33,11 @@ public class UserServiceModel extends BaseServiceModel {
 
     private String profilePicture;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    private LocalDateTime registrationDate;
+
+
     private Set<RoleServiceModel> authorities;
+
+
 }

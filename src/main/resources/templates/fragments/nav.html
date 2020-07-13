@@ -37,7 +37,7 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="about.html">About</a>
+                        <a class="nav-link" th:href="@{/about}">About</a>
                     </li>
                 </ul>
                 <ul id="logoutButton" class="navbar-nav absolute-right">
@@ -50,7 +50,9 @@
     </th:block>
 
     <th:block th:fragment sec:authorize="isAuthenticated()">
+
         <div class="container navbar-change">
+            <!-- DEVUNI LOGO-->
             <a class="navbar-brand absolute" th:href="@{/home}">DevUni</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample05"
                     aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,6 +64,16 @@
                     <li class="nav-item">
                         <a class="nav-link active" th:href="@{/home}">Home</a>
                     </li>
+                    <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdown05" data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false">Admin Panel</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown05">
+                                <a class="dropdown-item" href="#">All Admins</a>
+                                <a class="dropdown-item" href="#">Create Admin</a>
+                            </div>
+                        </li>
+                    </th:block>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="courses.html" id="dropdown04" data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">Courses</a>
@@ -87,27 +99,31 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="about.html">About</a>
+                        <a class="nav-link" th:href="@{/about}">About</a>
                     </li>
                 </ul>
             </div>
+
         </div>
-        <ul class="navbar-nav absolute">
+        <!--        Profile Pic and Logout Button-->
+        <div>
+            <ul class="navbar-nav absolute">
 
-            <li>
-                <a th:href="@{/users/user-details}">
-                    <img id="profilePicture" name="profilePicture" th:src="*{#session.getAttribute('avatarImg')}"
-                         alt="Avatar" class="avatar">
-                </a>
+                <li>
+                    <a th:href="@{/users/user-details}">
+                        <img id="profilePicture" name="profilePicture" th:src="*{#session.getAttribute('avatarImg')}"
+                             alt="Avatar" class="avatar">
+                    </a>
 
-            </li>
+                </li>
 
-            <li>
-                <form th:action="@{/logout}" th:method="post">
-                    <a type="button" class="btn" th:href="@{/logout}">Logout</a>
-                </form>
-            </li>
-        </ul>
+                <li>
+                    <form th:action="@{/logout}" th:method="post">
+                        <a type="button" class="btn" th:href="@{/logout}">Logout</a>
+                    </form>
+                </li>
+            </ul>
+        </div>
     </th:block>
 </th:block>
 
