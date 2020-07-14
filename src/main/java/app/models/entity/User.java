@@ -37,11 +37,14 @@ public class User extends BaseEntity implements UserDetails {
     @Column
     private String profilePicture;
 
-     @Column(nullable = false)
+     @Column(nullable = false )
      private LocalDateTime registrationDate;
 
     @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
     private Set<Role> authorities;
+
+    @Column
+    private boolean isNonBlocked;
 
 
     @Override
@@ -51,9 +54,8 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     @Override
-    @Transient
     public boolean isAccountNonLocked() {
-        return true;
+        return isNonBlocked;
     }
 
     @Override

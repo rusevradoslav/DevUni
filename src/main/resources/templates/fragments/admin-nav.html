@@ -1,0 +1,59 @@
+<th:block th:fragment >
+
+    <div class="container navbar-change">
+        <!-- DEVUNI LOGO-->
+        <a class="navbar-brand absolute" th:href="@{/home}">DevUni</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample05"
+                aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse navbar-light" id="navbarsExample05">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/home}">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown05" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">Admins</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown05">
+                        <a class="dropdown-item" href="#">All Admins</a>
+                        <a class="dropdown-item" href="#">Create Admin</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown05" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">Teachers</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown05">
+                        <a class="dropdown-item" href="#">All Teachers</a>
+                        <a class="dropdown-item" href="#">Teachers Requests</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="courses.html">Students</a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+    <!--        Profile Pic and Logout Button-->
+    <div>
+        <ul class="navbar-nav absolute">
+
+            <li>
+                <a th:href="@{/users/user-details}">
+                    <img id="profilePicture" name="profilePicture" th:src="*{#session.getAttribute('avatarImg')}"
+                         alt="Avatar" class="avatar">
+                </a>
+
+            </li>
+
+            <li>
+                <form th:action="@{/logout}" th:method="post">
+                    <a type="button" class="btn" th:href="@{/logout}">Logout</a>
+                </form>
+            </li>
+        </ul>
+    </div>
+
+</th:block>

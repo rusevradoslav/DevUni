@@ -39,9 +39,10 @@
               <form th:action="@{/users/login}" th:method="POST">
 
 
-                <div th:if="${param.error}"  class="alert alert-danger text-center" role="alert">
-                  Wrong email or password.
-                </div>
+                <th:block th:if="${exceptionMessage != null}">
+                  <div th:text="${exceptionMessage}" class="alert alert-danger text-center" role="alert">
+                  </div>
+                </th:block>
 
                 <div class="row">
                   <div class="col-md-12 form-group">

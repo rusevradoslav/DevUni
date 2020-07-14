@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
         User user = this.modelMapper.map(userServiceModel, User.class);
         user.setPassword(bCryptPasswordEncoder.encode(userServiceModel.getPassword()));
         user.setProfilePicture(DEFAULT_PROFILE_PICTURE);
-
+        user.setNonBlocked(true);
 
         this.userRepository.saveAndFlush(user);
     }
@@ -133,9 +133,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addProfilePicture(UserServiceModel user, MultipartFile profilePicture) throws IOException {
-        System.out.println();
         user.setProfilePicture(this.cloudinaryService.uploadImage(profilePicture));
-        System.out.println();
         this.userRepository.saveAndFlush(this.modelMapper.map(user, User.class));
     }
 

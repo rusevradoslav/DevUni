@@ -12,17 +12,17 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
@@ -39,12 +39,33 @@ public class UserController {
 
     @GetMapping("/login")
     @PageTitle("Login")
-    public String login() {
+    public String login(@RequestParam(value = "error",required = false) String error,
+                        Model model,
+                        HttpServletRequest httpServletRequest) {
+         System.out.println();
+        if (error != null) {
+            String exceptionMessage = getErrorMessage(httpServletRequest, "SPRING_SECURITY_LAST_EXCEPTION");
+            model.addAttribute("exceptionMessage", exceptionMessage);
+        }
 
         if (!SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
             return "redirect:/home";
         }
         return "users/login";
+    }
+
+    private String getErrorMessage(HttpServletRequest httpServletRequest, String key) {
+        System.out.println();
+        Exception exception =
+                (Exception) httpServletRequest.getSession().getAttribute(key);
+
+        String error = "";
+        if (exception instanceof BadCredentialsException) {
+            error = "Invalid username and password!";
+        } else if (exception instanceof LockedException) {
+            error = "Your account is locked";
+        }
+        return error;
     }
 
 
@@ -102,14 +123,14 @@ public class UserController {
     @PageTitle("User Details")
     public String userDetails(@ModelAttribute UserAddProfilePictureBindingModel userAddProfilePictureBindingModel,
                               Principal principal,
-                              RedirectAttributes redirectAttributes)  {
+                              RedirectAttributes redirectAttributes) {
         UserServiceModel user = this.userService.findByName(principal.getName());
         System.out.println();
         try {
-            this.userService.addProfilePicture(user,userAddProfilePictureBindingModel.getProfilePicture());
+            this.userService.addProfilePicture(user, userAddProfilePictureBindingModel.getProfilePicture());
 
         } catch (IOException e) {
-            redirectAttributes.addFlashAttribute("imageSizeException",e.getMessage());
+            redirectAttributes.addFlashAttribute("imageSizeException", e.getMessage());
             return "redirect:/users/user-details";
         }
         return "redirect:/home";
