@@ -51,9 +51,9 @@
                     <li class="nav-item">
                         <a class="nav-link active" th:href="@{/home}">Home</a>
                     </li>
-                    <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                    <th:block sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_ROOT_ADMIN')">
                         <li class="nav-item">
-                            <a class="nav-link active" href="admin-panel">Admin Panel</a>
+                            <a class="nav-link active" th:href="@{/admins/home-page}">Admin Panel</a>
                         </li>
                     </th:block>
                     <li class="nav-item">

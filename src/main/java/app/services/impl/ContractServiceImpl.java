@@ -16,7 +16,7 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public UserServiceModel currentUser() {
-        System.out.println();
+
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UserServiceModel user = this.userService.findByName(username);
         System.out.println();

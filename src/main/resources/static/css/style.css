@@ -309,15 +309,19 @@ header .navbar.navbar-light .nav-link.active {
     padding: 6em 0;
 
 }
-#userDetails{
+
+#userDetails {
     padding: 12em 0;
 }
-#userRegister{
-  padding: 0em 0;
+
+#userRegister {
+    padding: 0em 0;
 }
-#userLogin{
-  padding: 0em 0;
+
+#userLogin {
+    padding: 0em 0;
 }
+
 .school-features,
 .school-instructors {
     background-size: cover;
@@ -2164,7 +2168,7 @@ body > footer > div > div.pt-5 {
 }
 
 /* Logout button*/
-body > header > nav > ul > li:nth-child(2) > form > a{
+body > header > nav > ul > li:nth-child(2) > form > a {
     color: #11cbd7;
     text-decoration: none;
     background-color: transparent;
@@ -2197,18 +2201,19 @@ body > section > div > div > div.col-md-5.order-md-2 > form:nth-child(2) > div:n
 }
 
 /*Change Email Button*/
-#changeEmail{
-  font-size: 16px;
-  padding: 15px 25px;
+#changeEmail {
+    font-size: 16px;
+    padding: 15px 25px;
 }
+
 /*Change Email Button*/
-#changePassword{
-  font-size: 16px;
-  padding: 15px 25px;
+#changePassword {
+    font-size: 16px;
+    padding: 15px 25px;
 }
 
 /*Avatar Image*/
-.avatar{
+.avatar {
     vertical-align: middle;
     width: 60px;
     height: 60px;
@@ -2216,11 +2221,18 @@ body > section > div > div > div.col-md-5.order-md-2 > form:nth-child(2) > div:n
 }
 
 /*Navbar Change*/
-body > header > nav > div.navbar-change{
+body > header > nav > div.navbar-change {
     flex-wrap: nowrap;
     margin-left: 15%;
     margin-right: 15%;
 }
+
 .avatar-pic {
     width: 150px;
+}
+
+#backInfo {
+    margin-top: 40px;
+    margin-left: 30px;
+    font-size: 17px;
 }

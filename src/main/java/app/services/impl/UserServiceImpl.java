@@ -23,7 +23,9 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static app.constants.GlobalConstants.DEFAULT_PROFILE_PICTURE;
 
@@ -53,8 +55,10 @@ public class UserServiceImpl implements UserService {
         Set<RoleServiceModel> authorities = new HashSet<>();
         long count = this.userRepository.count();
         if (count == 0) {
-            authorities.add(this.roleService.findByAuthority("ROLE_ADMIN"));
+            authorities.add(this.roleService.findByAuthority("ROLE_ROOT_ADMIN"));
         } else if (count == 1) {
+            authorities.add(this.roleService.findByAuthority("ROLE_ADMIN"));
+        } else if (count == 2) {
             authorities.add(this.roleService.findByAuthority("ROLE_TEACHER"));
         } else {
             authorities.add(this.roleService.findByAuthority("ROLE_STUDENT"));
@@ -106,6 +110,7 @@ public class UserServiceImpl implements UserService {
         User user = this.userRepository.findFirstByUsername(username).orElse(null);
         UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
         userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
+        System.out.println();
         userDetailsViewModel.setRegistrationDate(user.getRegistrationDate());
         return userDetailsViewModel;
     }
@@ -135,6 +140,19 @@ public class UserServiceImpl implements UserService {
     public void addProfilePicture(UserServiceModel user, MultipartFile profilePicture) throws IOException {
         user.setProfilePicture(this.cloudinaryService.uploadImage(profilePicture));
         this.userRepository.saveAndFlush(this.modelMapper.map(user, User.class));
+    }
+
+    @Override
+    public List<UserDetailsViewModel> findAllAdmins() {
+
+
+        return this.userRepository.findAllAdmins().stream().map(user -> {
+                    UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
+                    userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
+                    userDetailsViewModel.setRegistrationDate(user.getRegistrationDate());
+                    return userDetailsViewModel;
+                }
+        ).collect(Collectors.toList());
     }
 
 

@@ -42,7 +42,6 @@ public class UserController {
     public String login(@RequestParam(value = "error",required = false) String error,
                         Model model,
                         HttpServletRequest httpServletRequest) {
-         System.out.println();
         if (error != null) {
             String exceptionMessage = getErrorMessage(httpServletRequest, "SPRING_SECURITY_LAST_EXCEPTION");
             model.addAttribute("exceptionMessage", exceptionMessage);

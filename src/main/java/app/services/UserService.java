@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface UserService extends UserDetailsService{
     void registerNewUserAccount(UserServiceModel map) throws UserAlreadyExistException;
@@ -24,4 +25,6 @@ public interface UserService extends UserDetailsService{
     void changeEmail(UserServiceModel user, String newEmail);
 
     void addProfilePicture(UserServiceModel user, MultipartFile profilePicture) throws IOException;
+
+    List<UserDetailsViewModel> findAllAdmins();
 }
