@@ -54,7 +54,7 @@ public class UserController {
     }
 
     private String getErrorMessage(HttpServletRequest httpServletRequest, String key) {
-        System.out.println();
+
         Exception exception =
                 (Exception) httpServletRequest.getSession().getAttribute(key);
 

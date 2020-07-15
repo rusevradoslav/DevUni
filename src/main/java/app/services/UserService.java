@@ -27,4 +27,8 @@ public interface UserService extends UserDetailsService{
     void addProfilePicture(UserServiceModel user, MultipartFile profilePicture) throws IOException;
 
     List<UserDetailsViewModel> findAllAdmins();
+
+    UserServiceModel findById(String id);
+
+    void blockUser(UserServiceModel userServiceModel);
 }

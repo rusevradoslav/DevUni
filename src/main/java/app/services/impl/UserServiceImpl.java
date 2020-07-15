@@ -155,6 +155,23 @@ public class UserServiceImpl implements UserService {
         ).collect(Collectors.toList());
     }
 
+    @Override
+    public UserServiceModel findById(String id) {
+
+        User user = this.userRepository.findById(id).orElse(null);
+
+        return this.modelMapper.map(user, UserServiceModel.class);
+    }
+
+    @Override
+    public void blockUser(UserServiceModel userServiceModel) {
+        User user = this.modelMapper.map(userServiceModel, User.class);
+        user.setStatus(false);
+        System.out.println();
+        this.userRepository.saveAndFlush(user);
+
+    }
+
 
     private boolean usernameExist(String username) {
         return this.userRepository.findFirstByUsername(username).orElse(null) != null;

@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
@@ -40,7 +41,14 @@ public class AdminController {
     @PageTitle("All Admins")
     public String allAdmins(Model model) {
         List<UserDetailsViewModel> allAdmins = this.userService.findAllAdmins();
-        model.addAttribute("admins",allAdmins);
+        model.addAttribute("admins", allAdmins);
         return "admins/root-all-admins";
+    }
+
+    @GetMapping("/block-admin/{id}")
+    public String blockAdmin(@PathVariable("id") String id) {
+        UserServiceModel userServiceModel = this.userService.findById(id);
+        this.userService.blockUser(userServiceModel);
+        return "redirect:/admins/all-admins";
     }
 }

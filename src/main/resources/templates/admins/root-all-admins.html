@@ -42,12 +42,7 @@
 </div>
 <div class="container col-md-11">
     <table class="table table-bordered"
-           id="table"
-           data-toggle="table"
-           data-height="460"
-           data-sort-name="name"
-           data-sort-order="desc"
-           data-url="json/data1.json">
+    >
         <thead>
         <tr>
             <th scope="col">#</th>
@@ -60,7 +55,7 @@
         </thead>
         <tbody>
         <tr th:each="a : ${admins}" th:object="${a}">
-            <th data-filed="id" scope="row" th:text="${aStat.index+1}"></th>
+            <th scope="row" th:text="${aStat.index+1}"></th>
             <td id th:text="*{fullName}"></td>
             <td th:text="*{email}"></td>
             <td th:text="*{username}"></td>
@@ -69,13 +64,13 @@
                 <span id="badgeStatusBlocked" th:unless="*{status}" class="badge badge-danger">Blocked</span>
             </td>
             <td>
-                <a href="">Disable</a>
+                <a th:href="@{/admins/block-admin/{id}(id =*{id})}">Disable</a>
                 &nbsp;&nbsp;&nbsp;
-                <a href="">Enable</a>
+                <a th:href="@{/admins/block-admin/{id}(id =*{id})}">Enable</a>
                 &nbsp;&nbsp;&nbsp;
-                <a href="">Demote Student</a>
+                <a th:href="@{/admins/demote-student/{id}(id =*{id})}">Demote Student</a>
                 &nbsp;&nbsp;&nbsp;
-                <a href="">Demote Teacher</a>
+                <a th:href="@{/admins/demote-teacher/{id}(id =*{id})}">Demote Teacher</a>
             </td>
         </tr>
         </tbody>
