@@ -183,10 +183,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void demoteToStudent(UserServiceModel userServiceModel) {
         User user = this.modelMapper.map(userServiceModel, User.class);
-/*
-        this.userRepository.demoteToStudent(user.getId());
-*/
+        Role role = this.roleService.findAuthorityByName("ROLE_STUDENT");
+        Set<Role> newAuthorities = new HashSet<>();
+        newAuthorities.add(role);
+        user.setAuthorities(newAuthorities);
         System.out.println();
+        this.userRepository.saveAndFlush(user);
         this.userRepository.saveAndFlush(user);
     }
 
