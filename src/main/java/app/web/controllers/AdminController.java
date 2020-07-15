@@ -24,8 +24,8 @@ public class AdminController {
     private final ContractService contractService;
 
 
-    @GetMapping("home-page")
-    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/home-page")
+    @PreAuthorize("hasAnyRole('ROLE_ROOT_ADMIN','ROLE_ADMIN')")
     @PageTitle("Admin Home Page")
     public String adminHomePage(Model model, HttpSession httpSession) {
         UserServiceModel loggedUser = contractService.currentUser();
@@ -33,5 +33,14 @@ public class AdminController {
         List<UserDetailsViewModel> allAdmins = this.userService.findAllAdmins();
         model.addAttribute("allAdmins", allAdmins);
         return "admins/admin-home";
+    }
+
+    @GetMapping("/all-admins")
+    @PreAuthorize("hasAnyRole('ROLE_ROOT_ADMIN','ROLE_ADMIN')")
+    @PageTitle("All Admins")
+    public String allAdmins() {
+        List<UserDetailsViewModel> allAdmins = this.userService.findAllAdmins();
+        System.out.println();
+        return "admins/root-all-admins";
     }
 }

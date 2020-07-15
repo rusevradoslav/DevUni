@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:include="~{/fragments/head}"></th:block>
+</head>
+<body>
+
+<header role="banner">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <th:block th:include="~{/fragments/admin-nav}"></th:block>
+    </nav>
+</header>
+
+
+<section class="site-hero overlay" data-stellar-background-ratio="0.5"
+         style="background-image: url(/images/big_image_2.jpg);">
+    <div class="container">
+        <div class="row align-items-center justify-content-center site-hero-inner">
+            <div class="col-md-10">
+
+                <div class="mb-5 element-animate">
+                    <div class="block-17">
+                        <h1 class="heading text-center mb-4">DEVUNI ADMIN PANEL</h1>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container site-section element-animate">
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-7 text-center section-heading">
+            <h2 class="text-primary heading">All Admins in DevUni</h2>
+        </div>
+    </div>
+
+</div>
+<div class="container col-md-11">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Full Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Username</th>
+            <th scope="col">status</th>
+            <th scope="col">Operation</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th scope="row">1</th>
+            <td>Radoslav Rusev</td>
+            <td>radorusevcrypto@gmail.com</td>
+            <td>rusevrado</td>
+            <td>active</td>
+            <td>
+                <a href="">Disable</a>
+                &nbsp;&nbsp;&nbsp;
+                <a href="">Enable</a>
+                &nbsp;&nbsp;&nbsp;
+                <a href="">Demote Student</a>
+                &nbsp;&nbsp;&nbsp;
+                <a href="">Demote Teacher</a>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<footer class="site-footer bg-dark">
+    <th:block th:include="~{/fragments/footer}"></th:block>
+</footer>
+<!-- END footer -->
+
+<!-- loader -->
+<th:block th:include="~{/fragments/script-loaders}"></th:block>
+</body>
+</html>

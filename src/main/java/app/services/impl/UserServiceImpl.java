@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
         User user = this.modelMapper.map(userServiceModel, User.class);
         user.setPassword(bCryptPasswordEncoder.encode(userServiceModel.getPassword()));
         user.setProfilePicture(DEFAULT_PROFILE_PICTURE);
-        user.setNonBlocked(true);
+        user.setStatus(true);
 
         this.userRepository.saveAndFlush(user);
     }

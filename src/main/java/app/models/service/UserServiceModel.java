@@ -33,7 +33,7 @@ public class UserServiceModel extends BaseServiceModel {
 
     private String profilePicture;
 
-    @DateTimeFormat(pattern = "yMM-dd-yyyy HH:mm")
+    @DateTimeFormat(pattern = "MM-dd-yyyy HH:mm")
     private LocalDateTime registrationDate;
 
 

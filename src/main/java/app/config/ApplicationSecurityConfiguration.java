@@ -29,7 +29,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
                 .and()
                 .authorizeRequests()
                 .antMatchers("/css/**", "/images/**", "/fonts/**", "/js/**", "/scss/**").permitAll()
-                .antMatchers("/", "/about","/admins/home-page", "/users/register", "/users/login", "/v2/api-docs", "/swagger-ui.html").permitAll()
+                .antMatchers("/", "/about", "/users/register", "/users/login", "/v2/api-docs", "/admins/all-admins","/swagger-ui.html").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
