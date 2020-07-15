@@ -38,9 +38,9 @@ public class AdminController {
     @GetMapping("/all-admins")
     @PreAuthorize("hasAnyRole('ROLE_ROOT_ADMIN','ROLE_ADMIN')")
     @PageTitle("All Admins")
-    public String allAdmins() {
+    public String allAdmins(Model model) {
         List<UserDetailsViewModel> allAdmins = this.userService.findAllAdmins();
-        System.out.println();
+        model.addAttribute("admins",allAdmins);
         return "admins/root-all-admins";
     }
 }

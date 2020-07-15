@@ -2236,3 +2236,27 @@ body > header > nav > div.navbar-change {
     margin-left: 30px;
     font-size: 17px;
 }
+/* active blocked badge*/
+
+#badgeStatus{
+    display: inline-block;
+    padding: 0.85em 0.60em;
+    font-size: 90%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+}
+#badgeStatusBlocked{
+    display: inline-block;
+    padding: 0.85em 0.60em;
+    font-size: 90%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+}

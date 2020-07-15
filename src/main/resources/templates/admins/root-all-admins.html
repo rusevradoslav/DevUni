@@ -41,7 +41,13 @@
 
 </div>
 <div class="container col-md-11">
-    <table class="table table-bordered">
+    <table class="table table-bordered"
+           id="table"
+           data-toggle="table"
+           data-height="460"
+           data-sort-name="name"
+           data-sort-order="desc"
+           data-url="json/data1.json">
         <thead>
         <tr>
             <th scope="col">#</th>
@@ -53,12 +59,15 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>Radoslav Rusev</td>
-            <td>radorusevcrypto@gmail.com</td>
-            <td>rusevrado</td>
-            <td>active</td>
+        <tr th:each="a : ${admins}" th:object="${a}">
+            <th data-filed="id" scope="row" th:text="${aStat.index+1}"></th>
+            <td id th:text="*{fullName}"></td>
+            <td th:text="*{email}"></td>
+            <td th:text="*{username}"></td>
+            <td>
+                <span id="badgeStatus" th:if="*{status}" class="badge badge-success">Active</span>
+                <span id="badgeStatusBlocked" th:unless="*{status}" class="badge badge-danger">Blocked</span>
+            </td>
             <td>
                 <a href="">Disable</a>
                 &nbsp;&nbsp;&nbsp;
@@ -68,7 +77,6 @@
                 &nbsp;&nbsp;&nbsp;
                 <a href="">Demote Teacher</a>
             </td>
-
         </tr>
         </tbody>
     </table>
