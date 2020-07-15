@@ -31,4 +31,10 @@ public interface UserService extends UserDetailsService{
     UserServiceModel findById(String id);
 
     void blockUser(UserServiceModel userServiceModel);
+
+    void activateUser(UserServiceModel userServiceModel);
+
+    void demoteToStudent(UserServiceModel userServiceModel);
+
+    void demoteToTeacher(UserServiceModel userServiceModel);
 }

@@ -24,4 +24,6 @@ public interface UserRepository extends JpaRepository<User, String> {
             "join authorities a on ua.authorities_id = a.id\n" +
             "where authority = 'ROLE_ADMIN'", nativeQuery = true)
     List<User> findAllAdmins();
+
+
 }

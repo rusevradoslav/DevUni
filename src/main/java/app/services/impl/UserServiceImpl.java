@@ -2,6 +2,7 @@ package app.services.impl;
 
 import app.error.InvalidEmailException;
 import app.error.UserAlreadyExistException;
+import app.models.entity.Role;
 import app.models.entity.User;
 import app.models.service.RoleServiceModel;
 import app.models.service.UserServiceModel;
@@ -170,6 +171,34 @@ public class UserServiceImpl implements UserService {
         System.out.println();
         this.userRepository.saveAndFlush(user);
 
+    }
+
+    @Override
+    public void activateUser(UserServiceModel userServiceModel) {
+        User user = this.modelMapper.map(userServiceModel, User.class);
+        user.setStatus(true);
+        this.userRepository.saveAndFlush(user);
+    }
+
+    @Override
+    public void demoteToStudent(UserServiceModel userServiceModel) {
+        User user = this.modelMapper.map(userServiceModel, User.class);
+/*
+        this.userRepository.demoteToStudent(user.getId());
+*/
+        System.out.println();
+        this.userRepository.saveAndFlush(user);
+    }
+
+    @Override
+    public void demoteToTeacher(UserServiceModel userServiceModel) {
+        User user = this.modelMapper.map(userServiceModel, User.class);
+        Role role = this.roleService.findAuthorityByName("ROLE_TEACHER");
+        Set<Role> newAuthorities = new HashSet<>();
+        newAuthorities.add(role);
+        user.setAuthorities(newAuthorities);
+        System.out.println();
+        this.userRepository.saveAndFlush(user);
     }
 
 

@@ -46,9 +46,31 @@ public class AdminController {
     }
 
     @GetMapping("/block-admin/{id}")
-    public String blockAdmin(@PathVariable("id") String id) {
+    public String blockAdminProfile(@PathVariable("id") String id) {
         UserServiceModel userServiceModel = this.userService.findById(id);
         this.userService.blockUser(userServiceModel);
+        return "redirect:/admins/all-admins";
+    }
+
+
+    @GetMapping("/activate-admin/{id}")
+    public String activateAdminProfile(@PathVariable("id") String id) {
+        UserServiceModel userServiceModel = this.userService.findById(id);
+        this.userService.activateUser(userServiceModel);
+        return "redirect:/admins/all-admins";
+    }
+
+
+    @GetMapping("/demote-student/{id}")
+    public String demoteToStudent(@PathVariable("id") String id) {
+        UserServiceModel userServiceModel = this.userService.findById(id);
+        this.userService.demoteToStudent(userServiceModel);
+        return "redirect:/admins/all-admins";
+
+    }  @GetMapping("/demote-teacher/{id}")
+    public String demoteToTeacher(@PathVariable("id") String id) {
+        UserServiceModel userServiceModel = this.userService.findById(id);
+        this.userService.demoteToTeacher(userServiceModel);
         return "redirect:/admins/all-admins";
     }
 }

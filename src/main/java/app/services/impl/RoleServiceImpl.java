@@ -37,4 +37,10 @@ public class RoleServiceImpl implements RoleService {
         return roleServiceModel;
     }
 
+    @Override
+    public Role findAuthorityByName(String authorityName) {
+
+        return this.roleRepository.findFirstByAuthority(authorityName).orElse(null);
+    }
+
 }

@@ -65,6 +65,12 @@
                                 </span>
                             </div>
 
+                            <div class="name">Status:
+                                <span th:if="*{status}" class="badge badge-success">Active</span>
+                                <span th:unless="*{status}" class="badge badge-danger">Blocked</span>
+
+                            </div>
+
                         </div>
 
                         <div class="author d-flex">
