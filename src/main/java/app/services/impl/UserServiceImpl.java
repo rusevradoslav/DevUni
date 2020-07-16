@@ -210,6 +210,14 @@ public class UserServiceImpl implements UserService {
         this.userRepository.changeRole(role.getId(), user.getId());
     }
 
+    @Override
+    public void changeRoleToAdmin(UserServiceModel userServiceModel) {
+        User user = this.modelMapper.map(userServiceModel, User.class);
+        Role role = this.roleService.findAuthorityByName("ROLE_ADMIN");
+
+        this.userRepository.changeRole(role.getId(), user.getId());
+    }
+
 
     private boolean usernameExist(String username) {
         return this.userRepository.findFirstByUsername(username).orElse(null) != null;

@@ -104,5 +104,11 @@ public class AdminController {
         this.userService.changeRoleToTeacher(user);
         return "redirect:/admins/all-students";
     }
+    @GetMapping("/promote-student-admin/{id}")
+    public String promoteStudentToAdmin(@PathVariable("id") String id) {
+        UserServiceModel user = this.userService.findById(id);
+        this.userService.changeRoleToAdmin(user);
+        return "redirect:/admins/all-students";
+    }
 
 }

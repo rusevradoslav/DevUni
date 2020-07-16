@@ -39,4 +39,6 @@ public interface UserService extends UserDetailsService{
     void changeRoleToStudent(UserServiceModel userServiceModel);
 
     void changeRoleToTeacher(UserServiceModel userServiceModel);
+
+    void changeRoleToAdmin(UserServiceModel user);
 }
