@@ -90,4 +90,11 @@ public class AdminController {
         this.userService.blockUser(userServiceModel);
         return "redirect:/admins/all-students";
     }
+
+    @GetMapping("/activate-student/{id}")
+    public String activateStudentProfile(@PathVariable("id") String id) {
+        UserServiceModel userServiceModel = this.userService.findById(id);
+        this.userService.activateUser(userServiceModel);
+        return "redirect:/admins/all-students";
+    }
 }
