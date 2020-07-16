@@ -120,6 +120,7 @@ public class AdminController {
         model.addAttribute("teachers", allTeachers);
         return "admins/admin-all-teachers";
     }
+
     @GetMapping("/block-teacher/{id}")
     public String blockTeacherProfile(@PathVariable("id") String id) {
         UserServiceModel userServiceModel = this.userService.findById(id);
@@ -127,4 +128,17 @@ public class AdminController {
         return "redirect:/admins/all-teachers";
     }
 
+    @GetMapping("/activate-teacher/{id}")
+    public String activateTeacherProfile(@PathVariable("id") String id) {
+        UserServiceModel userServiceModel = this.userService.findById(id);
+        this.userService.activateUser(userServiceModel);
+        return "redirect:/admins/all-teachers";
+    }
+
+    @GetMapping("/demote-teacher-student/{id}")
+    public String demoteTeacherToStudent(@PathVariable("id") String id){
+        UserServiceModel userServiceModel = this.userService.findById(id);
+        userService.changeRoleToStudent(userServiceModel);
+        return "redirect:/admins/all-teachers";
+    }
 }
