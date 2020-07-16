@@ -23,7 +23,7 @@
 
                 <div class="mb-5 element-animate">
                     <div class="block-17">
-                        <h1 class="heading text-center mb-4">ALL ADMINS IN DEVUNI</h1>
+                        <h1 class="heading text-center mb-4">ALL STUDENTS IN DEVUNI</h1>
                     </div>
                 </div>
             </div>
@@ -34,7 +34,7 @@
 <div class="container site-section element-animate">
     <div class="row justify-content-center mb-5">
         <div class="col-md-7 text-center section-heading">
-            <h2 class="text-primary heading">All Admins in DevUni</h2>
+            <h2 class="text-primary heading">All Students in DevUni</h2>
         </div>
     </div>
 
@@ -53,8 +53,8 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="a : ${admins}" th:object="${a}">
-            <th scope="row" th:text="${aStat.index+1}"></th>
+        <tr th:each="s: ${students}" th:object="${s}">
+            <th scope="row" th:text="${sStat.index+1}"></th>
             <td id th:text="*{fullName}"></td>
             <td th:text="*{email}"></td>
             <td th:text="*{username}"></td>
@@ -63,13 +63,14 @@
                 <span id="badgeStatusBlocked" th:unless="*{status}" class="badge badge-danger">Blocked</span>
             </td>
             <td>
-                <a th:href="@{/admins/block-admin/{id}(id =*{id})}">Disable</a>
+                <a th:href="@{/admins/block-student/{id}(id =*{id})}">Disable</a>
                 &nbsp;&nbsp;&nbsp;
-                <a th:href="@{/admins/activate-admin/{id}(id =*{id})}">Enable</a>
+                <a th:href="@{/admins/activate-student/{id}(id =*{id})}">Enable</a>
                 &nbsp;&nbsp;&nbsp;
-                <a th:href="@{/admins/demote-admin-student/{id}(id =*{id})}">Demote Student</a>
+                <a th:href="@{/admins/promote-teacher/{id}(id =*{id})}">Promote Teacher</a>
+
+                <a th:href="@{/admins/promote-admin/{id}(id =*{id})}">Promote Admin</a>
                 &nbsp;&nbsp;&nbsp;
-                <a th:href="@{/admins/demote-admin-teacher/{id}(id =*{id})}">Demote Teacher</a>
             </td>
         </tr>
         </tbody>

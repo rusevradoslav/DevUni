@@ -52,7 +52,6 @@ public class AdminController {
         return "redirect:/admins/all-admins";
     }
 
-
     @GetMapping("/activate-admin/{id}")
     public String activateAdminProfile(@PathVariable("id") String id) {
         UserServiceModel userServiceModel = this.userService.findById(id);
@@ -60,17 +59,35 @@ public class AdminController {
         return "redirect:/admins/all-admins";
     }
 
-
-    @GetMapping("/demote-student/{id}")
-    public String demoteToStudent(@PathVariable("id") String id) {
+    @GetMapping("/demote-admin-student/{id}")
+    public String demoteAdminToStudent(@PathVariable("id") String id) {
         UserServiceModel userServiceModel = this.userService.findById(id);
         this.userService.demoteToStudent(userServiceModel);
         return "redirect:/admins/all-admins";
 
-    }  @GetMapping("/demote-teacher/{id}")
-    public String demoteToTeacher(@PathVariable("id") String id) {
+    }
+
+    @GetMapping("/demote-admin-teacher/{id}")
+    public String demoteAdminToTeacher(@PathVariable("id") String id) {
         UserServiceModel userServiceModel = this.userService.findById(id);
         this.userService.demoteToTeacher(userServiceModel);
         return "redirect:/admins/all-admins";
+    }
+
+
+    @GetMapping("/all-students")
+    @PreAuthorize("hasAnyRole('ROLE_ROOT_ADMIN','ROLE_ADMIN')")
+    @PageTitle("All Students")
+    public String allStudents(Model model){
+        List<UserDetailsViewModel> allStudents = this.userService.findAllStudents();
+        model.addAttribute("students",allStudents);
+        return "admins/admin-all-students";
+    }
+
+    @GetMapping("/block-student/{id}")
+    public String blockStudentProfile(@PathVariable("id") String id) {
+        UserServiceModel userServiceModel = this.userService.findById(id);
+        this.userService.blockUser(userServiceModel);
+        return "redirect:/admins/all-students";
     }
 }

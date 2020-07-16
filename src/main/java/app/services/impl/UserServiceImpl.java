@@ -85,6 +85,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserServiceModel findById(String id) {
+
+        User user = this.userRepository.findById(id).orElse(null);
+
+        return this.modelMapper.map(user, UserServiceModel.class);
+    }
+
+    @Override
     public UserServiceModel findByEmail(String email) {
         System.out.println();
         User user = this.userRepository.findFirstByEmail(email).orElse(null);
@@ -157,11 +165,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserServiceModel findById(String id) {
+    public List<UserDetailsViewModel> findAllStudents() {
 
-        User user = this.userRepository.findById(id).orElse(null);
-
-        return this.modelMapper.map(user, UserServiceModel.class);
+        return this.userRepository.findAllStudents().stream().map(user -> {
+            UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
+            userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
+            userDetailsViewModel.setRegistrationDate(user.getRegistrationDate());
+            return userDetailsViewModel;
+        }).collect(Collectors.toList());
     }
 
     @Override
