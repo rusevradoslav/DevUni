@@ -104,11 +104,27 @@ public class AdminController {
         this.userService.changeRoleToTeacher(user);
         return "redirect:/admins/all-students";
     }
+
     @GetMapping("/promote-student-admin/{id}")
     public String promoteStudentToAdmin(@PathVariable("id") String id) {
         UserServiceModel user = this.userService.findById(id);
         this.userService.changeRoleToAdmin(user);
         return "redirect:/admins/all-students";
+    }
+
+    @GetMapping("/all-teachers")
+    @PreAuthorize("hasAnyRole('ROLE_ROOT_ADMIN','ROLE_ADMIN')")
+    @PageTitle("All Students")
+    public String allTeachers(Model model) {
+        List<UserDetailsViewModel> allTeachers = this.userService.findAllTeachers();
+        model.addAttribute("teachers", allTeachers);
+        return "admins/admin-all-teachers";
+    }
+    @GetMapping("/block-teacher/{id}")
+    public String blockTeacherProfile(@PathVariable("id") String id) {
+        UserServiceModel userServiceModel = this.userService.findById(id);
+        this.userService.blockUser(userServiceModel);
+        return "redirect:/admins/all-teachers";
     }
 
 }

@@ -30,6 +30,8 @@ public interface UserService extends UserDetailsService{
 
     List<UserDetailsViewModel> findAllStudents();
 
+    List<UserDetailsViewModel> findAllTeachers();
+
     UserServiceModel findById(String id);
 
     void blockUser(UserServiceModel userServiceModel);

@@ -176,6 +176,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserDetailsViewModel> findAllTeachers(){
+        return this.userRepository.findAllTeachers().stream().map(user -> {
+        UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
+        userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
+        userDetailsViewModel.setRegistrationDate(user.getRegistrationDate());
+        return userDetailsViewModel;
+    }).collect(Collectors.toList());
+    }
+
+    @Override
     public void blockUser(UserServiceModel userServiceModel) {
         User user = this.modelMapper.map(userServiceModel, User.class);
         user.setStatus(false);

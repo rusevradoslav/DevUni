@@ -53,7 +53,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="t: ${teachers}" th:object="${s}">
+        <tr th:each="t: ${teachers}" th:object="${t}">
             <th scope="row" th:text="${tStat.index+1}"></th>
             <td id th:text="*{fullName}"></td>
             <td th:text="*{email}"></td>
@@ -67,7 +67,7 @@
                 &nbsp;&nbsp;&nbsp;
                 <a th:href="@{/admins/activate-teacher/{id}(id =*{id})}">Enable</a>
                 &nbsp;&nbsp;&nbsp;
-                <a th:href="@{/admins/promote-teacher-student/{id}(id =*{id})}">Demote Student</a>
+                <a th:href="@{/admins/demote-teacher-student/{id}(id =*{id})}">Demote Student</a>
 
                 <a th:href="@{/admins/promote-teacher-admin/{id}(id =*{id})}">Promote Admin</a>
                 &nbsp;&nbsp;&nbsp;
