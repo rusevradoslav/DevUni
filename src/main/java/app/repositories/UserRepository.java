@@ -3,9 +3,12 @@ package app.repositories;
 
 import app.models.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,5 +28,11 @@ public interface UserRepository extends JpaRepository<User, String> {
             "where authority = 'ROLE_ADMIN'", nativeQuery = true)
     List<User> findAllAdmins();
 
+    @Modifying
+    @Transactional
+    @Query(value = "update users_authorities ua " +
+            "set ua.authorities_id = :authorityId\n" +
+            "where user_id = :userId", nativeQuery = true)
+    void changeRole(@Param("authorityId") String authorityId, @Param("userId") String userId);
 
 }
