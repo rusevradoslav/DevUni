@@ -36,7 +36,7 @@ public interface UserService extends UserDetailsService{
 
     void activateUser(UserServiceModel userServiceModel);
 
-    void demoteToStudent(UserServiceModel userServiceModel);
+    void changeRoleToStudent(UserServiceModel userServiceModel);
 
-    void demoteToTeacher(UserServiceModel userServiceModel);
+    void changeRoleToTeacher(UserServiceModel userServiceModel);
 }

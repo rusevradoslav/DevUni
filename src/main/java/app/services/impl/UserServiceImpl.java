@@ -192,7 +192,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void demoteToStudent(UserServiceModel userServiceModel) {
+    public void changeRoleToStudent(UserServiceModel userServiceModel) {
 
         User user = this.modelMapper.map(userServiceModel, User.class);
         Role role = this.roleService.findAuthorityByName("ROLE_STUDENT");
@@ -203,7 +203,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void demoteToTeacher(UserServiceModel userServiceModel) {
+    public void changeRoleToTeacher(UserServiceModel userServiceModel) {
         User user = this.modelMapper.map(userServiceModel, User.class);
         Role role = this.roleService.findAuthorityByName("ROLE_TEACHER");
 
