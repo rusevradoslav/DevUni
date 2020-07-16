@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:include="~{/fragments/head}"></th:block>
+</head>
+<body>
+
+<header role="banner">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <th:block th:include="~{/fragments/admin-nav}"></th:block>
+    </nav>
+</header>
+
+
+<section class="site-hero overlay" data-stellar-background-ratio="0.5"
+         style="background-image: url(/images/big_image_2.jpg);">
+    <div class="container">
+        <div class="row align-items-center justify-content-center site-hero-inner">
+            <div class="col-md-10">
+
+                <div class="mb-5 element-animate">
+                    <div class="block-17">
+                        <h1 class="heading text-center mb-4">ALL TEACHERS IN DEVUNI</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container site-section element-animate">
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-7 text-center section-heading">
+            <h2 class="text-primary heading">All Teachers in DevUni</h2>
+        </div>
+    </div>
+
+</div>
+<div class="container col-md-11">
+    <table class="table table-bordered"
+    >
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Full Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Username</th>
+            <th scope="col">status</th>
+            <th scope="col">Operation</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="s: ${students}" th:object="${s}">
+            <th scope="row" th:text="${sStat.index+1}"></th>
+            <td id th:text="*{fullName}"></td>
+            <td th:text="*{email}"></td>
+            <td th:text="*{username}"></td>
+            <td>
+                <span id="badgeStatus" th:if="*{status}" class="badge badge-success">Active</span>
+                <span id="badgeStatusBlocked" th:unless="*{status}" class="badge badge-danger">Blocked</span>
+            </td>
+            <td>
+                <a th:href="@{/admins/block-student/{id}(id =*{id})}">Disable</a>
+                &nbsp;&nbsp;&nbsp;
+                <a th:href="@{/admins/activate-student/{id}(id =*{id})}">Enable</a>
+                &nbsp;&nbsp;&nbsp;
+                <a th:href="@{/admins/promote-student-teacher/{id}(id =*{id})}">Promote Teacher</a>
+
+                <a th:href="@{/admins/promote-student-admin/{id}(id =*{id})}">Promote Admin</a>
+                &nbsp;&nbsp;&nbsp;
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<footer class="site-footer bg-dark">
+    <th:block th:include="~{/fragments/footer}"></th:block>
+</footer>
+<!-- END footer -->
+
+<!-- loader -->
+<th:block th:include="~{/fragments/script-loaders}"></th:block>
+</body>
+</html>
