@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserServiceModel findById(String id) {
-
+        System.out.println();
         User user = this.userRepository.findById(id).orElse(null);
 
         return this.modelMapper.map(user, UserServiceModel.class);
