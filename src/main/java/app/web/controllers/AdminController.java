@@ -174,7 +174,12 @@ public class AdminController {
         return "redirect:/admins/all-teacher-requests";
     }
 
-
+    @GetMapping("/cancel-teacher-request/{id}")
+    public String cancelTeacherRequest(@PathVariable("id") String id){
+        UserServiceModel userServiceModel = this.userService.findById(id);
+        this.userService.cancelTeacherRequest(userServiceModel);
+        return "redirect:/admins/all-teacher-requests";
+    }
 
 
     @GetMapping("/create-admin")
