@@ -2,10 +2,12 @@ package app.services.impl;
 
 import app.error.InvalidEmailException;
 import app.error.UserAlreadyExistException;
+import app.models.entity.AboutMe;
 import app.models.entity.Role;
 import app.models.entity.User;
 import app.models.service.RoleServiceModel;
 import app.models.service.UserServiceModel;
+import app.models.view.AboutMeViewModel;
 import app.models.view.UserDetailsViewModel;
 import app.repositories.UserRepository;
 import app.services.CloudinaryService;
@@ -135,6 +137,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void setAboutMeToTheTeacher(AboutMe aboutMe, User user) {
+        this.userRepository.updateTeacherAboutMe(aboutMe.getId(), user.getId());
+    }
+
+    @Override
     public void changePassword(UserServiceModel userServiceModel, String newPassword) {
         User user = this.modelMapper.map(userServiceModel, User.class);
         String newEncodedPassword = bCryptPasswordEncoder.encode(newPassword);
@@ -190,6 +197,15 @@ public class UserServiceImpl implements UserService {
             UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
             userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
             userDetailsViewModel.setRegistrationDate(user.getRegistrationDate());
+            AboutMeViewModel aboutMeViewModel;
+            if (user.getAboutMe() == null) {
+                aboutMeViewModel = this.modelMapper.map(new AboutMe("", ""), AboutMeViewModel.class);
+            } else {
+                aboutMeViewModel = this.modelMapper.map(user.getAboutMe(), AboutMeViewModel.class);
+            }
+            userDetailsViewModel.setAboutMeViewModel(aboutMeViewModel);
+
+
             return userDetailsViewModel;
         }).collect(Collectors.toList());
     }

@@ -22,4 +22,7 @@ public class UserDetailsViewModel {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime registrationDate;
+
+
+    private AboutMeViewModel aboutMeViewModel;
 }

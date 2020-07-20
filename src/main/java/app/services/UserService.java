@@ -2,6 +2,8 @@ package app.services;
 
 import app.error.InvalidEmailException;
 import app.error.UserAlreadyExistException;
+import app.models.entity.AboutMe;
+import app.models.entity.User;
 import app.models.service.UserServiceModel;
 import app.models.view.UserDetailsViewModel;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -53,4 +55,6 @@ public interface UserService extends UserDetailsService{
     void confirmTeacherRequest(UserServiceModel userServiceModel);
 
     void cancelTeacherRequest(UserServiceModel userServiceModel);
+
+    void setAboutMeToTheTeacher(AboutMe aboutMe, User user);
 }

@@ -49,7 +49,7 @@ public class User extends BaseEntity implements UserDetails {
     @Column
     private boolean teacherRequest;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(fetch = FetchType.EAGER)
     private AboutMe aboutMe;
 
     @Override

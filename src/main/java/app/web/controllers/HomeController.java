@@ -1,6 +1,7 @@
 package app.web.controllers;
 
 import app.models.service.UserServiceModel;
+import app.models.view.UserDetailsViewModel;
 import app.services.ContractService;
 import app.services.UserService;
 import app.validations.anotations.PageTitle;
@@ -12,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 @AllArgsConstructor(onConstructor = @__(@Autowired))
@@ -38,6 +40,9 @@ public class HomeController {
         UserServiceModel currentUser = contractService.currentUser();
         httpSession.setAttribute("user",currentUser);
         httpSession.setAttribute("avatarImg", currentUser.getProfilePicture());
+
+        List<UserDetailsViewModel> allTeachers = this.userService.findAllTeachers();
+        model.addAttribute("teachers",allTeachers);
         return "home";
 
     }
@@ -45,6 +50,7 @@ public class HomeController {
     @GetMapping("/about")
     @PageTitle("About")
     public String about(){
+
         return "about";
     }
 

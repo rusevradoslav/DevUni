@@ -84,10 +84,15 @@
                     </div>
                     <div class="text mb-5">
                         <p>
-                            We make the people we train real professionals in the software industry and help them start their careers!
-                            DevUni's Software University project was founded with the idea of ​​an innovative and modern educational center that creates true professionals in the world of programming. For us, as for the entire software industry, real practical skills are most important.
+                            We make the people we train real professionals in the software industry and help them start
+                            their careers!
+                            DevUni's Software University project was founded with the idea of ​​an innovative and modern
+                            educational center that creates true professionals in the world of programming. For us, as
+                            for the entire software industry, real practical skills are most important.
 
-                            That is why we use the "learning by doing" model, providing our students with programming training combined with real practical experience and knowledge in the most sought after and modern technologies, ready to start their careers as successful software engineers.
+                            That is why we use the "learning by doing" model, providing our students with programming
+                            training combined with real practical experience and knowledge in the most sought after and
+                            modern technologies, ready to start their careers as successful software engineers.
                         </p>
                     </div>
                 </div>
@@ -295,27 +300,28 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6 col-lg-4">
+
+        <div th:each="teacher : ${teachers}" th:object="${teacher}" class="col-md-6 col-lg-4">
             <div class="block-2">
                 <div class="flipper">
-                    <div class="front" style="background-image: url(/images/person_3.jpg);">
+                    <div class="front" th:style="'background-image:url(' + *{profilePicture} + ');'">
                         <div class="box">
-                            <h2>Job Smith</h2>
-                            <p>Laravel Expert</p>
+                            <h2 th:text="*{fullName}"></h2>
+                            <p th:text="*{aboutMeViewModel.knowledgeLevel}"></p>
                         </div>
                     </div>
                     <div class="back">
                         <!-- back content -->
                         <blockquote>
-                            <p>&ldquo;Even the all-powerful Pointing has no control about the blind texts it is an
-                                almost unorthographic life One day however a small line of blind text by the name of
-                                Lorem Ipsum decided to leave for the far World of Grammar.&rdquo;</p>
+                            <p th:text="*{aboutMeViewModel.selfDescription}"></p>
                         </blockquote>
                         <div class="author d-flex">
                             <div class="image mr-3 align-self-center">
-                                <img src="/images/person_3.jpg" alt="">
+                                <img th:src="*{profilePicture}">
                             </div>
-                            <div class="name align-self-center">Job Smith <span class="position">Laravel Expert</span>
+                            <div class="name align-self-center">
+                                <span th:text="*{fullName}"></span>
+                                <span class="position" th:text="*{aboutMeViewModel.knowledgeLevel}"></span>
                             </div>
                         </div>
                     </div>
@@ -323,61 +329,6 @@
             </div> <!-- .flip-container -->
         </div>
 
-        <div class="col-md-6 col-lg-4">
-            <div class="block-2 ">
-                <div class="flipper">
-                    <div class="front" style="background-image: url(/images/person_1.jpg);">
-                        <div class="box">
-                            <h2>Mellissa Cruz</h2>
-                            <p>JavaScript Guru</p>
-                        </div>
-                    </div>
-                    <div class="back">
-                        <!-- back content -->
-                        <blockquote>
-                            <p>&ldquo;Even the all-powerful Pointing has no control about the blind texts it is an
-                                almost unorthographic life One day however a small line of blind text by the name of
-                                Lorem Ipsum decided to leave for the far World of Grammar.&rdquo;</p>
-                        </blockquote>
-                        <div class="author d-flex">
-                            <div class="image mr-3 align-self-center">
-                                <img src="/images/person_1.jpg" alt="">
-                            </div>
-                            <div class="name align-self-center">Mellissa Cruz <span
-                                    class="position">JavaScript Guru</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div> <!-- .flip-container -->
-        </div>
-
-        <div class="col-md-6 col-lg-4">
-            <div class="block-2">
-                <div class="flipper">
-                    <div class="front" style="background-image: url(/images/person_2.jpg);">
-                        <div class="box">
-                            <h2>Aldin Powell</h2>
-                            <p>WordPress Ninja</p>
-                        </div>
-                    </div>
-                    <div class="back">
-                        <!-- back content -->
-                        <blockquote>
-                            <p>&ldquo;Even the all-powerful Pointing has no control about the blind texts it is an
-                                almost unorthographic life One day however a small line of blind text by the name of
-                                Lorem Ipsum decided to leave for the far World of Grammar.&rdquo;</p>
-                        </blockquote>
-                        <div class="author d-flex">
-                            <div class="image mr-3 align-self-center">
-                                <img src="/images/person_2.jpg" alt="">
-                            </div>
-                            <div class="name align-self-center">Aldin Powell <span
-                                    class="position">WordPress Ninja</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div> <!-- .flip-container -->
-        </div>
     </div>
 </div>
 <!-- END .block-2 -->

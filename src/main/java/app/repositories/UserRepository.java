@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-
 public interface UserRepository extends JpaRepository<User, String> {
     Optional<User> findFirstByEmail(String email);
 
@@ -65,4 +64,8 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Modifying
     @Query("update User u set u.teacherRequest = false where u.id = :userId")
     void changeTeacherRequestToFalse(@Param("userId") String userId);
+
+    @Modifying
+    @Query("update User  u set u.aboutMe.id = :aboutMeId where u.id = :userId")
+    void updateTeacherAboutMe(String aboutMeId, String userId);
 }

@@ -1,11 +1,10 @@
 package app.web.controllers;
 
 import app.error.UserAlreadyExistException;
-import app.models.binding.UserAddProfilePictureBindingModel;
-import app.models.binding.UserChangeEmailBindingModel;
-import app.models.binding.UserChangePasswordBindingModel;
-import app.models.binding.UserRegisterBindingModel;
+import app.models.binding.*;
+import app.models.service.AboutMeServiceModel;
 import app.models.service.UserServiceModel;
+import app.services.AboutMeService;
 import app.services.UserService;
 import app.validations.anotations.PageTitle;
 import lombok.AllArgsConstructor;
@@ -35,6 +34,7 @@ import static app.constants.GlobalConstants.BINDING_RESULT;
 public class UserController {
 
     private final UserService userService;
+    private final AboutMeService aboutMeService;
     private final ModelMapper modelMapper;
 
     @GetMapping("/login")
@@ -227,9 +227,29 @@ public class UserController {
     @GetMapping("/about-me")
     @PreAuthorize("hasRole('ROLE_TEACHER')")
     @PageTitle("About Me")
-    public String writeAboutMe(){
-
+    public String writeAboutMe(Model model) {
+        if (!model.containsAttribute("aboutMeAddBindingModel")) {
+            model.addAttribute("aboutMeAddBindingModel", new AboutMeAddBindingModel());
+        }
         return "users/about-me";
+    }
+
+    @PostMapping("/about-me")
+    @PreAuthorize("hasRole('ROLE_TEACHER')")
+    public String writeAboutMeConfirm(@Valid @ModelAttribute("aboutMeAddBindingModel") AboutMeAddBindingModel aboutMeAddBindingModel
+            , BindingResult bindingResult
+            , RedirectAttributes redirectAttributes
+            , Principal principal) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("aboutMeAddBindingModel", aboutMeAddBindingModel);
+            redirectAttributes.addFlashAttribute(String.format(BINDING_RESULT + "aboutMeAddBindingModel"), bindingResult);
+            return "redirect:/users/about-me";
+        }
+        UserServiceModel userServiceModel = this.userService.findByName(principal.getName());
+        AboutMeServiceModel aboutMeServiceModel = this.modelMapper.map(aboutMeAddBindingModel, AboutMeServiceModel.class);
+
+        this.aboutMeService.addTeacherAboutMe(userServiceModel,aboutMeServiceModel);
+        return "redirect:/users/user-details";
     }
 }
 

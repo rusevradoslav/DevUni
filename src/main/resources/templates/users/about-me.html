@@ -39,7 +39,7 @@
             <div class="col-md-7">
                 <div class="form-wrap">
                     <h2 class="mb-4">Create AboutMe</h2>
-                    <form>
+                    <form th:action="@{/users/about-me}" th:object="${aboutMeAddBindingModel}" th:method="POST">
 
                         <!--<th:block th:if="${exceptionMessage != null}">
                             <div th:text="${exceptionMessage}" class="alert alert-danger text-center" role="alert">
@@ -49,7 +49,7 @@
                         <div class="row">
                             <div class="col-md-12 form-group">
                                 <label for="knowledgeLevel">Knowledge Level</label>
-                                <input name="knowledgeLevel" type="text" id="knowledgeLevel" class="form-control py-2"
+                                <input th:field="*{knowledgeLevel}" name="knowledgeLevel" type="text" id="knowledgeLevel" class="form-control py-2"
                                        placeholder="Enter knowledge level.." required/>
 
                             </div>
@@ -57,10 +57,10 @@
                         <div class="row mb-5">
                             <div class="col-md-12 form-group">
                                 <label for="selfDescription">Self Description</label>
-                                <textarea  placeholder="Write self description about yourself.."
+                                <textarea th:field="*{selfDescription}" placeholder="Write self description about yourself.."
                                           name="selfDescription" id="selfDescription"
                                           class="form-control py-2"
-                                          cols="30" rows="8" required  autofocus></textarea>
+                                          cols="30" rows="8" required autofocus></textarea>
                                 <div id="the-count">
                                     <span id="current">0</span>
                                     <span id="maximum">/ 300</span>
