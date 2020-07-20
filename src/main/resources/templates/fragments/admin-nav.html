@@ -44,13 +44,11 @@
     <!--        Profile Pic and Logout Button-->
     <div>
         <ul class="navbar-nav absolute">
-
             <li>
                 <a th:href="@{/users/user-details}">
                     <img id="profilePicture" name="profilePicture" th:src="*{#session.getAttribute('avatarImg')}"
                          alt="Avatar" class="avatar">
                 </a>
-
             </li>
 
             <li>

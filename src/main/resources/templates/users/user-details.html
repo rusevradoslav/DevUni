@@ -83,7 +83,7 @@
                 </div>
 
                 <form class="row" th:object="${userDetailsViewModel}">
-                    <div class="col-md-4 form-group" sec:authorize="hasRole('ROLE_TEACHER')" >
+                    <div class="col-md- form-group" sec:authorize="hasRole('ROLE_TEACHER')" >
                         <a id="aboutMe" type="button" class="btn btn-primary" th:href="@{/users/about-me}">About
                             Me </a>
                     </div>

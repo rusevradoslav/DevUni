@@ -2236,9 +2236,10 @@ body > header > nav > div.navbar-change {
     margin-left: 30px;
     font-size: 17px;
 }
+
 /* active  badge*/
 
-#badgeStatus{
+#badgeStatus {
     display: inline-block;
     padding: 0.85em 0.60em;
     font-size: 90%;
@@ -2249,8 +2250,9 @@ body > header > nav > div.navbar-change {
     vertical-align: baseline;
     border-radius: 0.25rem;
 }
+
 /* blocked  badge*/
-#badgeStatusBlocked{
+#badgeStatusBlocked {
     display: inline-block;
     padding: 0.85em 0.60em;
     font-size: 90%;
@@ -2266,4 +2268,13 @@ body > header > nav > div.navbar-change {
     float: right;
     padding: 0.1rem 0 0 0;
     font-size: 0.875rem;
+}
+
+#aboutMe{
+    font-size: 16px;
+    padding: 15px 25px;
+}
+#sendTeacherRequest{
+    font-size: 16px;
+    padding: 15px 25px;
 }
