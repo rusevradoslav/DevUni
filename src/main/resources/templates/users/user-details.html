@@ -83,14 +83,14 @@
                 </div>
 
                 <form class="row" th:object="${userDetailsViewModel}">
-                    <div class="col-md-4 form-group" sec:authorize="hasRole('ROLE_STUDENT')" >
-                        <a id="changeEmail" type="button" class="btn btn-primary" th:href="@{/users/about-me}">About
+                    <div class="col-md-4 form-group" sec:authorize="hasRole('ROLE_TEACHER')" >
+                        <a id="aboutMe" type="button" class="btn btn-primary" th:href="@{/users/about-me}">About
                             Me </a>
                     </div>
 
                     <div class="col-md-6  form-group" sec:authorize="hasRole('ROLE_STUDENT')" th:unless="*{teacherRequest}">
-                        <a id="changePassword" type="button" class="btn btn-primary"
-                           th:href="@{/users/teacher-request/{id}(id =*{id})}">Send Teacher Request</a>
+                        <a id="sendTeacherRequest" type="button" class="btn btn-primary"
+                           th:href="@{/users/teacher-request/{id}(id =*{id})}">Sent Teacher Request</a>
                     </div>
                 </form>
 

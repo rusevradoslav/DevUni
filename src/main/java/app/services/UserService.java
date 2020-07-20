@@ -32,6 +32,8 @@ public interface UserService extends UserDetailsService{
 
     List<UserDetailsViewModel> findAllTeachers();
 
+    List<UserDetailsViewModel> findAllStudentsWithRequests();
+
     UserServiceModel findById(String id);
 
     void blockUser(UserServiceModel userServiceModel);
@@ -45,4 +47,6 @@ public interface UserService extends UserDetailsService{
     void changeRoleToAdmin(UserServiceModel user);
 
     void createNewAdminAccount(UserServiceModel map) throws UserAlreadyExistException;
+
+    void setTeacherRequestToTrue(UserServiceModel userServiceModel);
 }

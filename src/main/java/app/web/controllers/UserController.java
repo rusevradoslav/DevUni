@@ -39,7 +39,7 @@ public class UserController {
 
     @GetMapping("/login")
     @PageTitle("Login")
-    public String login(@RequestParam(value = "error",required = false) String error,
+    public String login(@RequestParam(value = "error", required = false) String error,
                         Model model,
                         HttpServletRequest httpServletRequest) {
         if (error != null) {
@@ -196,7 +196,7 @@ public class UserController {
                                         RedirectAttributes redirectAttributes,
                                         Principal principal,
                                         BCryptPasswordEncoder bCryptPasswordEncoder) {
-        System.out.println();
+
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("userChangePasswordBindingModel", userChangePasswordBindingModel);
             redirectAttributes.addFlashAttribute(String.format(BINDING_RESULT + "userChangePasswordBindingModel"), bindingResult);
@@ -214,5 +214,15 @@ public class UserController {
         }
         return "redirect:/users/user-details";
     }
+
+
+    @GetMapping("/teacher-request/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_STUDENT')")
+    public String sentTeacherRequest(@PathVariable("id") String id) {
+        UserServiceModel userServiceModel = this.userService.findById(id);
+        this.userService.setTeacherRequestToTrue(userServiceModel);
+        return "redirect:/users/user-details";
+    }
 }
+
 

@@ -115,23 +115,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void setTeacherRequestToTrue(UserServiceModel userServiceModel) {
+        this.userRepository.activateTeacherRequest(userServiceModel.getId());
+    }
+
+    @Override
     public void changePassword(UserServiceModel userServiceModel, String newPassword) {
         User user = this.modelMapper.map(userServiceModel, User.class);
         String newEncodedPassword = bCryptPasswordEncoder.encode(newPassword);
-        System.out.println();
+
         this.userRepository.changePassword(user.getId(), newEncodedPassword);
 
     }
 
     @Override
     public void changeEmail(UserServiceModel userServiceModel, String newEmail) {
+        User user = this.modelMapper.map(userServiceModel, User.class);
+
         if (emailExist(newEmail)) {
             throw new UserAlreadyExistException(
                     "There is an account with that email address: "
                             + newEmail);
         }
-        userServiceModel.setEmail(newEmail);
-        this.userRepository.saveAndFlush(this.modelMapper.map(userServiceModel, User.class));
+        this.userRepository.changeEmail(user.getId(), newEmail);
+
     }
 
     @Override
@@ -238,5 +245,17 @@ public class UserServiceImpl implements UserService {
         user.setStatus(true);
 
         this.userRepository.saveAndFlush(user);
+    }
+
+    @Override
+    public List<UserDetailsViewModel> findAllStudentsWithRequests() {
+
+        return this.userRepository.findAllStudentsWithRequests().stream().map(user -> {
+            UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
+            userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
+            userDetailsViewModel.setRegistrationDate(user.getRegistrationDate());
+            return userDetailsViewModel;
+        }).collect(Collectors.toList());
+
     }
 }

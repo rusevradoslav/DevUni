@@ -158,6 +158,19 @@ public class AdminController {
     }
 
 
+    @GetMapping("/all-teacher-requests")
+    @PreAuthorize("hasAnyRole('ROLE_ROOT_ADMIN','ROLE_ADMIN')")
+    @PageTitle("All Teacher Requests")
+    public String allTeacherRequests(Model model) {
+        List<UserDetailsViewModel> allStudentsWithRequests = this.userService.findAllStudentsWithRequests();
+        model.addAttribute("students", allStudentsWithRequests);
+        return "admins/admin-all-teacher-requests";
+    }
+
+  /*  @GetMapping("/approve-teacher-request/{id}")
+    public String aproveTeacherRequest()*/
+
+
     @GetMapping("/create-admin")
     @PreAuthorize("hasRole('ROLE_ROOT_ADMIN')")
     @PageTitle("Create Admin")
@@ -186,9 +199,8 @@ public class AdminController {
         } catch (UserAlreadyExistException e) {
             redirectAttributes.addFlashAttribute("adminCreateBindingModel", adminCreateBindingModel);
             redirectAttributes.addFlashAttribute("exceptionMessage", e.getMessage());
-             return "redirect:/admins/create-admin";
+            return "redirect:/admins/create-admin";
         }
         return "redirect:/admins/all-admins";
     }
-
 }
