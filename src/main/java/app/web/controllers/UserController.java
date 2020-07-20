@@ -220,7 +220,7 @@ public class UserController {
     @PreAuthorize("hasAnyRole('ROLE_STUDENT')")
     public String sentTeacherRequest(@PathVariable("id") String id) {
         UserServiceModel userServiceModel = this.userService.findById(id);
-        this.userService.setTeacherRequestToTrue(userServiceModel);
+        this.userService.sentTeacherRequest(userServiceModel);
         return "redirect:/users/user-details";
     }
 }

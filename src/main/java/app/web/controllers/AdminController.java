@@ -167,8 +167,14 @@ public class AdminController {
         return "admins/admin-all-teacher-requests";
     }
 
-  /*  @GetMapping("/approve-teacher-request/{id}")
-    public String aproveTeacherRequest()*/
+    @GetMapping("/confirm-teacher-request/{id}")
+    public String confirmTeacherRequest(@PathVariable("id") String id) {
+        UserServiceModel userServiceModel = this.userService.findById(id);
+        this.userService.confirmTeacherRequest(userServiceModel);
+        return "redirect:/admins/all-teacher-requests";
+    }
+
+
 
 
     @GetMapping("/create-admin")

@@ -48,5 +48,7 @@ public interface UserService extends UserDetailsService{
 
     void createNewAdminAccount(UserServiceModel map) throws UserAlreadyExistException;
 
-    void setTeacherRequestToTrue(UserServiceModel userServiceModel);
+    void sentTeacherRequest(UserServiceModel userServiceModel);
+
+    void confirmTeacherRequest(UserServiceModel userServiceModel);
 }

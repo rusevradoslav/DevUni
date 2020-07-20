@@ -59,6 +59,10 @@ public interface UserRepository extends JpaRepository<User, String> {
     void changeEmail(@Param("userId") String userId, @Param("newEmail") String newEmail);
 
     @Modifying
-    @Query("update User  u set u.teacherRequest = true where u.id= :userId")
-    void activateTeacherRequest(@Param("userId") String userId);
+    @Query("update User  u set u.teacherRequest = true where u.id = :userId")
+    void changeTeacherRequestToTrue(@Param("userId") String userId);
+
+    @Modifying
+    @Query("update User u set u.teacherRequest = false where u.id = :userId")
+    void changeTeacherRequestToFalse(@Param("userId") String userId);
 }

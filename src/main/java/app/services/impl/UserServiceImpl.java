@@ -115,8 +115,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void setTeacherRequestToTrue(UserServiceModel userServiceModel) {
-        this.userRepository.activateTeacherRequest(userServiceModel.getId());
+    public void sentTeacherRequest(UserServiceModel userServiceModel) {
+        this.userRepository.changeTeacherRequestToTrue(userServiceModel.getId());
+    }
+
+    @Override
+    public void confirmTeacherRequest(UserServiceModel userServiceModel) {
+        User user = this.modelMapper.map(userServiceModel, User.class);
+        Role role = this.roleService.findAuthorityByName("ROLE_TEACHER");
+        this.userRepository.changeRole(role.getId(),user.getId());
+        this.userRepository.changeTeacherRequestToFalse(userServiceModel.getId());
+
     }
 
     @Override

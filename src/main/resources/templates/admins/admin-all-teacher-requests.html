@@ -62,9 +62,9 @@
                 <span id="badgeStatusBlocked" th:unless="*{status}" class="badge badge-danger">Blocked</span>
             </td>
             <td>
-                <a th:href="@{/admins/approve-teacher-request/{id}(id =*{id})}">Approve</a>
+                <a th:href="@{/admins/confirm-teacher-request/{id}(id =*{id})}">Confirm</a>
                 &nbsp;&nbsp;&nbsp;
-                <a th:href="@{/admins/disapprove-teacher-request/{id}(id =*{id})}">Disapprove</a>
+                <a th:href="@{/admins/cancel-teacher-request/{id}(id =*{id})}">Cancel</a>
             </td>
         </tr>
         </tbody>
