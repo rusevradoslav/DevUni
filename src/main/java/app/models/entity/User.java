@@ -27,18 +27,18 @@ public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false, unique = true, updatable = false)
     @Length(min = 3, max = 30, message = "Username must be at least 3 characters.")
     private String username;
-    @Column(nullable = false, unique = true,updatable = true)
+    @Column(nullable = false, unique = true, updatable = true)
     @ValidEmail
     private String email;
-    @Column(nullable = false,updatable = true)
+    @Column(nullable = false, updatable = true)
     @Length(min = 3, message = "Password must be at least 3 characters.")
     private String password;
 
     @Column
     private String profilePicture;
 
-     @Column(nullable = false)
-     private LocalDateTime registrationDate;
+    @Column(nullable = false)
+    private LocalDateTime registrationDate;
 
     @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
     private Set<Role> authorities;
@@ -49,7 +49,8 @@ public class User extends BaseEntity implements UserDetails {
     @Column
     private boolean teacherRequest;
 
-
+    @OneToOne(mappedBy = "user")
+    private AboutMe aboutMe;
 
     @Override
     @Transient

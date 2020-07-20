@@ -223,6 +223,14 @@ public class UserController {
         this.userService.sentTeacherRequest(userServiceModel);
         return "redirect:/users/user-details";
     }
+
+    @GetMapping("/about-me")
+    @PreAuthorize("hasRole('ROLE_TEACHER')")
+    @PageTitle("About Me")
+    public String writeAboutMe(){
+
+        return "users/about-me";
+    }
 }
 
 

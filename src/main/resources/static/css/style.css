@@ -2236,7 +2236,7 @@ body > header > nav > div.navbar-change {
     margin-left: 30px;
     font-size: 17px;
 }
-/* active blocked badge*/
+/* active  badge*/
 
 #badgeStatus{
     display: inline-block;
@@ -2249,6 +2249,7 @@ body > header > nav > div.navbar-change {
     vertical-align: baseline;
     border-radius: 0.25rem;
 }
+/* blocked  badge*/
 #badgeStatusBlocked{
     display: inline-block;
     padding: 0.85em 0.60em;
@@ -2259,4 +2260,10 @@ body > header > nav > div.navbar-change {
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: 0.25rem;
+}
+
+#the-count {
+    float: right;
+    padding: 0.1rem 0 0 0;
+    font-size: 0.875rem;
 }

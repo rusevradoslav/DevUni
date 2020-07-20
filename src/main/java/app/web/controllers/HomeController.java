@@ -35,8 +35,9 @@ public class HomeController {
     @PreAuthorize("isAuthenticated()")
     @PageTitle("Home")
     public String home(Model model, HttpSession httpSession) {
-        UserServiceModel loggedUser = contractService.currentUser();
-        httpSession.setAttribute("avatarImg", loggedUser.getProfilePicture());
+        UserServiceModel currentUser = contractService.currentUser();
+        httpSession.setAttribute("user",currentUser);
+        httpSession.setAttribute("avatarImg", currentUser.getProfilePicture());
         return "home";
 
     }
