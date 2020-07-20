@@ -28,8 +28,9 @@
                     </form>
                     <form th:action="@{/users/user-details}" th:method="post"
                           th:object="${userAddProfilePictureBindingModel}"
-                          enctype="multipart/form-data" >
-                        <input th:field="*{profilePicture}" type="file" class="form-control-file" id="profilePicture" name="profilePicture">
+                          enctype="multipart/form-data">
+                        <input th:field="*{profilePicture}" type="file" class="form-control-file" id="profilePicture"
+                               name="profilePicture">
                         <br>
                         <input class="btn btn-primary" type="submit">
                         <th:block th:if="${imageSizeException != null}">
@@ -56,11 +57,13 @@
                         </div>
                         <div class="col-md-12 form-group">
                             <label for="email">Email Address</label>
-                            <input th:field="*{email}" disabled type="text" id="email" name="email" class="form-control py-2">
+                            <input th:field="*{email}" disabled type="text" id="email" name="email"
+                                   class="form-control py-2">
                         </div>
                         <div class="col-md-12 form-group">
                             <label for="registrationDate">Registration Date</label>
-                            <input th:field="*{registrationDate}" disabled type="text" id="registrationDate" name="registrationDate" class="form-control py-2">
+                            <input th:field="*{registrationDate}" disabled type="text" id="registrationDate"
+                                   name="registrationDate" class="form-control py-2">
                         </div>
                     </div>
                 </form>
@@ -75,7 +78,21 @@
                         <a id="changePassword" type="button" class="btn btn-primary"
                            th:href="@{/users/change-password}">Change Password</a>
                     </div>
+
+
                 </div>
+
+                <form class="row" th:object="${userDetailsViewModel}">
+                    <div class="col-md-4 form-group" sec:authorize="hasRole('ROLE_STUDENT')" >
+                        <a id="changeEmail" type="button" class="btn btn-primary" th:href="@{/users/about-me}">About
+                            Me </a>
+                    </div>
+
+                    <div class="col-md-6  form-group" sec:authorize="hasRole('ROLE_STUDENT')" th:unless="*{teacherRequest}">
+                        <a id="changePassword" type="button" class="btn btn-primary"
+                           th:href="@{/users/teacher-request/{id}(id =*{id})}">Send Teacher Request</a>
+                    </div>
+                </form>
 
 
             </div>

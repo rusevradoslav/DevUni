@@ -18,10 +18,6 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     Optional<User> findFirstByUsername(String username);
 
-    User findByUsername(String username);
-
-    User findByEmail(String email);
-
     @Query(value = "select * from users\n" +
             "join users_authorities ua on users.id = ua.user_id\n" +
             "join authorities a on ua.authorities_id = a.id\n" +
@@ -46,4 +42,10 @@ public interface UserRepository extends JpaRepository<User, String> {
             "set ua.authorities_id = :authorityId\n" +
             "where user_id = :userId", nativeQuery = true)
     void changeRole(@Param("authorityId") String authorityId, @Param("userId") String userId);
+
+    @Modifying
+    @Transactional
+    @Query("update User  u set u.password = :newPassword where u.id = :userId")
+
+    void changePassword(@Param("userId") String userId, @Param("newPassword") String newPassword);
 }

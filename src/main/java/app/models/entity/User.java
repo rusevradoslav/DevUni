@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
@@ -38,8 +37,7 @@ public class User extends BaseEntity implements UserDetails {
     @Column
     private String profilePicture;
 
-     @Column(nullable = false )
-     @DateTimeFormat(pattern = "MM-dd-yyyy HH:mm")
+     @Column(nullable = false)
      private LocalDateTime registrationDate;
 
     @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
@@ -47,6 +45,10 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(name = "status")
     private boolean status;
+
+    @Column
+    private boolean teacherRequest;
+
 
 
     @Override

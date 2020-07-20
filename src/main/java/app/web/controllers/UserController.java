@@ -124,7 +124,7 @@ public class UserController {
                               Principal principal,
                               RedirectAttributes redirectAttributes) {
         UserServiceModel user = this.userService.findByName(principal.getName());
-        System.out.println();
+
         try {
             this.userService.addProfilePicture(user, userAddProfilePictureBindingModel.getProfilePicture());
 

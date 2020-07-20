@@ -18,7 +18,8 @@ public class UserDetailsViewModel {
     private String email;
     private boolean status;
     private String profilePicture;
+    private boolean teacherRequest;
 
-    @DateTimeFormat(pattern = "MM-dd-yyyy HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime registrationDate;
 }

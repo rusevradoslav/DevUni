@@ -65,53 +65,44 @@ public class UserServiceImpl implements UserService {
             authorities.add(this.roleService.findByAuthority("ROLE_STUDENT"));
         }
         userServiceModel.setAuthorities(authorities);
-        userServiceModel.setRegistrationDate(LocalDateTime.now());
-        if (emailExist(userServiceModel.getEmail())) {
-            throw new UserAlreadyExistException(
-                    "There is an account with that email address: "
-                            + userServiceModel.getEmail());
-        }
-        if (usernameExist(userServiceModel.getUsername())) {
-            throw new UserAlreadyExistException(
-                    "There is an account with that username address: "
-                            + userServiceModel.getUsername());
-        }
-        User user = this.modelMapper.map(userServiceModel, User.class);
-        user.setPassword(bCryptPasswordEncoder.encode(userServiceModel.getPassword()));
-        user.setProfilePicture(DEFAULT_PROFILE_PICTURE);
-        user.setStatus(true);
+        userServiceModel.setRegistrationDate(LocalDateTime.now().withNano(0));
+        System.out.println();
+        registerNewUser(userServiceModel);
+    }
 
-        this.userRepository.saveAndFlush(user);
+    @Override
+    public void createNewAdminAccount(UserServiceModel adminUser) throws UserAlreadyExistException {
+        Set<RoleServiceModel> authorities = new HashSet<>();
+        authorities.add(this.roleService.findByAuthority("ROLE_ADMIN"));
+        adminUser.setAuthorities(authorities);
+        adminUser.setRegistrationDate(LocalDateTime.now());
+        registerNewUser(adminUser);
     }
 
     @Override
     public UserServiceModel findById(String id) {
-        System.out.println();
-        User user = this.userRepository.findById(id).orElse(null);
-
+        User user = this.userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User with given id was not found !"));
         return this.modelMapper.map(user, UserServiceModel.class);
     }
 
     @Override
     public UserServiceModel findByEmail(String email) {
-        System.out.println();
-        User user = this.userRepository.findFirstByEmail(email).orElse(null);
-        if (user == null) {
-            throw new InvalidEmailException("User with that email address does't exist !");
-        } else {
-            return this.modelMapper.map(user, UserServiceModel.class);
-        }
+
+        User user = this.userRepository.findFirstByEmail(email)
+                .orElseThrow(() -> new InvalidEmailException("User with that email address does't exist !"));
+
+        return this.modelMapper.map(user, UserServiceModel.class);
+
     }
 
     @Override
     public UserServiceModel findByName(String username) {
-        System.out.println();
-        User user = this.userRepository.findFirstByUsername(username).orElse(null);
-        if (user == null) {
-            return null;
-        } else {
-            return this.modelMapper.map(user, UserServiceModel.class);
-        }
+        User user = this.userRepository.findFirstByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User with given username was not found !"));
+
+        return this.modelMapper.map(user, UserServiceModel.class);
+
     }
 
     @Override
@@ -119,19 +110,17 @@ public class UserServiceImpl implements UserService {
         User user = this.userRepository.findFirstByUsername(username).orElse(null);
         UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
         userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
-        System.out.println();
         userDetailsViewModel.setRegistrationDate(user.getRegistrationDate());
         return userDetailsViewModel;
     }
 
     @Override
     public void changePassword(UserServiceModel userServiceModel, String newPassword) {
-        System.out.println();
         User user = this.modelMapper.map(userServiceModel, User.class);
-        String encodeNewPass = bCryptPasswordEncoder.encode(newPassword);
-        user.setPassword(encodeNewPass);
+        String newEncodedPassword = bCryptPasswordEncoder.encode(newPassword);
+        System.out.println();
+        this.userRepository.changePassword(user.getId(), newEncodedPassword);
 
-        this.userRepository.saveAndFlush(user);
     }
 
     @Override
@@ -154,14 +143,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDetailsViewModel> findAllAdmins() {
 
-
         return this.userRepository.findAllAdmins().stream().map(user -> {
-                    UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
-                    userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
-                    userDetailsViewModel.setRegistrationDate(user.getRegistrationDate());
-                    return userDetailsViewModel;
-                }
-        ).collect(Collectors.toList());
+            UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
+            userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
+            userDetailsViewModel.setRegistrationDate(user.getRegistrationDate());
+            return userDetailsViewModel;
+        }).collect(Collectors.toList());
     }
 
     @Override
@@ -176,20 +163,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDetailsViewModel> findAllTeachers(){
+    public List<UserDetailsViewModel> findAllTeachers() {
         return this.userRepository.findAllTeachers().stream().map(user -> {
-        UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
-        userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
-        userDetailsViewModel.setRegistrationDate(user.getRegistrationDate());
-        return userDetailsViewModel;
-    }).collect(Collectors.toList());
+            UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
+            userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
+            userDetailsViewModel.setRegistrationDate(user.getRegistrationDate());
+            return userDetailsViewModel;
+        }).collect(Collectors.toList());
     }
 
     @Override
     public void blockUser(UserServiceModel userServiceModel) {
         User user = this.modelMapper.map(userServiceModel, User.class);
         user.setStatus(false);
-        System.out.println();
         this.userRepository.saveAndFlush(user);
 
     }
@@ -206,9 +192,7 @@ public class UserServiceImpl implements UserService {
 
         User user = this.modelMapper.map(userServiceModel, User.class);
         Role role = this.roleService.findAuthorityByName("ROLE_STUDENT");
-
         this.userRepository.changeRole(role.getId(), user.getId());
-
 
     }
 
@@ -235,5 +219,24 @@ public class UserServiceImpl implements UserService {
 
     private boolean emailExist(String email) {
         return this.userRepository.findFirstByEmail(email).orElse(null) != null;
+    }
+
+    private void registerNewUser(UserServiceModel userServiceModel) {
+        if (emailExist(userServiceModel.getEmail())) {
+            throw new UserAlreadyExistException(
+                    "There is an account with that email address: "
+                            + userServiceModel.getEmail());
+        }
+        if (usernameExist(userServiceModel.getUsername())) {
+            throw new UserAlreadyExistException(
+                    "There is an account with that username address: "
+                            + userServiceModel.getUsername());
+        }
+        User user = this.modelMapper.map(userServiceModel, User.class);
+        user.setPassword(bCryptPasswordEncoder.encode(userServiceModel.getPassword()));
+        user.setProfilePicture(DEFAULT_PROFILE_PICTURE);
+        user.setStatus(true);
+
+        this.userRepository.saveAndFlush(user);
     }
 }

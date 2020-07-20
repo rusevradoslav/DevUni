@@ -43,4 +43,6 @@ public interface UserService extends UserDetailsService{
     void changeRoleToTeacher(UserServiceModel userServiceModel);
 
     void changeRoleToAdmin(UserServiceModel user);
+
+    void createNewAdminAccount(UserServiceModel map) throws UserAlreadyExistException;
 }

@@ -1,21 +1,27 @@
 package app.web.controllers;
 
+import app.error.UserAlreadyExistException;
+import app.models.binding.AdminCreateBindingModel;
 import app.models.service.UserServiceModel;
 import app.models.view.UserDetailsViewModel;
 import app.services.ContractService;
 import app.services.UserService;
 import app.validations.anotations.PageTitle;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.List;
+
+import static app.constants.GlobalConstants.BINDING_RESULT;
 
 @Controller
 @RequestMapping("/admins")
@@ -23,6 +29,7 @@ import java.util.List;
 public class AdminController {
     private final UserService userService;
     private final ContractService contractService;
+    private final ModelMapper modelMapper;
 
 
     @GetMapping("/home-page")
@@ -32,6 +39,7 @@ public class AdminController {
         UserServiceModel loggedUser = contractService.currentUser();
         httpSession.setAttribute("avatarImg", loggedUser.getProfilePicture());
         List<UserDetailsViewModel> allAdmins = this.userService.findAllAdmins();
+        System.out.println();
         model.addAttribute("allAdmins", allAdmins);
         return "admins/admin-home";
     }
@@ -147,6 +155,40 @@ public class AdminController {
         UserServiceModel user = this.userService.findById(id);
         this.userService.changeRoleToAdmin(user);
         return "redirect:/admins/all-teachers";
+    }
+
+
+    @GetMapping("/create-admin")
+    @PreAuthorize("hasRole('ROLE_ROOT_ADMIN')")
+    @PageTitle("Create Admin")
+    public String createAdmin(Model model) {
+        if (!model.containsAttribute("adminCreateBindingModel")) {
+            model.addAttribute("adminCreateBindingModel", new AdminCreateBindingModel());
+        }
+        return "admins/create-admin";
+    }
+
+    @PostMapping("/create-admin")
+    @PreAuthorize("hasRole('ROLE_ROOT_ADMIN')")
+    @PageTitle("Create Admin")
+    public String createAdminConfirm(@Valid @ModelAttribute("adminCreateBindingModel") AdminCreateBindingModel adminCreateBindingModel,
+                                     BindingResult bindingResult,
+                                     RedirectAttributes redirectAttributes
+    ) {
+        System.out.println();
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("adminCreateBindingModel", adminCreateBindingModel);
+            redirectAttributes.addFlashAttribute(String.format(BINDING_RESULT + "adminCreateBindingModel"), bindingResult);
+            return "redirect:/admins/create-admin";
+        }
+        try {
+            this.userService.createNewAdminAccount(this.modelMapper.map(adminCreateBindingModel, UserServiceModel.class));
+        } catch (UserAlreadyExistException e) {
+            redirectAttributes.addFlashAttribute("adminCreateBindingModel", adminCreateBindingModel);
+            redirectAttributes.addFlashAttribute("exceptionMessage", e.getMessage());
+             return "redirect:/admins/create-admin";
+        }
+        return "redirect:/admins/all-admins";
     }
 
 }
