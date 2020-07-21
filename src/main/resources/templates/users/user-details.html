@@ -14,6 +14,21 @@
     </nav>
 </header>
 
+<section>
+    <th:block sec:authorize="hasRole('ROLE_TEACHER')"
+              th:if="${session.user.getAboutMeServiceModel() == null}">
+    <div class="alert alert-warning alert-danger fade show" role="alert">
+        Congratulations <strong> <span th:text="*{userDetailsViewModel.getFullName()}"></span></strong> you have become
+        a teacher !
+        Every DevUni teacher must have short self description and knowledge level !
+        <a th:href="@{/users/about-me}"><strong>Don't forget to tell more about yourself !</strong></a>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span class="closebtn" aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    </th:block>
+</section>
+
 <section id="userDetails" class="site-section ">
     <div class="container-user-details">
         <div class="row">
@@ -83,12 +98,13 @@
                 </div>
 
                 <form class="row" th:object="${userDetailsViewModel}">
-                    <div class="col-md-6 form-group" sec:authorize="hasRole('ROLE_TEACHER')" >
+                    <div class="col-md-6 form-group" sec:authorize="hasRole('ROLE_TEACHER')">
                         <a id="aboutMe" type="button" class="btn btn-primary" th:href="@{/users/about-me}">About
                             Me </a>
                     </div>
 
-                    <div class="col-md-6  form-group" sec:authorize="hasRole('ROLE_STUDENT')" th:unless="*{teacherRequest}">
+                    <div class="col-md-6  form-group" sec:authorize="hasRole('ROLE_STUDENT')"
+                         th:unless="*{teacherRequest}">
                         <a id="sendTeacherRequest" type="button" class="btn btn-primary"
                            th:href="@{/users/teacher-request/{id}(id =*{id})}">Sent Teacher Request</a>
                     </div>
@@ -106,13 +122,7 @@
 
 <!-- loader -->
 <th:block th:include="~{/fragments/script-loaders}"></th:block>
+<script src="/js/close-button.js"></script>
 </body>
 </html>
 
-<!--
-<th:block th:if="${invalidEmail}">
-
-    <div th:text="${message}" class="alert alert-danger text-center " role="alert">
-    </div>
-
-</th:block>-->

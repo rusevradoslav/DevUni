@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -120,7 +121,10 @@ public class UserServiceImpl implements UserService {
         User user = this.userRepository.findFirstByUsername(username).orElse(null);
         UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
         userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
-        userDetailsViewModel.setRegistrationDate(user.getRegistrationDate());
+        LocalDateTime reg = user.getRegistrationDate();
+        String date = reg.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        System.out.println();
+        userDetailsViewModel.setRegistrationDate(date);
         return userDetailsViewModel;
     }
 
@@ -182,9 +186,14 @@ public class UserServiceImpl implements UserService {
         return this.userRepository.findAllAdmins().stream().map(user -> {
             UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
             userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
-            userDetailsViewModel.setRegistrationDate(user.getRegistrationDate());
+            LocalDateTime reg = user.getRegistrationDate();
+            String date = reg.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            System.out.println();
+            userDetailsViewModel.setRegistrationDate(date);
             return userDetailsViewModel;
         }).collect(Collectors.toList());
+
+
     }
 
     @Override
@@ -193,7 +202,9 @@ public class UserServiceImpl implements UserService {
         return this.userRepository.findAllStudents().stream().map(user -> {
             UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
             userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
-            userDetailsViewModel.setRegistrationDate(user.getRegistrationDate());
+            LocalDateTime reg = user.getRegistrationDate();
+            String date = reg.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            userDetailsViewModel.setRegistrationDate(date);
             return userDetailsViewModel;
         }).collect(Collectors.toList());
     }
@@ -203,7 +214,10 @@ public class UserServiceImpl implements UserService {
         return this.userRepository.findAllTeachers().stream().map(user -> {
             UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
             userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
-            userDetailsViewModel.setRegistrationDate(user.getRegistrationDate());
+            LocalDateTime reg = user.getRegistrationDate();
+            String date = reg.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            System.out.println();
+            userDetailsViewModel.setRegistrationDate(date);
             AboutMeViewModel aboutMeViewModel;
             if (user.getAboutMe() == null) {
                 aboutMeViewModel = this.modelMapper.map(new AboutMe("", ""), AboutMeViewModel.class);
@@ -291,7 +305,9 @@ public class UserServiceImpl implements UserService {
         return this.userRepository.findAllStudentsWithRequests().stream().map(user -> {
             UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
             userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
-            userDetailsViewModel.setRegistrationDate(user.getRegistrationDate());
+            LocalDateTime reg = user.getRegistrationDate();
+            String date = reg.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            userDetailsViewModel.setRegistrationDate(date);
             return userDetailsViewModel;
         }).collect(Collectors.toList());
 

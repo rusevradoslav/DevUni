@@ -5,8 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDateTime;
-
 @NoArgsConstructor
 @Getter
 @Setter
@@ -20,8 +18,9 @@ public class UserDetailsViewModel {
     private String profilePicture;
     private boolean teacherRequest;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-    private LocalDateTime registrationDate;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private String registrationDate;
 
 
     private AboutMeViewModel aboutMeViewModel;

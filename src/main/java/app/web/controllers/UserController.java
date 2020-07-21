@@ -249,7 +249,7 @@ public class UserController {
         AboutMeServiceModel aboutMeServiceModel = this.modelMapper.map(aboutMeAddBindingModel, AboutMeServiceModel.class);
 
         this.aboutMeService.addTeacherAboutMe(userServiceModel,aboutMeServiceModel);
-        return "redirect:/users/user-details";
+        return "redirect:/home";
     }
 }
 
