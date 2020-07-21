@@ -1,7 +1,6 @@
 package app.web.controllers;
 
 import app.models.service.UserServiceModel;
-import app.models.view.UserDetailsViewModel;
 import app.services.ContractService;
 import app.services.UserService;
 import app.validations.anotations.PageTitle;
@@ -13,13 +12,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @Controller
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class HomeController {
     private final ContractService contractService;
     private final UserService userService;
+
 
     @GetMapping("/")
     @PageTitle("Index")
@@ -37,20 +36,18 @@ public class HomeController {
     @PreAuthorize("isAuthenticated()")
     @PageTitle("Home")
     public String home(Model model, HttpSession httpSession) {
-        System.out.println();
-        UserServiceModel currentUser = contractService.currentUser();
-        httpSession.setAttribute("user",currentUser);
-        httpSession.setAttribute("avatarImg", currentUser.getProfilePicture());
 
-        List<UserDetailsViewModel> allTeachers = this.userService.findAllTeachers();
-        model.addAttribute("teachers",allTeachers);
+        UserServiceModel currentUser = contractService.currentUser();
+        httpSession.setAttribute("user", currentUser);
+        httpSession.setAttribute("avatarImg", currentUser.getProfilePicture());
+        model.addAttribute("teachers", this.userService.findAllTeachers());
         return "home";
 
     }
 
     @GetMapping("/about")
     @PageTitle("About")
-    public String about(){
+    public String about() {
 
         return "about";
     }

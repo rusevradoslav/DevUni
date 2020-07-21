@@ -98,18 +98,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserServiceModel findByName(String username) {
-        User user = this.userRepository.findFirstByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User with given username was not found !"));
-        AboutMeServiceModel aboutMeServiceModel = null;
+        System.out.println();
+        User user = this.userRepository.findFirstByUsername(username).orElse(null);
+        if (user != null) {
+            AboutMe aboutMe = user.getAboutMe();
+            if (aboutMe != null) {
+                AboutMeServiceModel aboutMeServiceModel = this.modelMapper.map(aboutMe, AboutMeServiceModel.class);
+                UserServiceModel userServiceModel = this.modelMapper.map(user, UserServiceModel.class);
+                userServiceModel.setAboutMeServiceModel(aboutMeServiceModel);
+                return userServiceModel;
+            } else {
+                return this.modelMapper.map(user, UserServiceModel.class);
 
-        if (user.getAboutMe() != null) {
-            aboutMeServiceModel = this.modelMapper.map(user.getAboutMe(), AboutMeServiceModel.class);
+            }
+        } else {
+            return null;
         }
 
-        UserServiceModel userServiceModel = this.modelMapper.map(user, UserServiceModel.class);
-        userServiceModel.setAboutMeServiceModel(aboutMeServiceModel);
-
-        return userServiceModel;
     }
 
     @Override
@@ -179,7 +184,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDetailsViewModel> findAllAdmins() {
 
-        return  this.userRepository.findAllAdmins().stream().map(user -> {
+        return this.userRepository.findAllAdmins().stream().map(user -> {
             UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
             userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
             LocalDateTime reg = user.getRegistrationDate();

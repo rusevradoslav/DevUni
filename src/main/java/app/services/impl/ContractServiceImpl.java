@@ -19,7 +19,7 @@ public class ContractServiceImpl implements ContractService {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UserServiceModel user = this.userService.findByName(username);
-        System.out.println();
+
         if (!username.equals("anonymousUser") && user != null) {
             return user;
         }

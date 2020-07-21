@@ -39,6 +39,7 @@ public class UserController {
 
     @GetMapping("/login")
     @PageTitle("Login")
+    @PreAuthorize("isAnonymous()")
     public String login(@RequestParam(value = "error", required = false) String error,
                         Model model,
                         HttpServletRequest httpServletRequest) {
@@ -70,6 +71,7 @@ public class UserController {
 
     @GetMapping("/register")
     @PageTitle("Register")
+    @PreAuthorize("isAnonymous()")
     public String register(Model model) {
         if (!SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
             return "redirect:/home";
