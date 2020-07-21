@@ -26,7 +26,7 @@ public class HomeController {
         System.out.println();
         UserServiceModel loggedUser = contractService.currentUser();
         if (loggedUser != null) {
-            return "redirect:/home";
+            return "home";
         } else {
             return "index";
         }
@@ -41,6 +41,7 @@ public class HomeController {
         httpSession.setAttribute("user", currentUser);
         httpSession.setAttribute("avatarImg", currentUser.getProfilePicture());
         model.addAttribute("teachers", this.userService.findAllTeachers());
+
         return "home";
 
     }
