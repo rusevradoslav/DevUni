@@ -5,6 +5,7 @@ import app.error.UserAlreadyExistException;
 import app.models.entity.AboutMe;
 import app.models.entity.Role;
 import app.models.entity.User;
+import app.models.service.AboutMeServiceModel;
 import app.models.service.RoleServiceModel;
 import app.models.service.UserServiceModel;
 import app.models.view.AboutMeViewModel;
@@ -102,9 +103,16 @@ public class UserServiceImpl implements UserService {
     public UserServiceModel findByName(String username) {
         User user = this.userRepository.findFirstByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User with given username was not found !"));
+        AboutMeServiceModel aboutMeServiceModel = null;
 
-        return this.modelMapper.map(user, UserServiceModel.class);
+        if (user.getAboutMe() != null) {
+            aboutMeServiceModel = this.modelMapper.map(user.getAboutMe(), AboutMeServiceModel.class);
+        }
 
+        UserServiceModel userServiceModel = this.modelMapper.map(user, UserServiceModel.class);
+        userServiceModel.setAboutMeServiceModel(aboutMeServiceModel);
+
+        return userServiceModel;
     }
 
     @Override
@@ -145,7 +153,6 @@ public class UserServiceImpl implements UserService {
     public void changePassword(UserServiceModel userServiceModel, String newPassword) {
         User user = this.modelMapper.map(userServiceModel, User.class);
         String newEncodedPassword = bCryptPasswordEncoder.encode(newPassword);
-
         this.userRepository.changePassword(user.getId(), newEncodedPassword);
 
     }
@@ -165,8 +172,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addProfilePicture(UserServiceModel user, MultipartFile profilePicture) throws IOException {
-        user.setProfilePicture(this.cloudinaryService.uploadImage(profilePicture));
-        this.userRepository.saveAndFlush(this.modelMapper.map(user, User.class));
+        String imageUrl = this.cloudinaryService.uploadImage(profilePicture);
+        this.userRepository.updatePhoto(user.getId(), imageUrl);
     }
 
     @Override

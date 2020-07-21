@@ -51,7 +51,11 @@
                                 <label for="knowledgeLevel">Knowledge Level</label>
                                 <input th:field="*{knowledgeLevel}" name="knowledgeLevel" type="text" id="knowledgeLevel" class="form-control py-2"
                                        placeholder="Enter knowledge level.." required/>
-
+                                <th:block th:each="e : ${#fields.errors('knowledgeLevel')}">
+                                    <div class="mx-auto">
+                                        <small th:text="${e}" class="text-danger"></small>
+                                    </div>
+                                </th:block>
                             </div>
                         </div>
                         <div class="row mb-5">
@@ -65,6 +69,11 @@
                                     <span id="current">0</span>
                                     <span id="maximum">/ 300</span>
                                 </div>
+                                <th:block th:each="e : ${#fields.errors('selfDescription')}">
+                                    <div class="mx-auto">
+                                        <small th:text="${e}" class="text-danger"></small>
+                                    </div>
+                                </th:block>
                             </div>
                         </div>
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">

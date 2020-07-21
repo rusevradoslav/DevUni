@@ -72,13 +72,22 @@
         <!--        Profile Pic and Logout Button-->
         <div>
             <ul class="navbar-nav absolute">
-
+                <!-- -->
+                <!--  -->
+                <th:block sec:authorize="hasRole('ROLE_TEACHER')"
+                          th:if="${session.user.getAboutMeServiceModel() == null}">
+                    <li>
+                        <a th:href="@{/users/user-details}">
+                            <img name="profilePicture" src="/images/notification_bell.jpg"
+                                 alt="Avatar" class="avatar" width="174" height="192">
+                        </a>
+                    </li>
+                </th:block>
                 <li>
                     <a th:href="@{/users/user-details}">
                         <img id="profilePicture" name="profilePicture" th:src="*{#session.getAttribute('avatarImg')}"
                              alt="Avatar" class="avatar">
                     </a>
-
                 </li>
 
                 <li>
