@@ -61,10 +61,6 @@ public class UserServiceImpl implements UserService {
         long count = this.userRepository.count();
         if (count == 0) {
             authorities.add(this.roleService.findByAuthority("ROLE_ROOT_ADMIN"));
-        } else if (count == 1) {
-            authorities.add(this.roleService.findByAuthority("ROLE_ADMIN"));
-        } else if (count == 2) {
-            authorities.add(this.roleService.findByAuthority("ROLE_TEACHER"));
         } else {
             authorities.add(this.roleService.findByAuthority("ROLE_STUDENT"));
         }
@@ -183,7 +179,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDetailsViewModel> findAllAdmins() {
 
-        return this.userRepository.findAllAdmins().stream().map(user -> {
+        return  this.userRepository.findAllAdmins().stream().map(user -> {
             UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
             userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
             LocalDateTime reg = user.getRegistrationDate();
