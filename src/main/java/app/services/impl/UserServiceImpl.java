@@ -272,7 +272,6 @@ public class UserServiceImpl implements UserService {
         this.userRepository.changeRole(role.getId(), user.getId());
     }
 
-
     private boolean usernameExist(String username) {
         return this.userRepository.findFirstByUsername(username).orElse(null) != null;
     }
@@ -289,7 +288,7 @@ public class UserServiceImpl implements UserService {
         }
         if (usernameExist(userServiceModel.getUsername())) {
             throw new UserAlreadyExistException(
-                    "There is an account with that username address: "
+                    "There is an account with that username : "
                             + userServiceModel.getUsername());
         }
         User user = this.modelMapper.map(userServiceModel, User.class);

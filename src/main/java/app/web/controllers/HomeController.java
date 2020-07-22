@@ -22,12 +22,13 @@ public class HomeController {
 
     @GetMapping("/")
     @PageTitle("Index")
-    public String index() {
+    public String index(Model model) {
         System.out.println();
         UserServiceModel loggedUser = contractService.currentUser();
         if (loggedUser != null) {
             return "home";
         } else {
+            model.addAttribute("teachers", this.userService.findAllTeachers());
             return "index";
         }
     }

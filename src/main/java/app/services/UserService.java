@@ -23,7 +23,6 @@ public interface UserService extends UserDetailsService{
 
     void changePassword(UserServiceModel user, String newPassword);
 
-
     void changeEmail(UserServiceModel user, String newEmail);
 
     void addProfilePicture(UserServiceModel user, MultipartFile profilePicture) throws IOException;
