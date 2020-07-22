@@ -135,7 +135,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void confirmTeacherRequest(UserServiceModel userServiceModel) {
+    public void confirmTeacherRequest(UserServiceModel userServiceModel) throws RoleNotFoundException {
         User user = this.modelMapper.map(userServiceModel, User.class);
         Role role = this.roleService.findAuthorityByName("ROLE_TEACHER");
         this.userRepository.changeRole(role.getId(), user.getId());
@@ -254,7 +254,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changeRoleToStudent(UserServiceModel userServiceModel) {
+    public void changeRoleToStudent(UserServiceModel userServiceModel) throws RoleNotFoundException {
 
         User user = this.modelMapper.map(userServiceModel, User.class);
         Role role = this.roleService.findAuthorityByName("ROLE_STUDENT");
@@ -263,7 +263,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changeRoleToTeacher(UserServiceModel userServiceModel) {
+    public void changeRoleToTeacher(UserServiceModel userServiceModel) throws RoleNotFoundException {
         User user = this.modelMapper.map(userServiceModel, User.class);
         Role role = this.roleService.findAuthorityByName("ROLE_TEACHER");
 
@@ -271,7 +271,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changeRoleToAdmin(UserServiceModel userServiceModel) {
+    public void changeRoleToAdmin(UserServiceModel userServiceModel) throws RoleNotFoundException {
         User user = this.modelMapper.map(userServiceModel, User.class);
         Role role = this.roleService.findAuthorityByName("ROLE_ADMIN");
 

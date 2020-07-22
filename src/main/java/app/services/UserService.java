@@ -42,17 +42,17 @@ public interface UserService extends UserDetailsService{
 
     void activateUser(UserServiceModel userServiceModel);
 
-    void changeRoleToStudent(UserServiceModel userServiceModel);
+    void changeRoleToStudent(UserServiceModel userServiceModel) throws RoleNotFoundException;
 
-    void changeRoleToTeacher(UserServiceModel userServiceModel);
+    void changeRoleToTeacher(UserServiceModel userServiceModel) throws RoleNotFoundException;
 
-    void changeRoleToAdmin(UserServiceModel user);
+    void changeRoleToAdmin(UserServiceModel user) throws RoleNotFoundException;
 
     void createNewAdminAccount(UserServiceModel map) throws UserAlreadyExistException, RoleNotFoundException;
 
     void sentTeacherRequest(UserServiceModel userServiceModel);
 
-    void confirmTeacherRequest(UserServiceModel userServiceModel);
+    void confirmTeacherRequest(UserServiceModel userServiceModel) throws RoleNotFoundException;
 
     void cancelTeacherRequest(UserServiceModel userServiceModel);
 

@@ -69,7 +69,7 @@ public class AdminController {
     }
 
     @GetMapping("/demote-admin-student/{id}")
-    public String demoteAdminToStudent(@PathVariable("id") String id) {
+    public String demoteAdminToStudent(@PathVariable("id") String id) throws RoleNotFoundException {
         UserServiceModel userServiceModel = this.userService.findById(id);
         this.userService.changeRoleToStudent(userServiceModel);
         return "redirect:/admins/all-admins";
@@ -77,7 +77,7 @@ public class AdminController {
     }
 
     @GetMapping("/demote-admin-teacher/{id}")
-    public String demoteAdminToTeacher(@PathVariable("id") String id) {
+    public String demoteAdminToTeacher(@PathVariable("id") String id) throws RoleNotFoundException {
         UserServiceModel userServiceModel = this.userService.findById(id);
         this.userService.changeRoleToTeacher(userServiceModel);
         return "redirect:/admins/all-admins";
@@ -108,14 +108,14 @@ public class AdminController {
     }
 
     @GetMapping("/promote-student-teacher/{id}")
-    public String promoteStudentToTeacher(@PathVariable("id") String id) {
+    public String promoteStudentToTeacher(@PathVariable("id") String id) throws RoleNotFoundException {
         UserServiceModel user = this.userService.findById(id);
         this.userService.changeRoleToTeacher(user);
         return "redirect:/admins/all-students";
     }
 
     @GetMapping("/promote-student-admin/{id}")
-    public String promoteStudentToAdmin(@PathVariable("id") String id) {
+    public String promoteStudentToAdmin(@PathVariable("id") String id) throws RoleNotFoundException {
         UserServiceModel user = this.userService.findById(id);
         this.userService.changeRoleToAdmin(user);
         return "redirect:/admins/all-students";
@@ -145,14 +145,14 @@ public class AdminController {
     }
 
     @GetMapping("/demote-teacher-student/{id}")
-    public String demoteTeacherToStudent(@PathVariable("id") String id) {
+    public String demoteTeacherToStudent(@PathVariable("id") String id) throws RoleNotFoundException {
         UserServiceModel userServiceModel = this.userService.findById(id);
         this.userService.changeRoleToStudent(userServiceModel);
         return "redirect:/admins/all-teachers";
     }
 
     @GetMapping("/promote-teacher-admin/{id}")
-    public String promoteTeacherToAdmin(@PathVariable("id") String id) {
+    public String promoteTeacherToAdmin(@PathVariable("id") String id) throws RoleNotFoundException {
         UserServiceModel user = this.userService.findById(id);
         this.userService.changeRoleToAdmin(user);
         return "redirect:/admins/all-teachers";
@@ -169,7 +169,7 @@ public class AdminController {
     }
 
     @GetMapping("/confirm-teacher-request/{id}")
-    public String confirmTeacherRequest(@PathVariable("id") String id) {
+    public String confirmTeacherRequest(@PathVariable("id") String id) throws RoleNotFoundException {
         UserServiceModel userServiceModel = this.userService.findById(id);
         this.userService.confirmTeacherRequest(userServiceModel);
         return "redirect:/admins/all-teacher-requests";

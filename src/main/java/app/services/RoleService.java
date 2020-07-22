@@ -10,5 +10,5 @@ public interface RoleService{
 
     RoleServiceModel findByAuthority(String student) throws RoleNotFoundException;
 
-    Role findAuthorityByName(String role_teacher);
+    Role findAuthorityByName(String role_teacher) throws RoleNotFoundException;
 }
