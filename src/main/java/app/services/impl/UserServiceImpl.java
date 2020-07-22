@@ -23,6 +23,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.management.relation.RoleNotFoundException;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -55,7 +56,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void registerNewUserAccount(UserServiceModel userServiceModel) throws UserAlreadyExistException {
+    public void registerNewUserAccount(UserServiceModel userServiceModel) throws UserAlreadyExistException, RoleNotFoundException {
 
         Set<RoleServiceModel> authorities = new HashSet<>();
         long count = this.userRepository.count();
@@ -66,12 +67,11 @@ public class UserServiceImpl implements UserService {
         }
         userServiceModel.setAuthorities(authorities);
         userServiceModel.setRegistrationDate(LocalDateTime.now().withNano(0));
-        System.out.println();
         registerNewUser(userServiceModel);
     }
 
     @Override
-    public void createNewAdminAccount(UserServiceModel adminUser) throws UserAlreadyExistException {
+    public void createNewAdminAccount(UserServiceModel adminUser) throws UserAlreadyExistException, RoleNotFoundException {
         Set<RoleServiceModel> authorities = new HashSet<>();
         authorities.add(this.roleService.findByAuthority("ROLE_ADMIN"));
         adminUser.setAuthorities(authorities);
@@ -202,10 +202,7 @@ public class UserServiceImpl implements UserService {
 
         return this.userRepository.findAllStudents().stream().map(user -> {
             UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
-            userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
-            LocalDateTime reg = user.getRegistrationDate();
-            String date = reg.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            userDetailsViewModel.setRegistrationDate(date);
+            setFullNameAndRegistrationDate(user, userDetailsViewModel);
             return userDetailsViewModel;
         }).collect(Collectors.toList());
     }
@@ -233,18 +230,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserDetailsViewModel> findAllStudentsWithRequests() {
+
+        return this.userRepository.findAllStudentsWithRequests().stream().map(user -> {
+            UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
+            setFullNameAndRegistrationDate(user, userDetailsViewModel);
+            return userDetailsViewModel;
+        }).collect(Collectors.toList());
+
+    }
+
+    @Override
     public void blockUser(UserServiceModel userServiceModel) {
         User user = this.modelMapper.map(userServiceModel, User.class);
-        user.setStatus(false);
-        this.userRepository.saveAndFlush(user);
+        this.userRepository.blockUser(user.getId());
 
     }
 
     @Override
     public void activateUser(UserServiceModel userServiceModel) {
         User user = this.modelMapper.map(userServiceModel, User.class);
-        user.setStatus(true);
-        this.userRepository.saveAndFlush(user);
+        this.userRepository.activateUser(user.getId());
     }
 
     @Override
@@ -272,25 +278,10 @@ public class UserServiceImpl implements UserService {
         this.userRepository.changeRole(role.getId(), user.getId());
     }
 
-    private boolean usernameExist(String username) {
-        return this.userRepository.findFirstByUsername(username).orElse(null) != null;
-    }
-
-    private boolean emailExist(String email) {
-        return this.userRepository.findFirstByEmail(email).orElse(null) != null;
-    }
-
     private void registerNewUser(UserServiceModel userServiceModel) {
-        if (emailExist(userServiceModel.getEmail())) {
-            throw new UserAlreadyExistException(
-                    "There is an account with that email address: "
-                            + userServiceModel.getEmail());
-        }
-        if (usernameExist(userServiceModel.getUsername())) {
-            throw new UserAlreadyExistException(
-                    "There is an account with that username : "
-                            + userServiceModel.getUsername());
-        }
+
+        throwExceptionIfUserExist(userServiceModel.getUsername(), userServiceModel.getEmail());
+
         User user = this.modelMapper.map(userServiceModel, User.class);
         user.setPassword(bCryptPasswordEncoder.encode(userServiceModel.getPassword()));
         user.setProfilePicture(DEFAULT_PROFILE_PICTURE);
@@ -299,17 +290,31 @@ public class UserServiceImpl implements UserService {
         this.userRepository.saveAndFlush(user);
     }
 
-    @Override
-    public List<UserDetailsViewModel> findAllStudentsWithRequests() {
+    private void throwExceptionIfUserExist(String username, String email) {
+        User userWithUsername = this.userRepository.findFirstByUsername(username).orElse(null);
+        if (userWithUsername != null) {
+            throw new UserAlreadyExistException(
+                    "There is an account with that username : "
+                            + username);
+        }
+        User userWithEmail = this.userRepository.findFirstByEmail(email).orElse(null);
 
-        return this.userRepository.findAllStudentsWithRequests().stream().map(user -> {
-            UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
-            userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
-            LocalDateTime reg = user.getRegistrationDate();
-            String date = reg.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            userDetailsViewModel.setRegistrationDate(date);
-            return userDetailsViewModel;
-        }).collect(Collectors.toList());
+        if (userWithEmail != null) {
+             throw  new UserAlreadyExistException(
+                    "There is an account with that email address: "
+                            + email);
+        }
+    }
 
+
+    private boolean emailExist(String email) {
+        return this.userRepository.findFirstByEmail(email).orElse(null) != null;
+    }
+
+    private void setFullNameAndRegistrationDate(User user, UserDetailsViewModel userDetailsViewModel) {
+        userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
+        LocalDateTime reg = user.getRegistrationDate();
+        String date = reg.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        userDetailsViewModel.setRegistrationDate(date);
     }
 }

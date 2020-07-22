@@ -9,11 +9,12 @@ import app.models.view.UserDetailsViewModel;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.management.relation.RoleNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
 public interface UserService extends UserDetailsService{
-    void registerNewUserAccount(UserServiceModel map) throws UserAlreadyExistException;
+    void registerNewUserAccount(UserServiceModel map) throws UserAlreadyExistException, RoleNotFoundException;
 
     UserServiceModel findByEmail(String email) throws InvalidEmailException;
 
@@ -47,7 +48,7 @@ public interface UserService extends UserDetailsService{
 
     void changeRoleToAdmin(UserServiceModel user);
 
-    void createNewAdminAccount(UserServiceModel map) throws UserAlreadyExistException;
+    void createNewAdminAccount(UserServiceModel map) throws UserAlreadyExistException, RoleNotFoundException;
 
     void sentTeacherRequest(UserServiceModel userServiceModel);
 

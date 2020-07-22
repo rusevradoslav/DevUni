@@ -21,6 +21,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.management.relation.RoleNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -97,7 +98,7 @@ public class UserController {
         }
         try {
             userService.registerNewUserAccount(this.modelMapper.map(userRegisterBindingModel, UserServiceModel.class));
-        } catch (UserAlreadyExistException e) {
+        } catch (UserAlreadyExistException | RoleNotFoundException e) {
             redirectAttributes.addFlashAttribute("userRegisterBindingModel", userRegisterBindingModel);
             redirectAttributes.addFlashAttribute("exceptionMessage", e.getMessage());
             return "redirect:/users/register";

@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.management.relation.RoleNotFoundException;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
@@ -207,7 +208,7 @@ public class AdminController {
         }
         try {
             this.userService.createNewAdminAccount(this.modelMapper.map(adminCreateBindingModel, UserServiceModel.class));
-        } catch (UserAlreadyExistException e) {
+        } catch (UserAlreadyExistException | RoleNotFoundException e) {
             redirectAttributes.addFlashAttribute("adminCreateBindingModel", adminCreateBindingModel);
             redirectAttributes.addFlashAttribute("exceptionMessage", e.getMessage());
             return "redirect:/admins/create-admin";

@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.management.relation.RoleNotFoundException;
 import javax.transaction.Transactional;
 
 @Service
@@ -29,12 +30,11 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public RoleServiceModel findByAuthority(String authority) {
-        Role role = roleRepository.findFirstByAuthority(authority).orElse(null);
-        System.out.println();
-        RoleServiceModel roleServiceModel = this.modelMapper.map(role,RoleServiceModel.class);
+    public RoleServiceModel findByAuthority(String authority) throws RoleNotFoundException {
 
-        return roleServiceModel;
+        return this.roleRepository.findFirstByAuthority(authority)
+                .map(role -> this.modelMapper.map(role, RoleServiceModel.class))
+                .orElseThrow(() -> new RoleNotFoundException("Role not found"));
     }
 
     @Override
