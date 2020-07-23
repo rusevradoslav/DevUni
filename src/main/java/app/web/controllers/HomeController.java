@@ -1,7 +1,6 @@
 package app.web.controllers;
 
 import app.models.service.UserServiceModel;
-import app.services.ContractService;
 import app.services.UserService;
 import app.validations.anotations.PageTitle;
 import lombok.AllArgsConstructor;
@@ -12,20 +11,21 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpSession;
+import java.security.Principal;
 
 @Controller
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class HomeController {
-    private final ContractService contractService;
     private final UserService userService;
 
 
     @GetMapping("/")
     @PageTitle("Index")
-    public String index(Model model) {
-        System.out.println();
-        UserServiceModel loggedUser = contractService.currentUser();
-        if (loggedUser != null) {
+    public String index(Model model,Principal principal) {
+
+
+
+        if (principal != null) {
             return "home";
         } else {
             model.addAttribute("teachers", this.userService.findAllTeachers());
@@ -36,9 +36,8 @@ public class HomeController {
     @GetMapping("/home")
     @PreAuthorize("isAuthenticated()")
     @PageTitle("Home")
-    public String home(Model model, HttpSession httpSession) {
-
-        UserServiceModel currentUser = contractService.currentUser();
+    public String home(Model model, HttpSession httpSession, Principal principal) {
+        UserServiceModel currentUser = this.userService.findByName(principal.getName());
         httpSession.setAttribute("user", currentUser);
         httpSession.setAttribute("avatarImg", currentUser.getProfilePicture());
         model.addAttribute("teachers", this.userService.findAllTeachers());

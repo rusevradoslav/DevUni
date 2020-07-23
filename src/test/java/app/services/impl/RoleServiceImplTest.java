@@ -1,10 +1,8 @@
-package app.services.impl.role;
-
+package app.services.impl;
 
 import app.models.entity.Role;
 import app.models.service.RoleServiceModel;
 import app.repositories.RoleRepository;
-import app.services.impl.RoleServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,11 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class RoleServiceTest {
+public class RoleServiceImplTest {
     private static final String ROLE_ROOT_ADMIN = "ROLE_ROOT_ADMIN";
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
     private static final String ROLE_TEACHER = "ROLE_TEACHER";
@@ -75,7 +73,6 @@ public class RoleServiceTest {
         assertEquals(fakeRepository.get(2).getAuthority(), ROLE_TEACHER);
         assertEquals(fakeRepository.get(3).getAuthority(), ROLE_STUDENT);
     }
-
     @Test
     public void seedRoles_shouldDoNothing_whenRepositoryIsNotEmpty() {
         //Arrange
@@ -128,10 +125,10 @@ public class RoleServiceTest {
         Role authority = this.roleService.findAuthorityByName(ROLE_ROOT_ADMIN);
 
         //Assert
-       String actual = ROLE_ROOT_ADMIN;
-       String expected = authority.getAuthority();
+        String actual = ROLE_ROOT_ADMIN;
+        String expected = authority.getAuthority();
 
-       assertEquals(actual,expected);
+        assertEquals(actual,expected);
 
     }
 

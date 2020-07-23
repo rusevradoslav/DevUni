@@ -44,6 +44,7 @@ public class UserController {
     public String login(@RequestParam(value = "error", required = false) String error,
                         Model model,
                         HttpServletRequest httpServletRequest) {
+
         if (error != null) {
             String exceptionMessage = getErrorMessage(httpServletRequest, "SPRING_SECURITY_LAST_EXCEPTION");
             model.addAttribute("exceptionMessage", exceptionMessage);
@@ -74,6 +75,7 @@ public class UserController {
     @PageTitle("Register")
     @PreAuthorize("isAnonymous()")
     public String register(Model model) {
+        System.out.println();
         if (!SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
             return "redirect:/home";
         }

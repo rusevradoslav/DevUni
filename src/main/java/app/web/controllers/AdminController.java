@@ -4,7 +4,6 @@ import app.error.UserAlreadyExistException;
 import app.models.binding.AdminCreateBindingModel;
 import app.models.service.UserServiceModel;
 import app.models.view.UserDetailsViewModel;
-import app.services.ContractService;
 import app.services.UserService;
 import app.validations.anotations.PageTitle;
 import lombok.AllArgsConstructor;
@@ -20,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.management.relation.RoleNotFoundException;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 import static app.constants.GlobalConstants.BINDING_RESULT;
@@ -29,15 +29,17 @@ import static app.constants.GlobalConstants.BINDING_RESULT;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class AdminController {
     private final UserService userService;
-    private final ContractService contractService;
+
     private final ModelMapper modelMapper;
 
 
     @GetMapping("/home-page")
     @PreAuthorize("hasAnyRole('ROLE_ROOT_ADMIN','ROLE_ADMIN')")
     @PageTitle("Admin Home Page")
-    public String adminHomePage(Model model, HttpSession httpSession) {
-        UserServiceModel loggedUser = contractService.currentUser();
+    public String adminHomePage(Model model, HttpSession httpSession, Principal principal) {
+
+        System.out.println();
+        UserServiceModel loggedUser = this.userService.findByName(principal.getName());
         httpSession.setAttribute("avatarImg", loggedUser.getProfilePicture());
         List<UserDetailsViewModel> allAdmins = this.userService.findAllAdmins();
         System.out.println();
