@@ -121,11 +121,7 @@ public class UserServiceImpl implements UserService {
     public UserDetailsViewModel getUserDetailsByUsername(String username) {
         User user = this.userRepository.findFirstByUsername(username).orElse(null);
         UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
-        userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
-        LocalDateTime reg = user.getRegistrationDate();
-        String date = reg.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        System.out.println();
-        userDetailsViewModel.setRegistrationDate(date);
+        setFullNameAndRegistrationDate(user, userDetailsViewModel);
         return userDetailsViewModel;
     }
 
@@ -153,6 +149,7 @@ public class UserServiceImpl implements UserService {
     public void setAboutMeToTheTeacher(AboutMe aboutMe, User user) {
         this.userRepository.updateTeacherAboutMe(aboutMe.getId(), user.getId());
     }
+
 
     @Override
     public void changePassword(UserServiceModel userServiceModel, String newPassword) {
@@ -214,7 +211,6 @@ public class UserServiceImpl implements UserService {
             userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
             LocalDateTime reg = user.getRegistrationDate();
             String date = reg.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            System.out.println();
             userDetailsViewModel.setRegistrationDate(date);
             AboutMeViewModel aboutMeViewModel;
             if (user.getAboutMe() == null) {

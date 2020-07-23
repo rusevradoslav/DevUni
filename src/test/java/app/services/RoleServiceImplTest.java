@@ -1,8 +1,9 @@
-package app.services.impl;
+package app.services;
 
 import app.models.entity.Role;
 import app.models.service.RoleServiceModel;
 import app.repositories.RoleRepository;
+import app.services.impl.RoleServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,12 +40,13 @@ public class RoleServiceImplTest {
 
     @Before
     public void init() {
-
+        System.out.println();
         fakeRepository = new ArrayList<>();
 
         //instead of saving in db add in fake repository
-        when(roleRepository.saveAndFlush(any(Role.class)))
-                .then(invocation -> {
+        when(roleRepository.saveAndFlush(isA(Role.class)))
+                .thenAnswer(invocation -> {
+                    System.out.println();
                     fakeRepository.add((Role) invocation.getArguments()[0]);
                     return null;
                 });

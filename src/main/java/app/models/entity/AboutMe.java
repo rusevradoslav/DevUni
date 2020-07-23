@@ -6,9 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -26,6 +24,8 @@ public class AboutMe extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     @Length(min = 1,max = 300,message = "Knowledge level must be between 1 and 300 characters")
     private String selfDescription;
+
+
 
 
 

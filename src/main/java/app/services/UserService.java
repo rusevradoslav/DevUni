@@ -57,4 +57,6 @@ public interface UserService extends UserDetailsService{
     void cancelTeacherRequest(UserServiceModel userServiceModel);
 
     void setAboutMeToTheTeacher(AboutMe aboutMe, User user);
+
+
 }
