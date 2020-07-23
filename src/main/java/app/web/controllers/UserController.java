@@ -40,19 +40,20 @@ public class UserController {
 
     @GetMapping("/login")
     @PageTitle("Login")
-    @PreAuthorize("isAnonymous()")
     public String login(@RequestParam(value = "error", required = false) String error,
                         Model model,
                         HttpServletRequest httpServletRequest) {
+
+        if (!SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
+            return "redirect:/home";
+        }
 
         if (error != null) {
             String exceptionMessage = getErrorMessage(httpServletRequest, "SPRING_SECURITY_LAST_EXCEPTION");
             model.addAttribute("exceptionMessage", exceptionMessage);
         }
 
-        if (!SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
-            return "redirect:/home";
-        }
+
         return "users/login";
     }
 
@@ -73,7 +74,6 @@ public class UserController {
 
     @GetMapping("/register")
     @PageTitle("Register")
-    @PreAuthorize("isAnonymous()")
     public String register(Model model) {
         System.out.println();
         if (!SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
@@ -253,7 +253,7 @@ public class UserController {
         UserServiceModel userServiceModel = this.userService.findByName(principal.getName());
         AboutMeServiceModel aboutMeServiceModel = this.modelMapper.map(aboutMeAddBindingModel, AboutMeServiceModel.class);
 
-        this.aboutMeService.addTeacherAboutMe(userServiceModel,aboutMeServiceModel);
+        this.aboutMeService.addTeacherAboutMe(userServiceModel, aboutMeServiceModel);
         return "redirect:/home";
     }
 }
