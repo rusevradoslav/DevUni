@@ -1,5 +1,6 @@
 package app.services;
 
+import app.error.InvalidEmailException;
 import app.error.UserAlreadyExistException;
 import app.models.entity.Role;
 import app.models.entity.User;
@@ -49,7 +50,7 @@ public class UserServiceImplTest {
 
     private List<User> fakeRepository;
 
-    private UserServiceModel userServiceModel = new UserServiceModel();
+    private UserServiceModel fakeUserServiceModel = new UserServiceModel();
 
     private User user = new User();
 
@@ -76,6 +77,7 @@ public class UserServiceImplTest {
 
         when(userRepository.saveAndFlush(isA(User.class)))
                 .thenAnswer(invocationOnMock -> {
+                    System.out.println();
                     fakeRepository.add((User) invocationOnMock.getArguments()[0]);
                     return null;
                 });
@@ -107,12 +109,11 @@ public class UserServiceImplTest {
         user.setAuthorities(authorities);
 
 
-        userServiceModel.setUsername(VALID_USERNAME);
-        userServiceModel.setFirstName(VALID_FIRST_NAME);
-        userServiceModel.setLastName(VALID_LAST_NAME);
-        userServiceModel.setPassword(VALID_PASSWORD);
-        userServiceModel.setEmail(VALID_EMAIL);
-        user.setAuthorities(authorities);
+        fakeUserServiceModel.setUsername(VALID_USERNAME);
+        fakeUserServiceModel.setFirstName(VALID_FIRST_NAME);
+        fakeUserServiceModel.setLastName(VALID_LAST_NAME);
+        fakeUserServiceModel.setPassword(VALID_PASSWORD);
+        fakeUserServiceModel.setEmail(VALID_EMAIL);
 
     }
 
@@ -138,32 +139,30 @@ public class UserServiceImplTest {
 
     }
 
-
     @Test(expected = UserAlreadyExistException.class)
     public void registerNewUser_shouldThrowException_WhenUsernameAlreadyExist() throws RoleNotFoundException, UserAlreadyExistException {
 
-        when(userRepository.findFirstByUsername(userServiceModel.getUsername())).thenReturn(Optional.of(user));
+        when(userRepository.findFirstByUsername(fakeUserServiceModel.getUsername())).thenReturn(Optional.of(user));
 
 
-        userService.registerNewUserAccount(userServiceModel);
+        userService.registerNewUserAccount(fakeUserServiceModel);
     }
 
     @Test(expected = UserAlreadyExistException.class)
     public void registerNewUser_shouldThrowException_WhenEmailAlreadyExist() throws RoleNotFoundException, UserAlreadyExistException {
 
-        when(userRepository.findFirstByEmail(userServiceModel.getEmail())).thenReturn(Optional.of(user));
+        when(userRepository.findFirstByEmail(fakeUserServiceModel.getEmail())).thenReturn(Optional.of(user));
 
-        userService.registerNewUserAccount(userServiceModel);
+        userService.registerNewUserAccount(fakeUserServiceModel);
 
     }
-
 
     @Test
     public void registerNewUser_shouldRegisterUser_whenUserDoesNotExistInDB() throws RoleNotFoundException {
         when(userRepository.findFirstByEmail(VALID_EMAIL)).thenReturn(Optional.empty());
         when(userRepository.findFirstByUsername(VALID_USERNAME)).thenReturn(Optional.empty());
 
-        userService.registerNewUserAccount(userServiceModel);
+        userService.registerNewUserAccount(fakeUserServiceModel);
 
         int actual = 1;
         int expected = fakeRepository.size();
@@ -179,7 +178,7 @@ public class UserServiceImplTest {
         when(userRepository.findFirstByEmail(VALID_EMAIL)).thenReturn(Optional.empty());
         when(userRepository.findFirstByUsername(VALID_USERNAME)).thenReturn(Optional.empty());
 
-        userService.registerNewUserAccount(userServiceModel);
+        userService.registerNewUserAccount(fakeUserServiceModel);
 
 
         User user = fakeRepository.get(0);
@@ -197,7 +196,7 @@ public class UserServiceImplTest {
         when(userRepository.findFirstByEmail(VALID_EMAIL)).thenReturn(Optional.empty());
         when(userRepository.findFirstByUsername(VALID_USERNAME)).thenReturn(Optional.empty());
 
-        userService.registerNewUserAccount(userServiceModel);
+        userService.registerNewUserAccount(fakeUserServiceModel);
 
 
         User user = fakeRepository.get(0);
@@ -211,18 +210,18 @@ public class UserServiceImplTest {
     @Test(expected = UserAlreadyExistException.class)
     public void createNewAdmin_shouldThrowException_WhenUsernameAlreadyExist() throws RoleNotFoundException, UserAlreadyExistException {
 
-        when(userRepository.findFirstByUsername(userServiceModel.getUsername())).thenReturn(Optional.of(user));
+        when(userRepository.findFirstByUsername(fakeUserServiceModel.getUsername())).thenReturn(Optional.of(user));
 
 
-        userService.createNewAdminAccount(userServiceModel);
+        userService.createNewAdminAccount(fakeUserServiceModel);
     }
 
     @Test(expected = UserAlreadyExistException.class)
     public void createNewAdmin_shouldThrowException_WhenEmailAlreadyExist() throws RoleNotFoundException, UserAlreadyExistException {
 
-        when(userRepository.findFirstByEmail(userServiceModel.getEmail())).thenReturn(Optional.of(user));
+        when(userRepository.findFirstByEmail(fakeUserServiceModel.getEmail())).thenReturn(Optional.of(user));
 
-        userService.createNewAdminAccount(userServiceModel);
+        userService.createNewAdminAccount(fakeUserServiceModel);
 
     }
 
@@ -231,7 +230,7 @@ public class UserServiceImplTest {
         when(userRepository.findFirstByEmail(VALID_EMAIL)).thenReturn(Optional.empty());
         when(userRepository.findFirstByUsername(VALID_USERNAME)).thenReturn(Optional.empty());
 
-        userService.createNewAdminAccount(userServiceModel);
+        userService.createNewAdminAccount(fakeUserServiceModel);
 
         User user = fakeRepository.get(0);
         String actualRole = "ROLE_ADMIN";
@@ -242,11 +241,49 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void sendTeacherRequest_shouldChangeTeacherRequestToTrue() throws RoleNotFoundException {
+    public void findById_shouldReturnCorrectUser_WhenIdExist() {
+        when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
+        UserServiceModel user2 = this.userService.findById(VALID_ID);
+
+        String actual = VALID_ID;
+        String expected = user2.getId();
 
 
-        System.out.println();
+        assertEquals(actual, expected);
+
+
     }
+
+    @Test(expected = UsernameNotFoundException.class)
+    public void findById_shouldThrowException_WhenIdDoesNotExist() throws RoleNotFoundException {
+        when(userRepository.findById(VALID_ID)).thenReturn(Optional.empty());
+        UserServiceModel user2 = this.userService.findById(VALID_ID);
+
+    }
+
+    @Test
+    public void findByEmail_shouldReturnCorrectUser_WhenEmailExist() throws RoleNotFoundException {
+        when(userRepository.findFirstByEmail(VALID_EMAIL)).thenReturn(Optional.of(user));
+        UserServiceModel user2 = this.userService.findByEmail(VALID_EMAIL);
+
+        String actual = VALID_EMAIL;
+        String expected = user2.getEmail();
+
+
+        assertEquals(actual, expected);
+
+
+    }
+
+    @Test(expected = InvalidEmailException.class)
+    public void findByEmail_shouldThrowException_WhenEmailDoesNotExist() throws RoleNotFoundException {
+        when(userRepository.findFirstByEmail(VALID_EMAIL)).thenReturn(Optional.empty());
+        this.userService.findByEmail(VALID_EMAIL);
+
+    }
+
+
+
   /*   @Test
         public void registerNewUser_shouldThrowException_WhenEmailAlreadyExist() {
             String actual = EMAIL_EXIST_EXCEPTION;

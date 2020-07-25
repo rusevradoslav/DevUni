@@ -82,8 +82,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserServiceModel findById(String id) {
-        User user = this.userRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("User with given id was not found !"));
+        User user = this.userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User with given id was not found !"));
         return this.modelMapper.map(user, UserServiceModel.class);
     }
 
@@ -142,8 +141,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void cancelTeacherRequest(UserServiceModel userServiceModel) {
-        User user = this.modelMapper.map(userServiceModel, User.class);
-        this.userRepository.changeTeacherRequestToFalse(user.getId());
+        this.userRepository.changeTeacherRequestToFalse(userServiceModel.getId());
     }
 
     @Override
@@ -184,11 +182,7 @@ public class UserServiceImpl implements UserService {
 
         return this.userRepository.findAllAdmins().stream().map(user -> {
             UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
-            userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
-            LocalDateTime reg = user.getRegistrationDate();
-            String date = reg.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            System.out.println();
-            userDetailsViewModel.setRegistrationDate(date);
+            setFullNameAndRegistrationDate(user, userDetailsViewModel);
             return userDetailsViewModel;
         }).collect(Collectors.toList());
 
@@ -209,10 +203,7 @@ public class UserServiceImpl implements UserService {
     public List<UserDetailsViewModel> findAllTeachers() {
         return this.userRepository.findAllTeachers().stream().map(user -> {
             UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
-            userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
-            LocalDateTime reg = user.getRegistrationDate();
-            String date = reg.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            userDetailsViewModel.setRegistrationDate(date);
+            setFullNameAndRegistrationDate(user, userDetailsViewModel);
             AboutMeViewModel aboutMeViewModel;
             if (user.getAboutMe() == null) {
                 aboutMeViewModel = this.modelMapper.map(new AboutMe("", ""), AboutMeViewModel.class);
