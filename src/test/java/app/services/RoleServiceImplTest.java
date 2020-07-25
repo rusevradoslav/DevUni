@@ -1,5 +1,6 @@
 package app.services;
 
+
 import app.models.entity.Role;
 import app.models.service.RoleServiceModel;
 import app.repositories.RoleRepository;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static junit.framework.TestCase.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -46,7 +47,7 @@ public class RoleServiceImplTest {
         //instead of saving in db add in fake repository
         when(roleRepository.saveAndFlush(isA(Role.class)))
                 .thenAnswer(invocation -> {
-                    System.out.println();
+
                     fakeRepository.add((Role) invocation.getArguments()[0]);
                     return null;
                 });
@@ -75,6 +76,7 @@ public class RoleServiceImplTest {
         assertEquals(fakeRepository.get(2).getAuthority(), ROLE_TEACHER);
         assertEquals(fakeRepository.get(3).getAuthority(), ROLE_STUDENT);
     }
+
     @Test
     public void seedRoles_shouldDoNothing_whenRepositoryIsNotEmpty() {
         //Arrange
@@ -118,7 +120,7 @@ public class RoleServiceImplTest {
         roleService.findByAuthority("INVALID_ROLE");
     }
 
-    @Test
+
     public void findByAuthorityByName_shouldReturnCorrectRole_WhenAuthorityExist() throws RoleNotFoundException {
         //Arrange
         when(roleRepository.findFirstByAuthority(ROLE_ROOT_ADMIN)).thenReturn(Optional.of(new Role(ROLE_ROOT_ADMIN)));
@@ -130,7 +132,7 @@ public class RoleServiceImplTest {
         String actual = ROLE_ROOT_ADMIN;
         String expected = authority.getAuthority();
 
-        assertEquals(actual,expected);
+        assertEquals(actual, expected);
 
     }
 

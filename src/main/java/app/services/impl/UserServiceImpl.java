@@ -48,16 +48,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        UserDetails user = this.userRepository.findFirstByEmail(email).orElse(null);
-        if (user == null) {
-            throw new UsernameNotFoundException("Invalid user");
-        }
+        UserDetails user = this.userRepository.findFirstByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Invalid user"));
+
         return user;
     }
 
     @Override
-    public void registerNewUserAccount(UserServiceModel userServiceModel) throws UserAlreadyExistException, RoleNotFoundException {
-
+    public UserServiceModel registerNewUserAccount(UserServiceModel userServiceModel) throws UserAlreadyExistException, RoleNotFoundException {
+        System.out.println();
         Set<RoleServiceModel> authorities = new HashSet<>();
         long count = this.userRepository.count();
         if (count == 0) {
@@ -67,16 +66,18 @@ public class UserServiceImpl implements UserService {
         }
         userServiceModel.setAuthorities(authorities);
         userServiceModel.setRegistrationDate(LocalDateTime.now().withNano(0));
-        registerNewUser(userServiceModel);
+
+        return registerNewUser(userServiceModel);
     }
 
     @Override
-    public void createNewAdminAccount(UserServiceModel adminUser) throws UserAlreadyExistException, RoleNotFoundException {
+    public UserServiceModel createNewAdminAccount(UserServiceModel adminUser) throws UserAlreadyExistException, RoleNotFoundException {
+
         Set<RoleServiceModel> authorities = new HashSet<>();
         authorities.add(this.roleService.findByAuthority("ROLE_ADMIN"));
         adminUser.setAuthorities(authorities);
         adminUser.setRegistrationDate(LocalDateTime.now());
-        registerNewUser(adminUser);
+        return registerNewUser(adminUser);
     }
 
     @Override
@@ -274,8 +275,8 @@ public class UserServiceImpl implements UserService {
         this.userRepository.changeRole(role.getId(), user.getId());
     }
 
-    private void registerNewUser(UserServiceModel userServiceModel) {
-
+    private UserServiceModel registerNewUser(UserServiceModel userServiceModel) {
+        System.out.println();
         throwExceptionIfUserExist(userServiceModel.getUsername(), userServiceModel.getEmail());
 
         User user = this.modelMapper.map(userServiceModel, User.class);
@@ -283,7 +284,8 @@ public class UserServiceImpl implements UserService {
         user.setProfilePicture(DEFAULT_PROFILE_PICTURE);
         user.setStatus(true);
 
-        this.userRepository.saveAndFlush(user);
+
+        return this.modelMapper.map(this.userRepository.saveAndFlush(user), UserServiceModel.class);
     }
 
     private void throwExceptionIfUserExist(String username, String email) {
@@ -296,12 +298,11 @@ public class UserServiceImpl implements UserService {
         User userWithEmail = this.userRepository.findFirstByEmail(email).orElse(null);
 
         if (userWithEmail != null) {
-             throw  new UserAlreadyExistException(
+            throw new UserAlreadyExistException(
                     "There is an account with that email address: "
                             + email);
         }
     }
-
 
     private boolean emailExist(String email) {
         return this.userRepository.findFirstByEmail(email).orElse(null) != null;

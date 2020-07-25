@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface UserService extends UserDetailsService{
-    void registerNewUserAccount(UserServiceModel map) throws UserAlreadyExistException, RoleNotFoundException;
+    UserServiceModel registerNewUserAccount(UserServiceModel map) throws UserAlreadyExistException, RoleNotFoundException;
 
     UserServiceModel findByEmail(String email) throws InvalidEmailException;
 
@@ -48,7 +48,7 @@ public interface UserService extends UserDetailsService{
 
     void changeRoleToAdmin(UserServiceModel user) throws RoleNotFoundException;
 
-    void createNewAdminAccount(UserServiceModel map) throws UserAlreadyExistException, RoleNotFoundException;
+    UserServiceModel createNewAdminAccount(UserServiceModel map) throws UserAlreadyExistException, RoleNotFoundException;
 
     void sentTeacherRequest(UserServiceModel userServiceModel);
 
