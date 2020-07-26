@@ -22,7 +22,7 @@ public class AboutMe extends BaseEntity {
     private String knowledgeLevel;
 
     @Column(columnDefinition = "TEXT")
-    @Length(min = 1,max = 300,message = "Knowledge level must be between 1 and 300 characters")
+    @Length(min = 100,max = 300,message = "Knowledge level must be between 100 and 300 characters")
     private String selfDescription;
 
 

@@ -2,6 +2,7 @@ package app.services.impl;
 
 import app.error.InvalidEmailException;
 import app.error.UserAlreadyExistException;
+import app.error.UserNotFoundException;
 import app.models.entity.AboutMe;
 import app.models.entity.Role;
 import app.models.entity.User;
@@ -82,7 +83,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserServiceModel findById(String id) {
-        User user = this.userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User with given id was not found !"));
+        User user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
         return this.modelMapper.map(user, UserServiceModel.class);
     }
 
@@ -98,28 +99,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserServiceModel findByName(String username) {
-        System.out.println();
-        User user = this.userRepository.findFirstByUsername(username).orElse(null);
-        if (user != null) {
-            AboutMe aboutMe = user.getAboutMe();
-            if (aboutMe != null) {
-                AboutMeServiceModel aboutMeServiceModel = this.modelMapper.map(aboutMe, AboutMeServiceModel.class);
-                UserServiceModel userServiceModel = this.modelMapper.map(user, UserServiceModel.class);
-                userServiceModel.setAboutMeServiceModel(aboutMeServiceModel);
-                return userServiceModel;
-            } else {
-                return this.modelMapper.map(user, UserServiceModel.class);
+        User user = this.userRepository.findFirstByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User with given username does not exist! "));
 
-            }
+
+        AboutMe aboutMe = user.getAboutMe();
+        if (aboutMe != null) {
+            AboutMeServiceModel aboutMeServiceModel = this.modelMapper.map(aboutMe, AboutMeServiceModel.class);
+            UserServiceModel userServiceModel = this.modelMapper.map(user, UserServiceModel.class);
+            userServiceModel.setAboutMeServiceModel(aboutMeServiceModel);
+            return userServiceModel;
         } else {
-            return null;
+            return this.modelMapper.map(user, UserServiceModel.class);
+
         }
+
 
     }
 
     @Override
     public UserDetailsViewModel getUserDetailsByUsername(String username) {
-        User user = this.userRepository.findFirstByUsername(username).orElse(null);
+        User user = this.userRepository.findFirstByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User with given username does not exist! "));
         UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
         setFullNameAndRegistrationDate(user, userDetailsViewModel);
         return userDetailsViewModel;
@@ -136,7 +135,6 @@ public class UserServiceImpl implements UserService {
         Role role = this.roleService.findAuthorityByName("ROLE_TEACHER");
         this.userRepository.changeRole(role.getId(), user.getId());
         this.userRepository.changeTeacherRequestToFalse(user.getId());
-
     }
 
     @Override
@@ -200,6 +198,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserDetailsViewModel> findAllStudentsWithRequests() {
+
+        return this.userRepository.findAllStudentsWithRequests().stream().map(user -> {
+            UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
+            setFullNameAndRegistrationDate(user, userDetailsViewModel);
+            return userDetailsViewModel;
+        }).collect(Collectors.toList());
+
+    }
+
+    @Override
     public List<UserDetailsViewModel> findAllTeachers() {
         return this.userRepository.findAllTeachers().stream().map(user -> {
             UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
@@ -215,17 +224,6 @@ public class UserServiceImpl implements UserService {
 
             return userDetailsViewModel;
         }).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<UserDetailsViewModel> findAllStudentsWithRequests() {
-
-        return this.userRepository.findAllStudentsWithRequests().stream().map(user -> {
-            UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
-            setFullNameAndRegistrationDate(user, userDetailsViewModel);
-            return userDetailsViewModel;
-        }).collect(Collectors.toList());
-
     }
 
     @Override
@@ -300,6 +298,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void setFullNameAndRegistrationDate(User user, UserDetailsViewModel userDetailsViewModel) {
+
         userDetailsViewModel.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
         LocalDateTime reg = user.getRegistrationDate();
         String date = reg.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));

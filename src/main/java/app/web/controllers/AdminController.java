@@ -38,7 +38,7 @@ public class AdminController {
     @PageTitle("Admin Home Page")
     public String adminHomePage(Model model, HttpSession httpSession, Principal principal) {
 
-        System.out.println();
+
         UserServiceModel loggedUser = this.userService.findByName(principal.getName());
         httpSession.setAttribute("avatarImg", loggedUser.getProfilePicture());
         List<UserDetailsViewModel> allAdmins = this.userService.findAllAdmins();
