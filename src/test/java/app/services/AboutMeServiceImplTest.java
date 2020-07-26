@@ -1,24 +1,35 @@
 package app.services;
 
-        import app.models.entity.AboutMe;
+import app.models.entity.AboutMe;
+import app.models.entity.User;
+import app.models.service.AboutMeServiceModel;
+import app.models.service.UserServiceModel;
 import app.repositories.AboutMeRepository;
 import app.services.impl.AboutMeServiceImpl;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
 
-import java.util.List;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
-class AboutMeServiceImplTest {
+public class AboutMeServiceImplTest {
+    private static String VALID_ID = "validId";
+    private static String VALID_KNOWLEDGE_LEVEL = "Java Master";
     private static String VALID_DESCRIPTION = "Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
             " Donec id arcu eu lacus semper gravida vulputate ut " +
             "erat. Mauris ultricies nisl id justo nisi.";
 
-    private static List<AboutMe> fakeRepository;
+    private User user;
+    private UserServiceModel userServiceModel;
+    private AboutMeServiceModel aboutMeServiceModel;
 
     @InjectMocks
     private AboutMeServiceImpl aboutMeService;
@@ -30,44 +41,50 @@ class AboutMeServiceImplTest {
     @Mock
     private UserService userService;
 
-/*
 
     @Before
     public void init() {
-        fakeRepository = new ArrayList<>();
-        when(aboutMeRepository.saveAndFlush(isA(AboutMe.class)))
-                .thenAnswer(invocation -> {
-                    fakeRepository.add((AboutMe) invocation.getArguments()[0]);
-                    return null;
-                });
+        ModelMapper actualMapper = new ModelMapper();
+        when(modelMapper.map(any(UserServiceModel.class), eq(User.class)))
+                .thenAnswer(invocationOnMock ->
+                        actualMapper.map(invocationOnMock.getArguments()[0], User.class));
+
+        when(modelMapper.map(any(User.class), eq(UserServiceModel.class)))
+                .thenAnswer(invocationOnMock ->
+                        actualMapper.map(invocationOnMock.getArguments()[0], UserServiceModel.class));
+
+        when(modelMapper.map(any(AboutMeServiceModel.class), eq(AboutMe.class)))
+                .thenAnswer(invocationOnMock ->
+                        actualMapper.map(invocationOnMock.getArguments()[0], AboutMe.class));
+
+        when(modelMapper.map(any(AboutMe.class), eq(AboutMeServiceModel.class)))
+                .thenAnswer(invocationOnMock ->
+                        actualMapper.map(invocationOnMock.getArguments()[0], AboutMeServiceModel.class));
+
+
+        user = new User();
+        user.setId("validUserAId");
+        user.setUsername("validUsername");
+
+        userServiceModel = this.modelMapper.map(user, UserServiceModel.class);
     }
-*/
 
-/*    @Test
-public void addTeacherAboutMe_shouldCreateNewAboutMe_WhenUserAboutMeIsNull() throws RoleNotFoundException {
-    AboutMe aboutMe = new AboutMe("Java Master", VALID_DESCRIPTION);
-    UserServiceModel user = new UserServiceModel();
-    user.setUsername("username");
-    user.setFirstName("firstName");
-    user.setLastName("lastName");
-    user.setEmail("valid@gmail.com");
-    user.setPassword("validPassword");
-    user.setAuthorities(new HashSet<>());
-    user.setRegistrationDate(LocalDateTime.now());
-    user.setProfilePicture("validProfilePicture");
-    System.out.println();
-    AboutMeServiceModel aboutMeServiceModel = this.modelMapper.map(aboutMe, AboutMeServiceModel.class);
+    @Test
+    public void addTeacherAboutMe_ShouldCreateNewAboutMeForTeacher_WhenTeacherDoesNOTHaveAboutMeAndCallAboutMeRepository() {
+        AboutMeServiceModel aboutMeServiceModel = new AboutMeServiceModel();
+        aboutMeServiceModel.setId(VALID_ID);
+        aboutMeServiceModel.setKnowledgeLevel(VALID_KNOWLEDGE_LEVEL);
+        aboutMeServiceModel.setId(VALID_DESCRIPTION);
+        aboutMeService.addTeacherAboutMe(userServiceModel, aboutMeServiceModel);
+    }
+    @Test
+    public void addTeacherAboutMe_ShouldUpdateAboutMeForTeacher_WhenTeacherHaveAboutMeAndCallAboutMeRepository(){
+        AboutMeServiceModel aboutMeServiceModel = new AboutMeServiceModel();
+        aboutMeServiceModel.setId(VALID_ID);
+        aboutMeServiceModel.setKnowledgeLevel(VALID_KNOWLEDGE_LEVEL);
+        aboutMeServiceModel.setId(VALID_DESCRIPTION);
+        userServiceModel.setAboutMeServiceModel(aboutMeServiceModel);
+        aboutMeService.addTeacherAboutMe(userServiceModel, aboutMeServiceModel);
+    }
 
-
-    aboutMeService.addTeacherAboutMe(user, aboutMeServiceModel);
-
-    System.out.println();
-
-    int expected = 1;
-    int actual = fakeRepository.size();
-
-    assertEquals(expected, actual);
-    assertEquals(fakeRepository.get(0).getKnowledgeLevel(), aboutMe.getKnowledgeLevel());
-
-}*/
 }

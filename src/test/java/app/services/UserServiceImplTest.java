@@ -45,13 +45,8 @@ public class UserServiceImplTest {
     private static final String VALID_EMAIL = "radorusevcrypto@gmail.com";
     private static final String INVALID_EMAIL = "invalid@gmail.com";
     private static final String VALID_EDITED_EMAIL = "radorusevcrypto_new@gmail.com";
-    private static final String USERNAME_EXIST_EXCEPTION = "There is an account with that username : rusevrado";
-    private static final String EMAIL_EXIST_EXCEPTION = "There is an account with that email address: radorusevcrypto@gmail.com";
 
     private static final String VALID_IMAGE_URL = "[random_url]";
-
-
-    private static final String WRONG_OLD_PASSWORD = "[wrong_old_password]";
 
     private static final String VALID_ABOUT_ME_ID = "validAboutMeId";
     private static final String VALID_KNOWLEDGE_LEVEL = "Java Developer";
@@ -63,7 +58,7 @@ public class UserServiceImplTest {
 
     private User user;
     private UserServiceModel fakeUserServiceModel;
-    private UserDetailsViewModel fakeUserDetailsViewModel;
+
 
     private AboutMe aboutMe;
     private AboutMeServiceModel fakeAboutMeServiceModel;
@@ -153,7 +148,6 @@ public class UserServiceImplTest {
         fakeUserServiceModel = modelMapper.map(user, UserServiceModel.class);
         fakeUserServiceModel.setAboutMeServiceModel(fakeAboutMeServiceModel);
 
-        fakeUserDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
 
 
     }
