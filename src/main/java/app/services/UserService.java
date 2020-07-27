@@ -50,7 +50,7 @@ public interface UserService extends UserDetailsService{
 
     UserServiceModel createNewAdminAccount(UserServiceModel map) throws UserAlreadyExistException, RoleNotFoundException;
 
-    void sentTeacherRequest(UserServiceModel userServiceModel);
+    UserServiceModel sentTeacherRequest(UserServiceModel userServiceModel);
 
     void confirmTeacherRequest(UserServiceModel userServiceModel) throws RoleNotFoundException;
 

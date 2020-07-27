@@ -125,8 +125,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void sentTeacherRequest(UserServiceModel userServiceModel) {
+    public UserServiceModel sentTeacherRequest(UserServiceModel userServiceModel) {
         this.userRepository.changeTeacherRequestToTrue(userServiceModel.getId());
+        User user = userRepository.findById(userServiceModel.getId()).orElse(null);
+        return this.modelMapper.map(user, UserServiceModel.class);
+
     }
 
     @Override
