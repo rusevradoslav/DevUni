@@ -127,48 +127,59 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserServiceModel sentTeacherRequest(UserServiceModel userServiceModel) {
         this.userRepository.changeTeacherRequestToTrue(userServiceModel.getId());
-        User user = userRepository.findById(userServiceModel.getId()).orElse(null);
+        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
         return this.modelMapper.map(user, UserServiceModel.class);
 
     }
 
     @Override
-    public void confirmTeacherRequest(UserServiceModel userServiceModel) throws RoleNotFoundException {
-        User user = this.modelMapper.map(userServiceModel, User.class);
+    public UserServiceModel confirmTeacherRequest(UserServiceModel userServiceModel) throws RoleNotFoundException {
         Role role = this.roleService.findAuthorityByName("ROLE_TEACHER");
-        this.userRepository.changeRole(role.getId(), user.getId());
-        this.userRepository.changeTeacherRequestToFalse(user.getId());
-    }
-
-    @Override
-    public void cancelTeacherRequest(UserServiceModel userServiceModel) {
+        this.userRepository.changeRole(role.getId(), userServiceModel.getId());
         this.userRepository.changeTeacherRequestToFalse(userServiceModel.getId());
+        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
+        return this.modelMapper.map(user, UserServiceModel.class);
     }
 
     @Override
-    public void setAboutMeToTheTeacher(AboutMe aboutMe, User user) {
-        this.userRepository.updateTeacherAboutMe(aboutMe.getId(), user.getId());
+    public UserServiceModel cancelTeacherRequest(UserServiceModel userServiceModel) {
+        this.userRepository.changeTeacherRequestToFalse(userServiceModel.getId());
+        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
+        return this.modelMapper.map(user, UserServiceModel.class);
+
+    }
+
+    @Override
+    public UserServiceModel setAboutMeToTheTeacher(AboutMe newAboutMe, User newUser) {
+        this.userRepository.updateTeacherAboutMe(newAboutMe.getId(), newUser.getId());
+        User user = userRepository.findById(newUser.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
+        AboutMeServiceModel aboutMeServiceModel = this.modelMapper.map(user.getAboutMe(),AboutMeServiceModel.class);
+        UserServiceModel userServiceModel = this.modelMapper.map(user, UserServiceModel.class);
+        userServiceModel.setAboutMeServiceModel(aboutMeServiceModel);
+        return userServiceModel;
     }
 
 
     @Override
-    public void changePassword(UserServiceModel userServiceModel, String newPassword) {
-        User user = this.modelMapper.map(userServiceModel, User.class);
+    public UserServiceModel changePassword(UserServiceModel userServiceModel, String newPassword) {
         String newEncodedPassword = bCryptPasswordEncoder.encode(newPassword);
-        this.userRepository.changePassword(user.getId(), newEncodedPassword);
+        this.userRepository.changePassword(userServiceModel.getId(), newEncodedPassword);
+        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
+        return this.modelMapper.map(user, UserServiceModel.class);
 
     }
 
     @Override
-    public void changeEmail(UserServiceModel userServiceModel, String newEmail) {
-        User user = this.modelMapper.map(userServiceModel, User.class);
-
+    public UserServiceModel changeEmail(UserServiceModel userServiceModel, String newEmail) {
         if (emailExist(newEmail)) {
             throw new UserAlreadyExistException(
                     "There is an account with that email address: "
                             + newEmail);
         }
-        this.userRepository.changeEmail(user.getId(), newEmail);
+        this.userRepository.changeEmail(userServiceModel.getId(), newEmail);
+
+        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
+        return this.modelMapper.map(user, UserServiceModel.class);
 
     }
 
@@ -230,45 +241,50 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void blockUser(UserServiceModel userServiceModel) {
-        User user = this.modelMapper.map(userServiceModel, User.class);
-        this.userRepository.blockUser(user.getId());
+    public UserServiceModel blockUser(UserServiceModel userServiceModel) {
+        this.userRepository.blockUser(userServiceModel.getId());
+        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
+        return this.modelMapper.map(user, UserServiceModel.class);
 
     }
 
     @Override
-    public void activateUser(UserServiceModel userServiceModel) {
-        User user = this.modelMapper.map(userServiceModel, User.class);
-        this.userRepository.activateUser(user.getId());
+    public UserServiceModel activateUser(UserServiceModel userServiceModel) {
+
+        this.userRepository.activateUser(userServiceModel.getId());
+        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
+        return this.modelMapper.map(user, UserServiceModel.class);
     }
 
     @Override
-    public void changeRoleToStudent(UserServiceModel userServiceModel) throws RoleNotFoundException {
-
-        User user = this.modelMapper.map(userServiceModel, User.class);
+    public UserServiceModel changeRoleToStudent(UserServiceModel userServiceModel) throws RoleNotFoundException {
         Role role = this.roleService.findAuthorityByName("ROLE_STUDENT");
-        this.userRepository.changeRole(role.getId(), user.getId());
+        this.userRepository.changeRole(role.getId(), userServiceModel.getId());
+        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
+        return this.modelMapper.map(user, UserServiceModel.class);
 
     }
 
     @Override
-    public void changeRoleToTeacher(UserServiceModel userServiceModel) throws RoleNotFoundException {
-        User user = this.modelMapper.map(userServiceModel, User.class);
+    public UserServiceModel changeRoleToTeacher(UserServiceModel userServiceModel) throws RoleNotFoundException {
         Role role = this.roleService.findAuthorityByName("ROLE_TEACHER");
+        this.userRepository.changeRole(role.getId(), userServiceModel.getId());
+        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
+        System.out.println();
+        return this.modelMapper.map(user, UserServiceModel.class);
 
-        this.userRepository.changeRole(role.getId(), user.getId());
+
     }
 
     @Override
-    public void changeRoleToAdmin(UserServiceModel userServiceModel) throws RoleNotFoundException {
-        User user = this.modelMapper.map(userServiceModel, User.class);
+    public UserServiceModel changeRoleToAdmin(UserServiceModel userServiceModel) throws RoleNotFoundException {
         Role role = this.roleService.findAuthorityByName("ROLE_ADMIN");
-
-        this.userRepository.changeRole(role.getId(), user.getId());
+        this.userRepository.changeRole(role.getId(), userServiceModel.getId());
+        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
+        return this.modelMapper.map(user, UserServiceModel.class);
     }
 
     private UserServiceModel registerNewUser(UserServiceModel userServiceModel) {
-        System.out.println();
         throwExceptionIfUserExist(userServiceModel.getUsername(), userServiceModel.getEmail());
 
         User user = this.modelMapper.map(userServiceModel, User.class);

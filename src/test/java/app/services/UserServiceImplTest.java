@@ -16,16 +16,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.management.relation.RoleNotFoundException;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -39,17 +36,17 @@ public class UserServiceImplTest {
     private static final String VALID_ID = "validId";
     private static final String VALID_USERNAME = "rusevrado";
     private static final String VALID_PASSWORD = "1234";
-    private static final String VALID_EDITED_PASSWORD = "12345";
+    private static final String VALID_NEW_PASSWORD = "12345";
     private static final String VALID_FIRST_NAME = "Radoslav";
     private static final String VALID_LAST_NAME = "Rusev";
     private static final String VALID_EMAIL = "radorusevcrypto@gmail.com";
     private static final String INVALID_EMAIL = "invalid@gmail.com";
-    private static final String VALID_EDITED_EMAIL = "radorusevcrypto_new@gmail.com";
+    private static final String VALID_NEW_EMAIL = "radorusevcrypto_new@gmail.com";
 
     private static final String VALID_IMAGE_URL = "[random_url]";
 
     private static final String VALID_ABOUT_ME_ID = "validAboutMeId";
-    private static final String VALID_KNOWLEDGE_LEVEL = "Java Developer";
+    private static final String VALID_KNOWLEDGE_LEVEL = "Java Master";
     private static final String VALID_SELF_DESCRIPTION = "Java Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus id massa fermentum nullam sodales.";
 
     Set<Role> authorities = new HashSet<>();
@@ -145,50 +142,58 @@ public class UserServiceImplTest {
 
     @Test
     public void loadUserByUsername_shouldReturnUser_WhenUserExist() {
+        //Arrange
         when(userRepository.findFirstByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
+        //Act
         UserDetails userDetails = userService.loadUserByUsername(VALID_EMAIL);
 
+        //Assert
         String actual = user.getUsername();
         String expected = userDetails.getUsername();
-
-        System.out.println();
 
         assertEquals(actual, expected);
     }
 
     @Test(expected = UsernameNotFoundException.class)
     public void loadUserByUsername_shouldThrowException_WhenUserDoesNotExist() {
+        //Arrange
         when(userRepository.findFirstByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
+        //Act //Assert
         userService.loadUserByUsername(INVALID_EMAIL);
 
     }
 
     @Test(expected = UserAlreadyExistException.class)
     public void registerNewUser_shouldThrowException_WhenUsernameAlreadyExist() throws RoleNotFoundException, UserAlreadyExistException {
-
+        //Arrange
         when(userRepository.findFirstByUsername(testUserServiceModel.getUsername())).thenReturn(Optional.of(user));
 
 
+        //Act //Assert
         userService.registerNewUserAccount(testUserServiceModel);
     }
 
     @Test(expected = UserAlreadyExistException.class)
     public void registerNewUser_shouldThrowException_WhenEmailAlreadyExist() throws RoleNotFoundException, UserAlreadyExistException {
-
+        //Arrange
         when(userRepository.findFirstByEmail(testUserServiceModel.getEmail())).thenReturn(Optional.of(user));
 
+        //Act //Assert
         userService.registerNewUserAccount(testUserServiceModel);
     }
 
     @Test
     public void registerNewUser_shouldRegisterUser_whenUserDoesNotExistInDB() throws RoleNotFoundException {
+        //Arrange
         when(userRepository.findFirstByEmail(VALID_EMAIL)).thenReturn(Optional.empty());
         when(userRepository.findFirstByUsername(VALID_USERNAME)).thenReturn(Optional.empty());
-
+        System.out.println();
+        //Act
         userService.registerNewUserAccount(testUserServiceModel);
 
+        //Assert
         int actual = 1;
         int expected = testRepository.size();
 
@@ -198,14 +203,15 @@ public class UserServiceImplTest {
 
     @Test
     public void registerFirstUser_shouldHaveRole_ROLE_ROOT_ADMIN() throws RoleNotFoundException {
-
+        //Arrange
         when(userRepository.count()).thenReturn(0L);
         when(userRepository.findFirstByEmail(VALID_EMAIL)).thenReturn(Optional.empty());
         when(userRepository.findFirstByUsername(VALID_USERNAME)).thenReturn(Optional.empty());
 
+        //Act
         userService.registerNewUserAccount(testUserServiceModel);
 
-
+        //Assert
         User user = testRepository.get(0);
         String actualRole = "ROLE_ROOT_ADMIN";
         String expectedRole = user.getAuthorities().stream().findFirst().get().getAuthority();
@@ -217,13 +223,15 @@ public class UserServiceImplTest {
     @Test
     public void registerFirstUser_shouldHaveRole_ROLE_STUDENT() throws RoleNotFoundException {
 
+        //Arrange
         when(userRepository.count()).thenReturn(1L);
         when(userRepository.findFirstByEmail(VALID_EMAIL)).thenReturn(Optional.empty());
         when(userRepository.findFirstByUsername(VALID_USERNAME)).thenReturn(Optional.empty());
 
+        //Act
         userService.registerNewUserAccount(testUserServiceModel);
 
-
+        //Assert
         User user = testRepository.get(0);
         String actualRole = "ROLE_STUDENT";
         String expectedRole = user.getAuthorities().stream().findFirst().get().getAuthority();
@@ -234,56 +242,66 @@ public class UserServiceImplTest {
 
     @Test(expected = UserAlreadyExistException.class)
     public void createNewAdmin_shouldThrowException_WhenUsernameAlreadyExist() throws RoleNotFoundException, UserAlreadyExistException {
-
+        //Arrange
         when(userRepository.findFirstByUsername(testUserServiceModel.getUsername())).thenReturn(Optional.of(user));
 
-
+        //Act //Assert
         userService.createNewAdminAccount(testUserServiceModel);
     }
 
     @Test(expected = UserAlreadyExistException.class)
     public void createNewAdmin_shouldThrowException_WhenEmailAlreadyExist() throws RoleNotFoundException, UserAlreadyExistException {
-
+        //Arrange
         when(userRepository.findFirstByEmail(testUserServiceModel.getEmail())).thenReturn(Optional.of(user));
 
+        //Act //Assert
         userService.createNewAdminAccount(testUserServiceModel);
 
     }
 
     @Test
     public void createNewAdmin_shouldThrowExcept_WhenUserAlreadyExist() throws RoleNotFoundException {
+        //Arrange
         when(userRepository.findFirstByEmail(VALID_EMAIL)).thenReturn(Optional.empty());
         when(userRepository.findFirstByUsername(VALID_USERNAME)).thenReturn(Optional.empty());
 
+        //Act
         userService.createNewAdminAccount(testUserServiceModel);
 
+        //Assert
         User user = testRepository.get(0);
         String actualRole = "ROLE_ADMIN";
         String expectedRole = user.getAuthorities().stream().findFirst().get().getAuthority();
-        System.out.println();
+
         assertEquals(actualRole, expectedRole);
 
     }
 
     @Test
     public void findById_shouldReturnCorrectUser_WhenIdExist() {
+        //Arrange
         when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
-        UserServiceModel user2 = this.userService.findById(VALID_ID);
 
+        //Act
+        UserServiceModel userServiceModel = this.userService.findById(VALID_ID);
+
+        //Assert
         String actual = VALID_ID;
-        String expected = user2.getId();
+        String expected = userServiceModel.getId();
 
         assertEquals(actual, expected);
-
-
     }
 
 
     @Test
     public void findByEmail_shouldReturnCorrectUser_WhenEmailExist() {
+        //Arrange
         when(userRepository.findFirstByEmail(VALID_EMAIL)).thenReturn(Optional.of(user));
+
+        //Act
         UserServiceModel user2 = this.userService.findByEmail(VALID_EMAIL);
 
+        //Assert
         String actual = VALID_EMAIL;
         String expected = user2.getEmail();
 
@@ -293,17 +311,22 @@ public class UserServiceImplTest {
 
     @Test(expected = InvalidEmailException.class)
     public void findByEmail_shouldThrowException_WhenEmailDoesNotExist() {
+        //Arrange
         when(userRepository.findFirstByEmail(VALID_EMAIL)).thenReturn(Optional.empty());
+        //Act //Assert
         this.userService.findByEmail(VALID_EMAIL);
     }
 
 
     @Test
     public void findByName_shouldReturnCorrectUserWithAboutMe_WhenUserNameExist() {
+        //Arrange
         when(userRepository.findFirstByUsername(VALID_USERNAME)).thenReturn(Optional.of(user));
 
+        //Act
         UserServiceModel userServiceModel = userService.findByName(VALID_USERNAME);
 
+        //Assert
         String actual = testAboutMeServiceModel.getKnowledgeLevel();
 
         String expected = userServiceModel.getAboutMeServiceModel().getKnowledgeLevel();
@@ -315,11 +338,13 @@ public class UserServiceImplTest {
 
     @Test
     public void findByName_shouldReturnCorrectUserWithNullAboutMe_WhenUserNameExist() {
-        System.out.println();
+        //Arrange
         when(userRepository.findFirstByUsername(VALID_USERNAME)).thenReturn(Optional.of(user));
         user.setAboutMe(null);
+        //Act
         UserServiceModel userServiceModel = userService.findByName(VALID_USERNAME);
 
+        //Assert
         String actual = null;
 
         AboutMeServiceModel expected = userServiceModel.getAboutMeServiceModel();
@@ -331,18 +356,23 @@ public class UserServiceImplTest {
 
     @Test(expected = UsernameNotFoundException.class)
     public void findByName_shouldThrowException_WhenUsernameDoesNotExist() {
+        //Arrange
         when(userRepository.findFirstByUsername(VALID_USERNAME)).thenReturn(Optional.empty());
-        System.out.println();
+
+        //Act
         this.userService.findByName(VALID_USERNAME);
 
     }
 
     @Test
     public void getUserDetailsByUsername_shouldReturnCorrectUser_WhenEmailExist() {
+        //Arrange
         when(userRepository.findFirstByUsername(VALID_USERNAME)).thenReturn(Optional.of(user));
 
+        //Act
         UserDetailsViewModel userDetailsViewModel = this.userService.getUserDetailsByUsername(VALID_USERNAME);
 
+        //Assert
         String actual = VALID_USERNAME;
 
         String expected = userDetailsViewModel.getUsername();
@@ -353,106 +383,194 @@ public class UserServiceImplTest {
 
     @Test(expected = UsernameNotFoundException.class)
     public void getUserDetailsByUsername_shouldThrowException_WhenEmailDoesNotExist() {
+        //Arrange
         when(userRepository.findFirstByUsername(VALID_USERNAME)).thenReturn(Optional.empty());
+        //Act
         this.userService.getUserDetailsByUsername(VALID_USERNAME);
     }
 
     @Test
     public void sentTeacherRequest_shouldCallUserRepository() {
+        //Arrange
         user.setTeacherRequest(true);
         when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
+        //Act
         UserServiceModel userServiceModel = userService.sentTeacherRequest(testUserServiceModel);
 
-        boolean expected = true;
-        boolean actual = userServiceModel.isTeacherRequest();
+        //Assert
+        boolean actual = true;
+        boolean expected = userServiceModel.isTeacherRequest();
 
-        assertEquals(expected, actual);
+        assertEquals(actual, expected);
 
     }
 
     @Test
     public void confirmTeacherRequest_shouldCallUserRepository() throws RoleNotFoundException {
+        //Arrange
         Role role = new Role("ROLE_TEACHER");
         when(roleService.findAuthorityByName("ROLE_TEACHER")).thenReturn(role);
-        userService.confirmTeacherRequest(testUserServiceModel);
+        when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
+        //Act
+        UserServiceModel userServiceModel = userService.confirmTeacherRequest(testUserServiceModel);
 
-    }
+        //Assert
+        boolean actual = false;
+        boolean expected = userServiceModel.isTeacherRequest();
 
-    @Test
-    public void changeRoleToTeacher_shouldCallUserRepository() throws RoleNotFoundException {
-        Role role = new Role("ROLE_TEACHER");
-        when(roleService.findAuthorityByName("ROLE_TEACHER")).thenReturn(role);
-        userService.changeRoleToTeacher(testUserServiceModel);
+        assertEquals(actual, expected);
 
-    }
-
-    @Test
-    public void changeRoleToStudent_shouldCallUserRepository() throws RoleNotFoundException {
-        Role role = new Role("ROLE_STUDENT");
-        when(roleService.findAuthorityByName("ROLE_STUDENT")).thenReturn(role);
-        userService.changeRoleToStudent(testUserServiceModel);
-
-    }
-
-    @Test
-    public void changeRoleToAdmin_shouldCallUserRepository() throws RoleNotFoundException {
-        Role role = new Role("ROLE_ADMIN");
-        when(roleService.findAuthorityByName("ROLE_ADMIN")).thenReturn(role);
-        userService.changeRoleToAdmin(testUserServiceModel);
 
     }
 
     @Test
     public void cancelTeacherRequest_shouldCallUserRepository() {
-        userService.cancelTeacherRequest(testUserServiceModel);
+        //Arrange
+        when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
+        //Act
+        UserServiceModel userServiceModel = userService.cancelTeacherRequest(testUserServiceModel);
+
+        //Assert
+        boolean actual = false;
+        boolean expected = userServiceModel.isTeacherRequest();
+
+        assertEquals(actual, expected);
+
+    }
+
+    @Test
+    public void changeRoleToTeacher_shouldCallUserRepository() throws RoleNotFoundException {
+        //Arrange
+        Set<Role> authorities = new HashSet<>();
+        Role role = new Role("ROLE_TEACHER");
+        authorities.add(role);
+        user.setAuthorities(authorities);
+        when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
+        when(roleService.findAuthorityByName("ROLE_TEACHER")).thenReturn(role);
+
+        //Act
+        UserServiceModel userServiceModel = userService.changeRoleToTeacher(testUserServiceModel);
+
+        //Assert
+        String actual = "ROLE_TEACHER";
+        String expected = userServiceModel.getAuthorities().stream().findFirst().get().getAuthority();
+
+        assertEquals(actual, expected);
+
+    }
+
+
+    @Test
+    public void changeRoleToStudent_shouldCallUserRepository() throws RoleNotFoundException {
+        //Arrange
+
+        Set<Role> authorities = new HashSet<>();
+        Role role = new Role("ROLE_STUDENT");
+        authorities.add(role);
+        user.setAuthorities(authorities);
+        when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
+        when(roleService.findAuthorityByName("ROLE_STUDENT")).thenReturn(role);
+
+        //Act
+        UserServiceModel userServiceModel = userService.changeRoleToStudent(testUserServiceModel);
+
+
+        //Assert
+        String actual = "ROLE_STUDENT";
+        String expected = userServiceModel.getAuthorities().stream().findFirst().get().getAuthority();
+
+        assertEquals(actual, expected);
+
+
+    }
+
+    @Test
+    public void changeRoleToAdmin_shouldCallUserRepository() throws RoleNotFoundException {
+        //Arrange
+        Set<Role> authorities = new HashSet<>();
+        Role role = new Role("ROLE_ADMIN");
+        authorities.add(role);
+        user.setAuthorities(authorities);
+        when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
+        when(roleService.findAuthorityByName("ROLE_ADMIN")).thenReturn(role);
+        //Act
+        UserServiceModel userServiceModel = userService.changeRoleToAdmin(testUserServiceModel);
+
+        //Assert
+        String actual = "ROLE_ADMIN";
+        String expected = userServiceModel.getAuthorities().stream().findFirst().get().getAuthority();
+
+        assertEquals(actual, expected);
+
+
     }
 
     @Test
     public void setAboutMeToTheTeacher_shouldUpdateTeacherAboutMeAndCallUserRepository() {
-        userService.setAboutMeToTheTeacher(aboutMe, user);
+        //Arrange
+        when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
+
+        //Act
+        UserServiceModel userServiceModel = userService.setAboutMeToTheTeacher(aboutMe, user);
+
+        //Assert
+        String actual = "Java Master";
+        String expected = userServiceModel.getAboutMeServiceModel().getKnowledgeLevel();
+        assertEquals(actual, expected);
+
     }
 
     @Test
     public void changePassword_shouldChangeUserPasswordAndCallUserRepository() {
-        userService.changePassword(testUserServiceModel, VALID_EDITED_PASSWORD);
+        //Arrange
+        String newEncodedPassword = bCryptPasswordEncoder.encode(VALID_NEW_PASSWORD);
+        user.setPassword(newEncodedPassword);
+        when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
+
+        //Act
+        UserServiceModel userServiceModel = userService.changePassword(testUserServiceModel, VALID_NEW_PASSWORD);
+
+        //Assert
+        String actual = newEncodedPassword;
+        String expected = userServiceModel.getPassword();
+
+        assertEquals(actual, expected);
     }
 
     @Test
     public void changeEmail_shouldChangeEmailAndCallUserRepository() {
-        when(userRepository.findFirstByEmail(VALID_EMAIL)).thenReturn(Optional.of(user));
-        userService.changeEmail(testUserServiceModel, VALID_EDITED_EMAIL);
+        //Arrange
+        user.setEmail(VALID_NEW_EMAIL);
+        when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
+        //Act
+        UserServiceModel userServiceModel = userService.changeEmail(testUserServiceModel, VALID_NEW_EMAIL);
+        //Assert
+        String actual = VALID_NEW_EMAIL;
+        String expected = userServiceModel.getEmail();
+
+        assertEquals(actual,expected);
     }
 
     @Test(expected = UserAlreadyExistException.class)
     public void changeEmail_shouldThrowUserAlreadyExistException() {
+        //Arrange
         when(userRepository.findFirstByEmail(VALID_EMAIL)).thenReturn(Optional.of(user));
+        //Act
         userService.changeEmail(testUserServiceModel, VALID_EMAIL);
     }
 
     @Test
-    public void addProfilePicture_shouldChangeEmailAndCallUserRepository() {
-        userService.changeEmail(testUserServiceModel, VALID_EDITED_EMAIL);
-    }
-
-    @Test
-    public void blockUser_shouldCallUserRepository() {
-        userService.blockUser(testUserServiceModel);
-    }
-
-    @Test
-    public void activateUser_shouldCallUserRepository() {
-        userService.activateUser(testUserServiceModel);
-    }
-
-    @Test
     public void findAllAdmins_shouldReturnAllAdminsAndCallUserRepository() {
+        //Arrange
         User newUser = new User();
         newUser.setFirstName("NewUserFirstName");
         newUser.setLastName("NewUserLastName");
         newUser.setRegistrationDate(LocalDateTime.now());
         when(userRepository.findAllAdmins()).thenReturn(Arrays.asList(user, newUser));
+        //Act
         List<UserDetailsViewModel> allAdmins = this.userService.findAllAdmins();
 
+        //Assert
         int actual = 2;
         int expected = allAdmins.size();
         assertEquals(actual, expected);
@@ -461,13 +579,16 @@ public class UserServiceImplTest {
 
     @Test
     public void findAllStudents_shouldReturnAllStudentsAndCallUserRepository() {
+        //Arrange
         User newUser = new User();
         newUser.setFirstName("NewUserFirstName");
         newUser.setLastName("NewUserLastName");
         newUser.setRegistrationDate(LocalDateTime.now());
         when(userRepository.findAllStudents()).thenReturn(Arrays.asList(user, newUser));
+        //Act
         List<UserDetailsViewModel> allAdmins = this.userService.findAllStudents();
 
+        //Assert
         int actual = 2;
         int expected = allAdmins.size();
         assertEquals(actual, expected);
@@ -476,6 +597,7 @@ public class UserServiceImplTest {
 
     @Test
     public void findAllStudentsWithTeacherRequests_shouldReturnAllStudentsWithTeacherRequestsAndCallUserRepository() {
+        //Arrange
         User first = new User();
         first.setUsername("First");
         first.setLastName("First");
@@ -487,7 +609,10 @@ public class UserServiceImplTest {
         second.setRegistrationDate(LocalDateTime.now());
         second.setTeacherRequest(true);
         when(userRepository.findAllStudentsWithRequests()).thenReturn(Arrays.asList(first, second));
+        //Act
         List<UserDetailsViewModel> allAdmins = this.userService.findAllStudentsWithRequests();
+
+        //Assert
         int actual = 2;
         int expected = allAdmins.size();
         assertEquals(actual, expected);
@@ -496,6 +621,7 @@ public class UserServiceImplTest {
 
     @Test
     public void findAllTeachers_shouldReturnAllTeachersWithAboutMeAndCallUserRepository() {
+        //Arrange
         AboutMe firstAboutMe = new AboutMe();
         aboutMe.setId("firstAboutMe");
         AboutMe secondAboutMe = new AboutMe();
@@ -511,7 +637,10 @@ public class UserServiceImplTest {
         second.setRegistrationDate(LocalDateTime.now());
         second.setAboutMe(secondAboutMe);
         when(userRepository.findAllTeachers()).thenReturn(Arrays.asList(first, second));
+        //Act
         List<UserDetailsViewModel> allTeachers = userService.findAllTeachers();
+
+        //Assert
         int actual = 2;
         int expected = allTeachers.size();
         assertEquals(actual, expected);
@@ -520,6 +649,7 @@ public class UserServiceImplTest {
 
     @Test
     public void findAllTeachers_shouldReturnAllTeachersWITHOUTAboutMeAndCallUserRepository() {
+        //Arrange
         User first = new User();
         first.setUsername("First");
         first.setLastName("First");
@@ -531,18 +661,48 @@ public class UserServiceImplTest {
         second.setRegistrationDate(LocalDateTime.now());
         second.setAboutMe(null);
         when(userRepository.findAllTeachers()).thenReturn(Arrays.asList(first, second));
+        //Act
         List<UserDetailsViewModel> allTeachers = userService.findAllTeachers();
+
+        //Assert
         int actual = 2;
         int expected = allTeachers.size();
         assertEquals(actual, expected);
 
     }
 
+    @Test
+    public void blockUser_shouldCallUserRepository() {
+        //Arrange
+        user.setStatus(false);
+        when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
+        //Act
+        UserServiceModel userServiceModel = userService.blockUser(testUserServiceModel);
+
+
+        //Assert
+        boolean actual = false;
+        boolean expected = userServiceModel.isStatus();
+
+        assertEquals(actual, expected);
+
+    }
 
     @Test
-    public void addProfilePicture_shouldAddProfilePictureToUserAndCallUserRepository() throws IOException {
-        MultipartFile multipartFile = Mockito.mock(MultipartFile.class);
-        this.userService.addProfilePicture(testUserServiceModel, multipartFile);
+    public void activateUser_shouldCallUserRepository() {
+        //Arrange
+        user.setStatus(true);
+        when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
+        //Act
+        UserServiceModel userServiceModel = userService.activateUser(testUserServiceModel);
+
+        //Assert
+        boolean actual = true;
+        boolean expected = userServiceModel.isStatus();
+
+        assertEquals(actual, expected);
     }
+
+
 
 }

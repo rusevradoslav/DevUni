@@ -22,9 +22,9 @@ public interface UserService extends UserDetailsService{
 
     UserDetailsViewModel getUserDetailsByUsername(String username);
 
-    void changePassword(UserServiceModel user, String newPassword);
+    UserServiceModel changePassword(UserServiceModel user, String newPassword);
 
-    void changeEmail(UserServiceModel user, String newEmail);
+    UserServiceModel changeEmail(UserServiceModel user, String newEmail);
 
     void addProfilePicture(UserServiceModel user, MultipartFile profilePicture) throws IOException;
 
@@ -38,25 +38,25 @@ public interface UserService extends UserDetailsService{
 
     UserServiceModel findById(String id);
 
-    void blockUser(UserServiceModel userServiceModel);
+    UserServiceModel blockUser(UserServiceModel userServiceModel);
 
-    void activateUser(UserServiceModel userServiceModel);
+    UserServiceModel activateUser(UserServiceModel userServiceModel);
 
-    void changeRoleToStudent(UserServiceModel userServiceModel) throws RoleNotFoundException;
+    UserServiceModel changeRoleToStudent(UserServiceModel userServiceModel) throws RoleNotFoundException;
 
-    void changeRoleToTeacher(UserServiceModel userServiceModel) throws RoleNotFoundException;
+    UserServiceModel changeRoleToTeacher(UserServiceModel userServiceModel) throws RoleNotFoundException;
 
-    void changeRoleToAdmin(UserServiceModel user) throws RoleNotFoundException;
+    UserServiceModel changeRoleToAdmin(UserServiceModel user) throws RoleNotFoundException;
 
     UserServiceModel createNewAdminAccount(UserServiceModel map) throws UserAlreadyExistException, RoleNotFoundException;
 
     UserServiceModel sentTeacherRequest(UserServiceModel userServiceModel);
 
-    void confirmTeacherRequest(UserServiceModel userServiceModel) throws RoleNotFoundException;
+    UserServiceModel confirmTeacherRequest(UserServiceModel userServiceModel) throws RoleNotFoundException;
 
-    void cancelTeacherRequest(UserServiceModel userServiceModel);
+    UserServiceModel cancelTeacherRequest(UserServiceModel userServiceModel);
 
-    void setAboutMeToTheTeacher(AboutMe aboutMe, User user);
+    UserServiceModel setAboutMeToTheTeacher(AboutMe aboutMe, User user);
 
 
 }

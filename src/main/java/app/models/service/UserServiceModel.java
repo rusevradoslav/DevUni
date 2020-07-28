@@ -40,6 +40,8 @@ public class UserServiceModel extends BaseServiceModel {
 
     private boolean teacherRequest;
 
+    private boolean status;
+
     private AboutMeServiceModel aboutMeServiceModel;
 
 
