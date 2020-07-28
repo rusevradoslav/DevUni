@@ -1,5 +1,5 @@
 const URLS = {
-    teachers: '/admins/all-teachers-rest',
+    teachers_requests: '/admins/all-teachers-requests-rest',
 };
 const toString1 = ({id, fullName, email, username, status}, index) => {
 
@@ -20,31 +20,26 @@ const toString1 = ({id, fullName, email, username, status}, index) => {
 
     let thirdPart =
         `    <td>
-                <a href="/admins/block-teacher/${id}">Disable</a>
+                  <a href="/admins/confirm-teacher-request/${id}">Confirm</a>
              
-                <a href="/admins/activate-teacher/${id}">Enable</a>
-               
-                <a href="/admins/demote-teacher-student/${id}">Demote To Student</a>
-
-                <a href="/admins/promote-teacher-admin/${id}">Promote To Admin</a>
+                <a href="/admins/cancel-teacher-request/${id}">Cancel</a>
 
            </td>`;
-
 
     return `<tr>${firstPart}${secondPart}${thirdPart}</tr>`
 
 };
-fetch(URLS.teachers)
+fetch(URLS.teachers_requests)
     .then(response => response.json())
-    .then(teachers => {
+    .then(teachersWithRequests => {
+        console.log(teachersWithRequests)
         let result = '';
-        teachers.forEach((teacher, index) => {
+        teachersWithRequests.forEach((teacher, index) => {
             console.log(teacher);
             const adminString = toString1(teacher, index + 1);
             result += adminString;
         });
-        document.getElementById('all-teachers')
+        document.getElementById('all-teachers-requests')
             .innerHTML = result;
 
     });
-

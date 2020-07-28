@@ -158,9 +158,8 @@ public class AdminController {
     @GetMapping("/all-teacher-requests")
     @PreAuthorize("hasAnyRole('ROLE_ROOT_ADMIN','ROLE_ADMIN')")
     @PageTitle("All Teacher Requests")
-    public String allTeacherRequests(Model model) {
-        List<UserDetailsViewModel> allStudentsWithRequests = this.userService.findAllStudentsWithRequests();
-        model.addAttribute("students", allStudentsWithRequests);
+    public String allTeacherRequests() {
+
         return "admins/admin-all-teacher-requests";
     }
 
