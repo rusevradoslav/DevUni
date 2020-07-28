@@ -5,6 +5,6 @@ import app.models.service.UserServiceModel;
 
 public interface AboutMeService {
 
-    void addTeacherAboutMe(UserServiceModel userServiceModel, AboutMeServiceModel aboutMeAddBindingModel);
+    AboutMeServiceModel addTeacherAboutMe(UserServiceModel userServiceModel, AboutMeServiceModel aboutMeAddBindingModel);
 
 }

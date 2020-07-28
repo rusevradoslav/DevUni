@@ -57,7 +57,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserServiceModel registerNewUserAccount(UserServiceModel userServiceModel) throws UserAlreadyExistException, RoleNotFoundException {
-        System.out.println();
         Set<RoleServiceModel> authorities = new HashSet<>();
         long count = this.userRepository.count();
         if (count == 0) {
@@ -150,15 +149,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserServiceModel setAboutMeToTheTeacher(AboutMe newAboutMe, User newUser) {
-        this.userRepository.updateTeacherAboutMe(newAboutMe.getId(), newUser.getId());
-        User user = userRepository.findById(newUser.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
-        AboutMeServiceModel aboutMeServiceModel = this.modelMapper.map(user.getAboutMe(),AboutMeServiceModel.class);
-        UserServiceModel userServiceModel = this.modelMapper.map(user, UserServiceModel.class);
-        userServiceModel.setAboutMeServiceModel(aboutMeServiceModel);
-        return userServiceModel;
+    public void setAboutMeToTheTeacher(AboutMe aboutMe, User user) {
+        this.userRepository.updateTeacherAboutMe(aboutMe.getId(), user.getId());
     }
-
 
     @Override
     public UserServiceModel changePassword(UserServiceModel userServiceModel, String newPassword) {
@@ -270,10 +263,7 @@ public class UserServiceImpl implements UserService {
         Role role = this.roleService.findAuthorityByName("ROLE_TEACHER");
         this.userRepository.changeRole(role.getId(), userServiceModel.getId());
         User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
-        System.out.println();
         return this.modelMapper.map(user, UserServiceModel.class);
-
-
     }
 
     @Override

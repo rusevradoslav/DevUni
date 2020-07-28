@@ -1,5 +1,6 @@
 package app.services;
 
+
 import app.models.entity.AboutMe;
 import app.models.entity.User;
 import app.models.service.AboutMeServiceModel;
@@ -14,8 +15,12 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 
@@ -29,7 +34,8 @@ public class AboutMeServiceImplTest {
 
     private User user;
     private UserServiceModel userServiceModel;
-    private AboutMeServiceModel aboutMeServiceModel;
+    private AboutMe aboutMe;
+    private AboutMeServiceModel testAboutMeServiceModel;
 
     @InjectMocks
     private AboutMeServiceImpl aboutMeService;
@@ -40,11 +46,20 @@ public class AboutMeServiceImplTest {
 
     @Mock
     private UserService userService;
+    private List<AboutMe> testAboutMeRepository;
 
 
     @Before
     public void init() {
         ModelMapper actualMapper = new ModelMapper();
+
+        when(aboutMeRepository.saveAndFlush(isA(AboutMe.class)))
+                .thenAnswer(invocation -> {
+
+                    testAboutMeRepository.add((AboutMe) invocation.getArguments()[0]);
+                    return null;
+                });
+
         when(modelMapper.map(any(UserServiceModel.class), eq(User.class)))
                 .thenAnswer(invocationOnMock ->
                         actualMapper.map(invocationOnMock.getArguments()[0], User.class));
@@ -61,30 +76,49 @@ public class AboutMeServiceImplTest {
                 .thenAnswer(invocationOnMock ->
                         actualMapper.map(invocationOnMock.getArguments()[0], AboutMeServiceModel.class));
 
+        testAboutMeRepository = new ArrayList<>();
 
         user = new User();
         user.setId("validUserAId");
         user.setUsername("validUsername");
 
         userServiceModel = this.modelMapper.map(user, UserServiceModel.class);
+
+        aboutMe = new AboutMe();
+        aboutMe.setId(VALID_ID);
+        aboutMe.setKnowledgeLevel(VALID_KNOWLEDGE_LEVEL);
+        aboutMe.setSelfDescription(VALID_DESCRIPTION);
+
+        testAboutMeServiceModel = this.modelMapper.map(aboutMe, AboutMeServiceModel.class);
     }
 
     @Test
     public void addTeacherAboutMe_ShouldCreateNewAboutMeForTeacher_WhenTeacherDoesNOTHaveAboutMeAndCallAboutMeRepository() {
-        AboutMeServiceModel aboutMeServiceModel = new AboutMeServiceModel();
-        aboutMeServiceModel.setId(VALID_ID);
-        aboutMeServiceModel.setKnowledgeLevel(VALID_KNOWLEDGE_LEVEL);
-        aboutMeServiceModel.setId(VALID_DESCRIPTION);
-        aboutMeService.addTeacherAboutMe(userServiceModel, aboutMeServiceModel);
+        //Arrange
+        when(aboutMeRepository.findById(VALID_ID)).thenReturn(Optional.of(aboutMe));
+        userServiceModel.setAboutMeServiceModel(testAboutMeServiceModel);
+        //Act
+        AboutMeServiceModel aboutMeServiceModel = aboutMeService.addTeacherAboutMe(userServiceModel, testAboutMeServiceModel);
+
+        //Assert
+        String actual = VALID_ID;
+        String expected = aboutMeServiceModel.getId();
+        assertEquals(actual, expected);
     }
+
     @Test
-    public void addTeacherAboutMe_ShouldUpdateAboutMeForTeacher_WhenTeacherHaveAboutMeAndCallAboutMeRepository(){
-        AboutMeServiceModel aboutMeServiceModel = new AboutMeServiceModel();
-        aboutMeServiceModel.setId(VALID_ID);
-        aboutMeServiceModel.setKnowledgeLevel(VALID_KNOWLEDGE_LEVEL);
-        aboutMeServiceModel.setId(VALID_DESCRIPTION);
-        userServiceModel.setAboutMeServiceModel(aboutMeServiceModel);
-        aboutMeService.addTeacherAboutMe(userServiceModel, aboutMeServiceModel);
+    public void addTeacherAboutMe_ShouldUpdateAboutMeForTeacher_WhenTeacherHaveAboutMeAndCallAboutMeRepository() {
+
+        //Arrange
+        userServiceModel.setAboutMeServiceModel(null);
+
+        //Act
+        aboutMeService.addTeacherAboutMe(userServiceModel, testAboutMeServiceModel);
+
+        //Assert
+        int actual = 1;
+        int expected = testAboutMeRepository.size();
+        assertEquals(actual, expected);
     }
 
 }

@@ -23,21 +23,22 @@ public class AboutMeServiceImpl implements AboutMeService {
     private final UserService userService;
 
     @Override
-    public void addTeacherAboutMe(UserServiceModel userServiceModel, AboutMeServiceModel aboutMeAddBindingModel) {
+    public AboutMeServiceModel addTeacherAboutMe(UserServiceModel userServiceModel, AboutMeServiceModel aboutMeAddBindingModel) {
         System.out.println();
         User user = this.modelMapper.map(userServiceModel, User.class);
         AboutMe aboutMe = user.getAboutMe();
 
         if (user.getAboutMe() != null) {
             this.aboutMeRepository.updateAboutMe(aboutMe.getId(), aboutMeAddBindingModel.getKnowledgeLevel(), aboutMeAddBindingModel.getSelfDescription());
+            AboutMe newAboutMe = this.aboutMeRepository.findById(aboutMe.getId()).orElse(null);
+            return this.modelMapper.map(newAboutMe, AboutMeServiceModel.class);
         } else {
             aboutMe = this.modelMapper.map(aboutMeAddBindingModel, AboutMe.class);
             this.aboutMeRepository.saveAndFlush(aboutMe);
             this.userService.setAboutMeToTheTeacher(aboutMe, user);
+            return this.modelMapper.map(aboutMe, AboutMeServiceModel.class);
         }
 
 
-
     }
-
 }

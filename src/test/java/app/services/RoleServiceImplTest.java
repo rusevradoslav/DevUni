@@ -141,8 +141,9 @@ public class RoleServiceImplTest {
         //Arrange
         when(roleRepository.findFirstByAuthority("INVALID_ROLE")).thenReturn(Optional.empty());
 
-        //Act
+        //Act //Assert
         this.roleService.findAuthorityByName("INVALID_ROLE");
+
 
     }
 }

@@ -189,7 +189,6 @@ public class UserServiceImplTest {
         //Arrange
         when(userRepository.findFirstByEmail(VALID_EMAIL)).thenReturn(Optional.empty());
         when(userRepository.findFirstByUsername(VALID_USERNAME)).thenReturn(Optional.empty());
-        System.out.println();
         //Act
         userService.registerNewUserAccount(testUserServiceModel);
 
@@ -505,20 +504,6 @@ public class UserServiceImplTest {
 
     }
 
-    @Test
-    public void setAboutMeToTheTeacher_shouldUpdateTeacherAboutMeAndCallUserRepository() {
-        //Arrange
-        when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
-
-        //Act
-        UserServiceModel userServiceModel = userService.setAboutMeToTheTeacher(aboutMe, user);
-
-        //Assert
-        String actual = "Java Master";
-        String expected = userServiceModel.getAboutMeServiceModel().getKnowledgeLevel();
-        assertEquals(actual, expected);
-
-    }
 
     @Test
     public void changePassword_shouldChangeUserPasswordAndCallUserRepository() {
@@ -548,7 +533,7 @@ public class UserServiceImplTest {
         String actual = VALID_NEW_EMAIL;
         String expected = userServiceModel.getEmail();
 
-        assertEquals(actual,expected);
+        assertEquals(actual, expected);
     }
 
     @Test(expected = UserAlreadyExistException.class)
@@ -702,7 +687,6 @@ public class UserServiceImplTest {
 
         assertEquals(actual, expected);
     }
-
 
 
 }
