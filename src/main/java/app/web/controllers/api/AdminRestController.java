@@ -4,7 +4,6 @@ import app.models.view.UserDetailsViewModel;
 import app.services.UserService;
 import app.validations.anotations.PageTitle;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +18,6 @@ import java.util.List;
 public class AdminRestController {
 
     private final UserService userService;
-
-    private final ModelMapper modelMapper;
 
     @GetMapping("/all-admins-rest")
     @PreAuthorize("hasAnyRole('ROLE_ROOT_ADMIN','ROLE_ADMIN')")
@@ -37,4 +34,12 @@ public class AdminRestController {
 
         return userService.findAllStudents();
     }
+
+    @GetMapping("/all-teachers-rest")
+    @PreAuthorize("hasAnyRole('ROLE_ROOT_ADMIN','ROLE_ADMIN')")
+    @PageTitle("All Teachers")
+    public List<UserDetailsViewModel> allTeachers() {
+        return userService.findAllTeachers();
+    }
+
 }

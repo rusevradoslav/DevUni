@@ -1,7 +1,7 @@
 const URLS = {
-    students: '/admins/all-students-rest',
+    teachers: '/admins/all-teachers-rest',
 };
-const toString1 = ({id, fullName, email, username,status},index) => {
+const toString1 = ({id, fullName, email, username, status}, index) => {
 
     let firstPart =
         ` <th scope="row">${index}</th>
@@ -20,29 +20,29 @@ const toString1 = ({id, fullName, email, username,status},index) => {
 
     let thirdPart =
         `    <td>
-                <a href="/admins/block-student/${id}">Disable</a>
-         
-                <a href="/admins/activate-student/${id}">Enable</a>
-    
-                <a href="/admins/promote-student-teacher/${id}">Promote To Teacher</a>
+                <a href="/admins/block-teacher/${id}">Disable</a>
+             
+                <a href="/admins/activate-teacher/${id}">Enable</a>
+               
+                <a href="/admins/demote-teacher-student/${id}">Demote To Student</a>
 
-                <a href="/admins/promote-student-admin/${id}">Promote To Admin</a>
+                <a href="/admins/promote-teacher-admin/${id}">Promote To Admin</a>
 
            </td>`;
 
     return `<tr>${firstPart}${secondPart}${thirdPart}</tr>`
 
 };
-fetch(URLS.students)
+fetch(URLS.teachers)
     .then(response => response.json())
-    .then(students => {
+    .then(teachers => {
         let result = '';
-        students.forEach((student,index) => {
-            console.log(student);
-            const adminString = toString1(student,index+1);
+        teachers.forEach((teacher, index) => {
+            console.log(teacher);
+            const adminString = toString1(teacher, index + 1);
             result += adminString;
         });
-        document.getElementById('all-students')
+        document.getElementById('all-teachers')
             .innerHTML = result;
 
     });

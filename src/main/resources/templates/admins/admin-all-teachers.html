@@ -51,27 +51,7 @@
             <th scope="col">Operation</th>
         </tr>
         </thead>
-        <tbody>
-        <tr th:each="t: ${teachers}" th:object="${t}">
-            <th scope="row" th:text="${tStat.index+1}"></th>
-            <td id th:text="*{fullName}"></td>
-            <td th:text="*{email}"></td>
-            <td th:text="*{username}"></td>
-            <td>
-                <span id="badgeStatus" th:if="*{status}" class="badge badge-success">Active</span>
-                <span id="badgeStatusBlocked" th:unless="*{status}" class="badge badge-danger">Blocked</span>
-            </td>
-            <td>
-                <a th:href="@{/admins/block-teacher/{id}(id =*{id})}">Disable</a>
-                &nbsp;&nbsp;&nbsp;
-                <a th:href="@{/admins/activate-teacher/{id}(id =*{id})}">Enable</a>
-                &nbsp;&nbsp;&nbsp;
-                <a th:href="@{/admins/demote-teacher-student/{id}(id =*{id})}">Demote Student</a>
-
-                <a th:href="@{/admins/promote-teacher-admin/{id}(id =*{id})}">Promote Admin</a>
-                &nbsp;&nbsp;&nbsp;
-            </td>
-        </tr>
+        <tbody id="all-teachers">
         </tbody>
     </table>
 </div>
@@ -83,5 +63,6 @@
 
 <!-- loader -->
 <th:block th:include="~{/fragments/script-loaders}"></th:block>
+<script src="/js/users/teachers-details.js"></script>
 </body>
 </html>

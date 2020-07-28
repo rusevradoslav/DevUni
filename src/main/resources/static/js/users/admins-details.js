@@ -34,7 +34,7 @@ const toString1 = ({id, fullName, email, username,status},index) => {
     return `<tr>${firstPart}${secondPart}${thirdPart}</tr>`
 
 };
-loader().s
+
 fetch(URLS.admins)
     .then(response => response.json())
     .then(admins => {
@@ -49,11 +49,3 @@ fetch(URLS.admins)
 
     });
 
-const loader = function() {
-    setTimeout(function() {
-        if($('#loader').length > 0) {
-            $('#loader').removeClass('show');
-        }
-    }, 200);
-};
-loader();
