@@ -565,17 +565,23 @@ public class UserServiceImplTest {
     @Test
     public void findAllStudents_shouldReturnAllStudentsAndCallUserRepository() {
         //Arrange
+        Role role = new Role();
+        role.setId("VALID_ID");
+        role.setAuthority("ROLE_STUDENT");
+        authorities.add(role);
         User newUser = new User();
+        newUser.setUsername("NewUserUsername");
         newUser.setFirstName("NewUserFirstName");
         newUser.setLastName("NewUserLastName");
         newUser.setRegistrationDate(LocalDateTime.now());
-        when(userRepository.findAllStudents()).thenReturn(Arrays.asList(user, newUser));
+        newUser.setAuthorities(authorities);
+        when(userRepository.findAllStudents()).thenReturn(Arrays.asList(newUser));
         //Act
         List<UserDetailsViewModel> allAdmins = this.userService.findAllStudents();
 
         //Assert
-        int actual = 2;
-        int expected = allAdmins.size();
+        String actual = "NewUserUsername";
+        String expected = allAdmins.stream().findFirst().get().getUsername();
         assertEquals(actual, expected);
 
     }
@@ -583,23 +589,23 @@ public class UserServiceImplTest {
     @Test
     public void findAllStudentsWithTeacherRequests_shouldReturnAllStudentsWithTeacherRequestsAndCallUserRepository() {
         //Arrange
+        Role role = new Role();
+        role.setId("VALID_ID");
+        role.setAuthority("ROLE_TEACHER");
+        authorities.add(role);
         User first = new User();
         first.setUsername("First");
         first.setLastName("First");
         first.setRegistrationDate(LocalDateTime.now());
         first.setTeacherRequest(true);
-        User second = new User();
-        second.setUsername("Second");
-        second.setLastName("Second");
-        second.setRegistrationDate(LocalDateTime.now());
-        second.setTeacherRequest(true);
-        when(userRepository.findAllStudentsWithRequests()).thenReturn(Arrays.asList(first, second));
+        first.setAuthorities(authorities);
+        when(userRepository.findAllStudentsWithRequests()).thenReturn(Arrays.asList(first));
         //Act
         List<UserDetailsViewModel> allAdmins = this.userService.findAllStudentsWithRequests();
 
         //Assert
-        int actual = 2;
-        int expected = allAdmins.size();
+        String actual = "First";
+        String expected = allAdmins.stream().findFirst().get().getUsername();
         assertEquals(actual, expected);
 
     }
