@@ -115,7 +115,7 @@ public class AboutMeServiceImplTest {
         //Act
         aboutMeService.addTeacherAboutMe(userServiceModel, testAboutMeServiceModel);
 
-
+        //Assert
         int actual = 1;
         int expected = testAboutMeRepository.size();
         assertEquals(actual, expected);
