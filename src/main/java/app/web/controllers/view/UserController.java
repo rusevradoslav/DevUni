@@ -1,4 +1,4 @@
-package app.web.controllers;
+package app.web.controllers.view;
 
 import app.error.UserAlreadyExistException;
 import app.models.binding.*;

@@ -1,4 +1,4 @@
-package app.web.controllers;
+package app.web.controllers.view;
 
 import app.error.UserAlreadyExistException;
 import app.models.binding.AdminCreateBindingModel;
@@ -50,9 +50,7 @@ public class AdminController {
     @GetMapping("/all-admins")
     @PreAuthorize("hasAnyRole('ROLE_ROOT_ADMIN','ROLE_ADMIN')")
     @PageTitle("All Admins")
-    public String allAdmins(Model model) {
-        List<UserDetailsViewModel> allAdmins = this.userService.findAllAdmins();
-        model.addAttribute("admins", allAdmins);
+    public String allAdmins() {
         return "admins/root-all-admins";
     }
 
@@ -89,9 +87,7 @@ public class AdminController {
     @GetMapping("/all-students")
     @PreAuthorize("hasAnyRole('ROLE_ROOT_ADMIN','ROLE_ADMIN')")
     @PageTitle("All Students")
-    public String allStudents(Model model) {
-        List<UserDetailsViewModel> allStudents = this.userService.findAllStudents();
-        model.addAttribute("students", allStudents);
+    public String allStudents() {
         return "admins/admin-all-students";
     }
 

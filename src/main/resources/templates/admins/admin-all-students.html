@@ -40,8 +40,7 @@
 
 </div>
 <div class="container col-md-11">
-    <table class="table table-bordered"
-    >
+    <table class="table table-bordered">
         <thead>
         <tr>
             <th scope="col">#</th>
@@ -52,27 +51,7 @@
             <th scope="col">Operation</th>
         </tr>
         </thead>
-        <tbody>
-        <tr th:each="s: ${students}" th:object="${s}">
-            <th scope="row" th:text="${sStat.index+1}"></th>
-            <td id th:text="*{fullName}"></td>
-            <td th:text="*{email}"></td>
-            <td th:text="*{username}"></td>
-            <td>
-                <span id="badgeStatus" th:if="*{status}" class="badge badge-success">Active</span>
-                <span id="badgeStatusBlocked" th:unless="*{status}" class="badge badge-danger">Blocked</span>
-            </td>
-            <td>
-                <a th:href="@{/admins/block-student/{id}(id =*{id})}">Disable</a>
-                &nbsp;&nbsp;&nbsp;
-                <a th:href="@{/admins/activate-student/{id}(id =*{id})}">Enable</a>
-                &nbsp;&nbsp;&nbsp;
-                <a th:href="@{/admins/promote-student-teacher/{id}(id =*{id})}">Promote Teacher</a>
-
-                <a th:href="@{/admins/promote-student-admin/{id}(id =*{id})}">Promote Admin</a>
-                &nbsp;&nbsp;&nbsp;
-            </td>
-        </tr>
+        <tbody id="all-students">
         </tbody>
     </table>
 </div>
@@ -84,5 +63,6 @@
 
 <!-- loader -->
 <th:block th:include="~{/fragments/script-loaders}"></th:block>
+<script src="/js/users/students-details.js"></script>
 </body>
 </html>

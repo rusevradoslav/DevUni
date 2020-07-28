@@ -1,4 +1,4 @@
-package app.web.controllers;
+package app.web.controllers.api;
 
 import app.models.view.UserDetailsViewModel;
 import app.services.UserService;
@@ -26,6 +26,15 @@ public class AdminRestController {
     @PreAuthorize("hasAnyRole('ROLE_ROOT_ADMIN','ROLE_ADMIN')")
     @PageTitle("All Admins")
     public List<UserDetailsViewModel> allAdmins() {
+
         return userService.findAllAdmins();
+    }
+
+    @GetMapping("/all-students-rest")
+    @PreAuthorize("hasAnyRole('ROLE_ROOT_ADMIN','ROLE_ADMIN')")
+    @PageTitle("All Admins")
+    public List<UserDetailsViewModel> allStudents() {
+
+        return userService.findAllStudents();
     }
 }

@@ -2293,3 +2293,8 @@ body > header > nav > div.navbar-change {
 .closebtn:hover {
     color: black;
 }
+
+/*table operations margin*/
+td a {
+    margin-right: 26px;
+}
