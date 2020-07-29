@@ -58,6 +58,12 @@
                         <!--   th:field="*{password}" required-->
                   </div>
                 </div>
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="remember-me" name="remember-me">
+                  <label class="custom-control-label" for="remember-me">Remember me</label>
+                </div>
+
+
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                 <div class="row">
                   <div class="col-md-6 form-group">

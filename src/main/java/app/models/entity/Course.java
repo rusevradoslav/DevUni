@@ -15,6 +15,11 @@ import javax.persistence.*;
 @Table(name = "courses")
 public class Course extends BaseEntity {
 
+
+
+
+
+
     @ManyToOne
     private Topic topic;
 

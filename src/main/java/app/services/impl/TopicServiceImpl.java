@@ -21,7 +21,6 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public void seedTopicsInDb() {
-        System.out.println();
         if (this.topicRepository.count() == 0) {
             this.topicRepository.saveAndFlush(new Topic("C#"));
             this.topicRepository.saveAndFlush(new Topic("Java"));

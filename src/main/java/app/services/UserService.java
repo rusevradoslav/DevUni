@@ -6,14 +6,13 @@ import app.models.entity.AboutMe;
 import app.models.entity.User;
 import app.models.service.UserServiceModel;
 import app.models.view.UserDetailsViewModel;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.management.relation.RoleNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-public interface UserService extends UserDetailsService{
+public interface UserService{
     UserServiceModel registerNewUserAccount(UserServiceModel map) throws UserAlreadyExistException, RoleNotFoundException;
 
     UserServiceModel findByEmail(String email) throws InvalidEmailException;

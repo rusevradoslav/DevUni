@@ -56,6 +56,7 @@ public class RoleServiceImplTest {
         ModelMapper actualMapper = new ModelMapper();
         when(modelMapper.map(any(Role.class), eq(RoleServiceModel.class)))
                 .thenAnswer(invocation -> actualMapper.map(invocation.getArguments()[0], RoleServiceModel.class));
+
         Role root_admin = new Role(ROLE_ROOT_ADMIN);
         Role role_admin = new Role(ROLE_ADMIN);
         Role role_teacher = new Role(ROLE_TEACHER);

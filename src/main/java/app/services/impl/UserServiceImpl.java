@@ -18,7 +18,6 @@ import app.services.UserService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -46,14 +45,6 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-
-        UserDetails user = this.userRepository.findFirstByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Invalid user"));
-
-        return user;
-    }
 
     @Override
     public UserServiceModel registerNewUserAccount(UserServiceModel userServiceModel) throws UserAlreadyExistException, RoleNotFoundException {

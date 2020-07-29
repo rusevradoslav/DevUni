@@ -39,7 +39,6 @@ fetch(URLS.students)
     .then(students => {
         let result = '';
         students.forEach((student,index) => {
-            console.log(student);
             const adminString = toString1(student,index+1);
             result += adminString;
         });
