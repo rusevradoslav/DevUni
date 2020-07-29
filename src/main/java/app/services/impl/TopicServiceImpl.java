@@ -1,16 +1,15 @@
 package app.services.impl;
+import app.error.TopicNotFoundException;
+import app.models.entity.Topic;
+import app.models.service.TopicServiceModel;
+import app.repositories.TopicRepository;
+import app.services.TopicService;
+import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-        import app.error.TopicNotFoundException;
-        import app.models.entity.Topic;
-        import app.models.service.TopicServiceModel;
-        import app.repositories.TopicRepository;
-        import app.services.TopicService;
-        import lombok.AllArgsConstructor;
-        import org.modelmapper.ModelMapper;
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.stereotype.Service;
-
-        import javax.transaction.Transactional;
+import javax.transaction.Transactional;
 
 @Service
 @Transactional
@@ -22,6 +21,7 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public void seedTopicsInDb() {
+        System.out.println();
         if (this.topicRepository.count() == 0) {
             this.topicRepository.saveAndFlush(new Topic("C#"));
             this.topicRepository.saveAndFlush(new Topic("Java"));

@@ -10,6 +10,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.List;
 
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,3 +28,4 @@ public class Topic extends BaseEntity{
         this.name = name;
     }
 }
+

@@ -28,7 +28,7 @@ public class RoleServiceImplTest {
     private static final String ROLE_TEACHER = "ROLE_TEACHER";
     private static final String ROLE_STUDENT = "ROLE_STUDENT";
 
-    private static List<Role> fakeRepository;
+    private static List<Role> testRepository;
 
     @InjectMocks
     private RoleServiceImpl roleService;
@@ -41,14 +41,14 @@ public class RoleServiceImplTest {
 
     @Before
     public void init() {
-        System.out.println();
-        fakeRepository = new ArrayList<>();
+
+        testRepository = new ArrayList<>();
 
         //instead of saving in db add in fake repository
         when(roleRepository.saveAndFlush(isA(Role.class)))
                 .thenAnswer(invocation -> {
 
-                    fakeRepository.add((Role) invocation.getArguments()[0]);
+                    testRepository.add((Role) invocation.getArguments()[0]);
                     return null;
                 });
 
@@ -56,25 +56,46 @@ public class RoleServiceImplTest {
         ModelMapper actualMapper = new ModelMapper();
         when(modelMapper.map(any(Role.class), eq(RoleServiceModel.class)))
                 .thenAnswer(invocation -> actualMapper.map(invocation.getArguments()[0], RoleServiceModel.class));
+        Role root_admin = new Role(ROLE_ROOT_ADMIN);
+        Role role_admin = new Role(ROLE_ADMIN);
+        Role role_teacher = new Role(ROLE_TEACHER);
+        Role role_student = new Role(ROLE_STUDENT);
+
+        when(roleRepository.findFirstByAuthority(ROLE_ROOT_ADMIN)).thenReturn(Optional.of(root_admin));
+        when(roleRepository.findFirstByAuthority(ROLE_ADMIN)).thenReturn(Optional.of(role_admin));
+        when(roleRepository.findFirstByAuthority(ROLE_TEACHER)).thenReturn(Optional.of(role_teacher));
+        when(roleRepository.findFirstByAuthority(ROLE_STUDENT)).thenReturn(Optional.of(role_student));
     }
 
     @Test
     public void seedRoles_shouldSeedAllRoles_whenRepositoryEmpty() {
-
         //Arrange
         when(roleRepository.count()).thenReturn(0L);
+
 
         //Act
         roleService.seedRolesInDb();
 
         //Assert
         int expected = 4;
-        int actual = fakeRepository.size();
+        int actual = testRepository.size();
+        Role rootAdmin = roleRepository.findFirstByAuthority("ROLE_ROOT_ADMIN").orElse(null);
+        String roleRootAdmin = rootAdmin.getAuthority();
+
+        Role admin = roleRepository.findFirstByAuthority("ROLE_ADMIN").orElse(null);
+        String roleAdmin = admin.getAuthority();
+
+        Role teacher = roleRepository.findFirstByAuthority("ROLE_TEACHER").orElse(null);
+        String roleTeacher = teacher.getAuthority();
+
+        Role student = roleRepository.findFirstByAuthority("ROLE_STUDENT").orElse(null);
+        String roleStudent = student.getAuthority();
+
         assertEquals(expected, actual);
-        assertEquals(fakeRepository.get(0).getAuthority(), ROLE_ROOT_ADMIN);
-        assertEquals(fakeRepository.get(1).getAuthority(), ROLE_ADMIN);
-        assertEquals(fakeRepository.get(2).getAuthority(), ROLE_TEACHER);
-        assertEquals(fakeRepository.get(3).getAuthority(), ROLE_STUDENT);
+        assertEquals(roleRootAdmin, ROLE_ROOT_ADMIN);
+        assertEquals(roleAdmin, ROLE_ADMIN);
+        assertEquals(roleTeacher, ROLE_TEACHER);
+        assertEquals(roleStudent, ROLE_STUDENT);
     }
 
     @Test
@@ -86,8 +107,8 @@ public class RoleServiceImplTest {
         roleService.seedRolesInDb();
 
         //Assert
-        int expected = 0;
-        int actual = fakeRepository.size();
+        long expected = 4;
+        long actual = roleRepository.count();
 
         assertEquals(expected, actual);
     }

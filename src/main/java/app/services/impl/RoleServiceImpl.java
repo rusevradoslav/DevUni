@@ -40,7 +40,8 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Role findAuthorityByName(String authorityName) throws RoleNotFoundException {
 
-        return this.roleRepository.findFirstByAuthority(authorityName).orElseThrow(() -> new RoleNotFoundException("Role not found"));
+        return this.roleRepository.findFirstByAuthority(authorityName)
+                .orElseThrow(() -> new RoleNotFoundException("Role not found"));
     }
 
 }
