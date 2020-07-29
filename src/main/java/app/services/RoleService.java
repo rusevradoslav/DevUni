@@ -8,7 +8,7 @@ import javax.management.relation.RoleNotFoundException;
 public interface RoleService{
     void seedRolesInDb();
 
-    RoleServiceModel findByAuthority(String student) throws RoleNotFoundException;
+    RoleServiceModel findByAuthority(String authority) throws RoleNotFoundException;
 
-    Role findAuthorityByName(String role_teacher) throws RoleNotFoundException;
+    Role findAuthorityByName(String authority) throws RoleNotFoundException;
 }
