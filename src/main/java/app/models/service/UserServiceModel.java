@@ -36,13 +36,17 @@ public class UserServiceModel extends BaseServiceModel {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime registrationDate;
 
-    private Set<RoleServiceModel> authorities;
-
     private boolean teacherRequest;
 
     private boolean status;
 
     private AboutMeServiceModel aboutMeServiceModel;
 
+    private Set<RoleServiceModel> authorities;
 
+
+    private Set<CourseServiceModel> createdCourses;
+
+
+    private Set<CourseServiceModel> enrolledCourses;
 }

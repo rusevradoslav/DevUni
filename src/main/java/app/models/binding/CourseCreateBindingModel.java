@@ -1,6 +1,5 @@
-package app.models.service;
+package app.models.binding;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,15 +11,11 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-public class CourseServiceModel extends BaseServiceModel {
-
-
+public class CourseCreateBindingModel  {
     @NotNull(message = "Title is required")
     @Length(min = 10, max = 40, message = "Title must be between 10 and 40 characters !")
     private String title;
@@ -49,20 +44,6 @@ public class CourseServiceModel extends BaseServiceModel {
     @FutureOrPresent(message = "The date must be in the future!")
     private LocalDate endedON;
 
-    private int rating;
-
-    private boolean status;
-
-
-    private UserServiceModel author;
-
-
-    private List<UserServiceModel> enrolledStudents;
-
-
-    private List<LectureServiceModel> lectures;
-
-
-    private TopicServiceModel topic;
-
+    @NotNull(message = "Topic is required")
+    String topic;
 }

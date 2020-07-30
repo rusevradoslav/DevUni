@@ -42,8 +42,6 @@ public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private LocalDateTime registrationDate;
 
-    @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
-    private Set<Role> authorities;
 
     @Column(name = "status")
     private boolean status;
@@ -53,6 +51,15 @@ public class User extends BaseEntity implements UserDetails {
 
     @OneToOne(fetch = FetchType.EAGER)
     private AboutMe aboutMe;
+
+    @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
+    private Set<Role> authorities;
+
+    @OneToMany(mappedBy = "author")
+    private Set<Course> createdCourses;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    private Set<Course> enrolledCourses;
 
     @Override
     @Transient

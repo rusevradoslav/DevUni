@@ -56,8 +56,19 @@
                             <a class="nav-link active" th:href="@{/admins/home-page}">Admin Panel</a>
                         </li>
                     </th:block>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="courses.html">Courses</a>
+                    <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_TEACHER')">
+                        <a class="nav-link dropdown-toggle" href="courses.html" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Teacher Courses</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown04">
+                            <a class="dropdown-item" href="courses.html">Create Course</a>
+                            <a class="dropdown-item" href="courses.html">My Courses</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_STUDENT')">
+                        <a class="nav-link dropdown-toggle" href="courses.html" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Courses</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown04">
+                            <a class="dropdown-item" href="courses.html">All Course</a>
+                            <a class="dropdown-item" href="courses.html">My Courses</a>
+                        </div>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" href="blog.html">Blogs</a>
