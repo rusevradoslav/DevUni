@@ -125,10 +125,17 @@ public class UserController {
     @PostMapping("/user-details")
     @PreAuthorize("isAuthenticated()")
     @PageTitle("User Details")
-    public String userDetails(@ModelAttribute UserAddProfilePictureBindingModel userAddProfilePictureBindingModel,
+    public String userDetails(@Valid @ModelAttribute UserAddProfilePictureBindingModel userAddProfilePictureBindingModel,
                               Principal principal,
+                              BindingResult bindingResult,
                               RedirectAttributes redirectAttributes) {
         UserServiceModel user = this.userService.findByName(principal.getName());
+        System.out.println();
+        if (bindingResult.hasErrors()){
+            redirectAttributes.addFlashAttribute("userAddProfilePictureBindingModel", userAddProfilePictureBindingModel);
+            redirectAttributes.addFlashAttribute(String.format(BINDING_RESULT + "userAddProfilePictureBindingModel"), bindingResult);
+            return "redirect:/users/user-details";
+        }
 
         try {
             this.userService.addProfilePicture(user, userAddProfilePictureBindingModel.getProfilePicture());

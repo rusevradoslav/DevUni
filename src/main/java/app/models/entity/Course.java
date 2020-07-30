@@ -19,7 +19,7 @@ import java.util.List;
 public class Course extends BaseEntity {
 
     @Column(nullable = false, updatable = false)
-    @Length(min = 10, max = 40, message = "Title must be between 10 and 40 characters !")
+    @Length(min = 5, max = 40, message = "Title must be between 10 and 40 characters !")
     private String title;
 
     @Column(nullable = false, columnDefinition = "TEXT")
@@ -53,8 +53,8 @@ public class Course extends BaseEntity {
     @Column
     private int courseRating;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false,unique = true,updatable = false)
+    @Enumerated(EnumType.ORDINAL)
+    @Column(nullable = false,updatable = false)
     private Difficulty difficulty;
 
     @ManyToOne

@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 public class CourseCreateBindingModel {
 
     @NotNull(message = "Title is required")
-    @Length(min = 10, max = 40, message = "Title must be between 10 and 40 characters !")
+    @Length(min = 5, max = 40, message = "Title must be between 10 and 40 characters !")
     private String title;
 
     @NotNull(message = "Short description is required")
@@ -42,6 +42,7 @@ public class CourseCreateBindingModel {
     @FutureOrPresent(message = "The date must be in the future!")
     private LocalDateTime startedOn;
 
+    @Min(value = 1, message = "Course duration must be at least 1 week")
     private int durationWeeks;
 
     private String topic;

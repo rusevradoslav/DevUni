@@ -127,7 +127,7 @@
                                        type="number" step="1" min="1" max="17"
                                        id="durationWeeks" class="form-control py-2"
                                        placeholder="Enter duration weeks..." required/>
-                                <th:block th:each="e : ${#fields.errors('title')}">
+                                <th:block th:each="e : ${#fields.errors('durationWeeks')}">
                                     <div class="mx-auto">
                                         <small th:text="${e}" class="text-danger"></small>
                                     </div>
@@ -139,8 +139,7 @@
                                 <label for="title">Select Topic</label>
                                 <select th:errorclass="alert-danger" th:field="*{topic}" class="form-control py-2"
                                         id="topic"
-                                        name="topic">
-                                    <option value="" selected>-----Topic Name-----</option>
+                                        name="topic" required>
                                     <th:block th:each="topicName : ${topicNames}">
                                         <option th:text="${topicName}" th:value="${topicName}" value=""></option>
                                     </th:block>
@@ -153,8 +152,8 @@
                                 <select th:errorclass="alert-danger" th:field="*{difficulty}"
                                         class="form-control py-2"
                                         id="difficulty"
-                                        name="difficulty">
-                                    <option value="" selected>-----Difficulty-----</option>
+                                        name="difficulty" required>
+
                                     <th:block>
                                         <option value="BEGINNER">BEGINNER</option>
                                         <option value="INTERMEDIATE">INTERMEDIATE</option>
@@ -168,7 +167,7 @@
                                 <label for="title">Course Photo</label>
                                 <input  th:field="*{coursePhoto}" type="file" class="form-control-file"
                                        id="profilePicture"
-                                       name="coursePhoto">
+                                       name="coursePhoto" required>
                                 <br>
                                 <th:block th:if="${imageSizeException != null}">
                                     <div th:text="${imageSizeException}" class="alert alert-danger text-center"
