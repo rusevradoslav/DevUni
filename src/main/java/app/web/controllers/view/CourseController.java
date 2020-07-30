@@ -44,8 +44,7 @@ public class CourseController {
     public String createCourseConfirm(@Valid @ModelAttribute("courseCreateBindingModel") CourseCreateBindingModel courseCreateBindingModel,
                                       BindingResult bindingResult,
                                       RedirectAttributes redirectAttributes) {
-        //TODO
-        System.out.println();
+
         return "courses/create-course";
     }
 

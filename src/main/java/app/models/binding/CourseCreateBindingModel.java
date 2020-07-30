@@ -38,7 +38,7 @@ public class CourseCreateBindingModel {
     @Max(value = 100, message = "Pass percentage must be at maximum 100%")
     private double passPercentage = 0.0;
 
-    @DateTimeFormat(pattern = "MM/dd/yyyy'T'hh:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     @FutureOrPresent(message = "The date must be in the future!")
     private LocalDateTime startedOn;
 
