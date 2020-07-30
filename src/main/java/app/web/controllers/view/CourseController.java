@@ -45,6 +45,7 @@ public class CourseController {
                                       BindingResult bindingResult,
                                       RedirectAttributes redirectAttributes) {
         //TODO
+        System.out.println();
         return "courses/create-course";
     }
 
