@@ -15,5 +15,6 @@ public class TopicServiceModel extends BaseServiceModel {
 
 
     private String name;
+
     private List<CourseServiceModel> courses;
 }

@@ -11,7 +11,7 @@ import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -37,22 +37,27 @@ public class CourseServiceModel extends BaseServiceModel {
     private String coursePhoto;
 
 
-    @Min(value = 1 ,message = "Pass percentage must be at least 1%")
-    @Max(value = 100 ,message = "Pass percentage must be at maximum 100%")
+    @Min(value = 1, message = "Pass percentage must be at least 1%")
+    @Max(value = 100, message = "Pass percentage must be at maximum 100%")
     private double passPercentage = 0.0;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @FutureOrPresent(message = "The date must be in the future!")
-    private LocalDate startedOn;
+    private LocalDateTime startedOn;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @FutureOrPresent(message = "The date must be in the future!")
-    private LocalDate endedON;
+    private LocalDateTime endedON;
+
+    @NotNull
+    int durationWeeks;
+
+
+    private String difficulty;
 
     private int rating;
 
     private boolean status;
-
 
     private UserServiceModel author;
 
@@ -63,6 +68,6 @@ public class CourseServiceModel extends BaseServiceModel {
     private List<LectureServiceModel> lectures;
 
 
-    private TopicServiceModel topic;
+    private String topic;
 
 }

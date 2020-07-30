@@ -58,7 +58,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
                 .key("devUniSecret")
                 .tokenValiditySeconds(604800)
                 .rememberMeParameter("remember-me")
-                .rememberMeCookieName("rememberME")
+                .rememberMeCookieName("rememberMECOOKIE")
                 .and()
                 .logout()
                 .deleteCookies("JSESSIONID")

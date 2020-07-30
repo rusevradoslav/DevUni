@@ -7,7 +7,7 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -38,17 +38,24 @@ public class Course extends BaseEntity {
 
 
     @Column(nullable = false)
-    private LocalDate startedOn;
+    private LocalDateTime startedOn;
 
 
     @Column(nullable = false)
-    private LocalDate endedON;
+    private LocalDateTime endedON;
+
+    @Column(nullable = false)
+    int durationWeeks;
 
     @Column
     private boolean status;
 
     @Column
     private int courseRating;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false,unique = true,updatable = false)
+    private Difficulty difficulty;
 
     @ManyToOne
     private User author;

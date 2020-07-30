@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -40,6 +42,11 @@ public class TopicServiceImpl implements TopicService {
     @Override
     public Topic findTopicByName(String name) {
         return this.topicRepository.findFirstByName(name).orElseThrow(() -> new TopicNotFoundException("Topic not found !"));
+    }
+
+    @Override
+    public List<String> getAllTopicNames() {
+        return this.topicRepository.findAll().stream().map(Topic::getName).collect(Collectors.toList());
     }
 
 

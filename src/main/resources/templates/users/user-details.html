@@ -42,8 +42,7 @@
                         </figure>
                     </form>
                     <form th:action="@{/users/user-details}" th:method="post"
-                          th:object="${userAddProfilePictureBindingModel}"
-                          enctype="multipart/form-data">
+                          th:object="${userAddProfilePictureBindingModel}">
                         <input th:field="*{profilePicture}" type="file" class="form-control-file" id="profilePicture"
                                name="profilePicture">
                         <br>

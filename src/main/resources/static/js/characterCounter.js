@@ -1,4 +1,4 @@
-$('textarea').keyup(function() {
+$('#selfDescription').keyup(function() {
 
     var characterCount = $(this).val().length,
         current = $('#current'),

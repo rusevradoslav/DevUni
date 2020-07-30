@@ -2269,6 +2269,11 @@ body > header > nav > div.navbar-change {
     padding: 0.1rem 0 0 0;
     font-size: 0.875rem;
 }
+#the-count1 {
+    float: right;
+    padding: 0.1rem 0 0 0;
+    font-size: 0.875rem;
+}
 
 #aboutMe{
     font-size: 16px;
