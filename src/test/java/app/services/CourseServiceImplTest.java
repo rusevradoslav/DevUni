@@ -19,9 +19,8 @@ import org.modelmapper.ModelMapper;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Optional;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 import static app.models.entity.Difficulty.ADVANCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,6 +32,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class CourseServiceImplTest {
     private static final String VALID_ID = "validId";
+    private static final String VALID_NEW_ID = "validId";
     private static final String VALID_TITLE = "Java Master Class";
     private static final String VALID_SHORT_DESCRIPTION = "Curabitur cursus elementum nibh quis dignissim. Mauris tristique, tortor vel auctor elementum, lorem urna sed.";
     private static final String VALID_DESCRIPTION = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nisi lectus, elementum in accumsan nec, porttitor vitae lacus. Nunc tempor sodales sem vitae porttitor. Nullam id iaculis sapien. Nunc non porttitor sapien, sed elementum sem. Suspendisse elementum hendrerit neque, vitae luctus ex interdum sit amet. Morbi eu congue arcu, sed fringilla dolor. Donec pharetra sem et turpis consectetur quis.";
@@ -50,6 +50,8 @@ public class CourseServiceImplTest {
     private Course course;
     private CourseServiceModel courseServiceModel;
     private User author;
+    private Course course2;
+    private CourseServiceModel courseServiceModel2;
     private UserServiceModel userServiceModel;
     private Topic topic;
     private TopicServiceModel topicServiceModel;
@@ -90,8 +92,10 @@ public class CourseServiceImplTest {
                 .thenAnswer(invocationOnMock ->
                         actualMapper.map(invocationOnMock.getArguments()[0], Course.class));
 
-        course = getCourse();
+        course = getCourse1();
+        course2 = getCourse2();
         courseServiceModel = getCourseServiceModel(actualMapper);
+        courseServiceModel2 = getCourseServiceModel(actualMapper);
     }
 
     @Test
@@ -112,9 +116,49 @@ public class CourseServiceImplTest {
 
     }
 
+    @Test
+    public void findAllCoursesByAuthorId_shouldReturnCoursesByAuthorID() {
+        //Arrange
+        when(courseRepository.findAllCoursesByAuthorId(VALID_AUTHOR_ID)).thenReturn(Arrays.asList(course));
+
+        //Act
+        List<CourseServiceModel> allCoursesByAuthorId = this.courseService.findAllCoursesByAuthorId(VALID_AUTHOR_ID);
+
+        int actual = 1;
+        int expected = allCoursesByAuthorId.size();
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    public void findTopThreeRecentCourses_shouldReturnTopThreeRecentCourses() {
+        //Arrange
+        course2.setStartedOn(LocalDateTime.now().plus(VALID_DURATION_WEEKS * 7, ChronoUnit.DAYS));
+
+        // findRecentCourses() method compare Courses by StartedON date
+        when(courseRepository.findRecentCourses()).thenReturn(Arrays.asList(course2, course));
+        //Act
+        List<CourseServiceModel> recentCourses = this.courseService.findRecentCourses();
+
+        //Assert
+        assertEquals(recentCourses.get(0).getTitle(), course2.getTitle());
+        assertEquals(recentCourses.get(1).getTitle(), course.getTitle());
+
+    }
+
     private CourseServiceModel getCourseServiceModel(ModelMapper actualMapper) {
         CourseServiceModel courseServiceModel = actualMapper.map(course, CourseServiceModel.class);
-        userServiceModel =actualMapper.map(author, UserServiceModel.class);
+        userServiceModel = actualMapper.map(author, UserServiceModel.class);
+        topicServiceModel = actualMapper.map(topic, TopicServiceModel.class);
+        courseServiceModel.setAuthor(userServiceModel);
+        courseServiceModel.setTopic(topicServiceModel.getName());
+        courseServiceModel.setStartedOn(LocalDateTime.now());
+        return courseServiceModel;
+
+    }
+
+    private CourseServiceModel getCourseServiceModel2(ModelMapper actualMapper) {
+        CourseServiceModel courseServiceModel = actualMapper.map(course2, CourseServiceModel.class);
+        userServiceModel = actualMapper.map(author, UserServiceModel.class);
         topicServiceModel = actualMapper.map(topic, TopicServiceModel.class);
         courseServiceModel.setAuthor(userServiceModel);
         courseServiceModel.setTopic(topicServiceModel.getName());
@@ -122,7 +166,7 @@ public class CourseServiceImplTest {
         return courseServiceModel;
     }
 
-    private Course getCourse() {
+    private Course getCourse1() {
         Course course = new Course();
         course.setId(VALID_ID);
         course.setTitle(VALID_TITLE);
@@ -145,5 +189,30 @@ public class CourseServiceImplTest {
         topic.setCourses(new ArrayList<>());
         course.setTopic(topic);
         return course;
+    }
+
+    private Course getCourse2() {
+        Course course2 = new Course();
+        course2.setId(VALID_NEW_ID);
+        course2.setTitle(VALID_TITLE);
+        course2.setShortDescription(VALID_SHORT_DESCRIPTION);
+        course2.setDescription(VALID_DESCRIPTION);
+        course2.setCoursePhoto(VALID_COURSE_PHOTO);
+        course2.setPassPercentage(VALID_PASS_PERCENTAGE);
+        course2.setDurationWeeks(VALID_DURATION_WEEKS);
+        course2.setStatus(VALID_STATUS);
+        course2.setCourseRating(VALID_COURSE_RATING);
+        course2.setDifficulty(VALID_COURSE_DIFFICULTY);
+        author = new User();
+        author.setId(VALID_AUTHOR_ID);
+        author.setUsername(VALID_AUTHOR_USERNAME);
+        author.setCreatedCourses(new HashSet<>());
+        course2.setAuthor(author);
+        topic = new Topic();
+        topic.setId(VALID_TOPIC_ID);
+        topic.setName(VALID_TOPIC_NAME);
+        topic.setCourses(new ArrayList<>());
+        course2.setTopic(topic);
+        return course2;
     }
 }

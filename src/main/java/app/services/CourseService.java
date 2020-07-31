@@ -10,5 +10,5 @@ public interface CourseService {
 
     List<CourseServiceModel> findAllCoursesByAuthorId(String id);
 
-    List<CourseServiceModel> findTopThreeRecentCourses();
+    List<CourseServiceModel> findRecentCourses();
 }

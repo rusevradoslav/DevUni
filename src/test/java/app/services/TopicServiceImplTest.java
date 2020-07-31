@@ -14,6 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -153,6 +154,7 @@ public class TopicServiceImplTest {
         TopicServiceModel topicServiceModel = this.topicService.findTopicServiceByName(TOPIC_JAVA);
 
     }
+
     @Test
     public void findTopicByName_shouldReturnCorrectTopicIfExist() {
         //Arrange
@@ -176,5 +178,38 @@ public class TopicServiceImplTest {
         Topic topic = this.topicService.findTopicByName(TOPIC_JAVA);
 
     }
+
+    @Test
+    public void findAllTopics_shouldReturnAllTopics() {
+        //Arrange
+        when(topicRepository.findAll()).thenReturn(Arrays.asList(cSharp, java, javaScript, python, php, cpp));
+
+        //Act
+        List<TopicServiceModel> allTopics = this.topicService.findAllTopics();
+
+        int actual = 6;
+        int expected = allTopics.size();
+
+        //Assert
+
+        assertEquals(actual, expected);
+    }
+    @Test
+    public void findAllTopicNames_shouldReturnAllTopics() {
+        //Arrange
+        when(topicRepository.findAll()).thenReturn(Arrays.asList(cSharp, java, javaScript, python, php, cpp));
+
+        //Act
+        List<String> allTopics = this.topicService.getAllTopicNames();
+
+        //Assert
+        assertEquals(TOPIC_C_SHARP, allTopics.get(0));
+        assertEquals(TOPIC_JAVA, allTopics.get(1));
+        assertEquals(TOPIC_JAVASCRIPT, allTopics.get(2));
+        assertEquals(TOPIC_PYTHON, allTopics.get(3));
+        assertEquals(TOPIC_PHP, allTopics.get(4));
+        assertEquals(TOPIC_CPP, allTopics.get(5));
+    }
+
 
 }

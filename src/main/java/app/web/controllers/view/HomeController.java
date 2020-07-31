@@ -46,7 +46,7 @@ public class HomeController {
         httpSession.setAttribute("fullName", String.format("%s %s",currentUser.getFirstName(),currentUser.getLastName()));
         httpSession.setAttribute("avatarImg", currentUser.getProfilePicture());
         httpSession.setAttribute("allTopics",this.topicService.findAllTopics());
-        httpSession.setAttribute("top3RecentCourses",this.courseService.findTopThreeRecentCourses());
+        httpSession.setAttribute("top3RecentCourses",this.courseService.findRecentCourses());
         model.addAttribute("teachers", this.userService.findAllTeachers());
 
         return "home";

@@ -15,5 +15,5 @@ public interface CourseRepository extends JpaRepository<Course,String> {
     List<Course> findAllCoursesByAuthorId(@Param("authorId") String authorId);
 
     @Query("select c from Course c order by c.startedOn desc")
-    List<Course> findTopThreeRecentCourses();
+    List<Course> findRecentCourses();
 }

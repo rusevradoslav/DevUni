@@ -74,8 +74,8 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<CourseServiceModel> findTopThreeRecentCourses() {
-        return this.courseRepository.findTopThreeRecentCourses().stream().limit(3)
+    public List<CourseServiceModel> findRecentCourses() {
+        return this.courseRepository.findRecentCourses().stream().limit(3)
                 .map(course -> this.modelMapper.map(course, CourseServiceModel.class))
                 .collect(Collectors.toList());
 
