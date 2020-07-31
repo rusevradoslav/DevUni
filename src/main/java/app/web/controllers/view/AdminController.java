@@ -1,29 +1,29 @@
 package app.web.controllers.view;
 
-import app.error.UserAlreadyExistException;
-import app.models.binding.AdminCreateBindingModel;
-import app.models.service.UserServiceModel;
-import app.models.view.UserDetailsViewModel;
-import app.services.CourseService;
-import app.services.UserService;
-import app.validations.anotations.PageTitle;
-import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+        import app.error.UserAlreadyExistException;
+        import app.models.binding.AdminCreateBindingModel;
+        import app.models.service.UserServiceModel;
+        import app.models.view.UserDetailsViewModel;
+        import app.services.CourseService;
+        import app.services.UserService;
+        import app.validations.anotations.PageTitle;
+        import lombok.AllArgsConstructor;
+        import org.modelmapper.ModelMapper;
+        import org.springframework.beans.factory.annotation.Autowired;
+        import org.springframework.security.access.prepost.PreAuthorize;
+        import org.springframework.stereotype.Controller;
+        import org.springframework.ui.Model;
+        import org.springframework.validation.BindingResult;
+        import org.springframework.web.bind.annotation.*;
+        import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.management.relation.RoleNotFoundException;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-import java.security.Principal;
-import java.util.List;
+        import javax.management.relation.RoleNotFoundException;
+        import javax.servlet.http.HttpSession;
+        import javax.validation.Valid;
+        import java.security.Principal;
+        import java.util.List;
 
-import static app.constants.GlobalConstants.BINDING_RESULT;
+        import static app.constants.GlobalConstants.BINDING_RESULT;
 
 @Controller
 @RequestMapping("/admins")
@@ -223,13 +223,13 @@ public class AdminController {
 
     @GetMapping("/enable-course/{id}")
     public String enableCourse(@PathVariable("id") String id) throws RoleNotFoundException {
-
+        this.courseService.enableCourse(id);
         return "redirect:/admins/all-courses-details";
     }
 
     @GetMapping("/disable-course/{id}")
     public String disableCourse(@PathVariable("id") String id) {
-
+        this.courseService.disableCourse(id);
         return "redirect:/admins/all-courses-details";
     }
 

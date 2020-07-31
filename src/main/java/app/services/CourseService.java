@@ -13,4 +13,8 @@ public interface CourseService {
     List<CourseServiceModel> findRecentCourses();
 
     List<CourseServiceModel> getAllCourses();
+
+    CourseServiceModel enableCourse(String id);
+
+    CourseServiceModel disableCourse(String id);
 }

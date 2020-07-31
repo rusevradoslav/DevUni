@@ -1,5 +1,6 @@
 package app.services.impl;
 
+import app.error.CourseNotFoundException;
 import app.models.entity.Course;
 import app.models.entity.Difficulty;
 import app.models.entity.Topic;
@@ -94,5 +95,18 @@ public class CourseServiceImpl implements CourseService {
             courseServiceModel.setTopic(topicServiceModel.getName());
             return courseServiceModel;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public CourseServiceModel enableCourse(String id) {
+        this.courseRepository.changeCourseStatusToTrue(id);
+        Course course = this.courseRepository.findById(id).orElseThrow(() -> new CourseNotFoundException("User with given id was not found"));
+        return this.modelMapper.map(course,CourseServiceModel.class);
+    }
+    @Override
+    public CourseServiceModel disableCourse(String id) {
+        this.courseRepository.changeCourseStatusToFalse(id);
+        Course course = this.courseRepository.findById(id).orElseThrow(() -> new CourseNotFoundException("User with given id was not found"));
+        return this.modelMapper.map(course,CourseServiceModel.class);
     }
 }
