@@ -2,9 +2,13 @@ package app.services;
 
 import app.models.service.CourseServiceModel;
 
-import java.io.IOException;
+import java.util.List;
 
 public interface CourseService {
 
-   CourseServiceModel createCourse(String username, CourseServiceModel courseServiceModel) throws IOException;
+   CourseServiceModel createCourse(String username, CourseServiceModel courseServiceModel) ;
+
+    List<CourseServiceModel> findAllCoursesByAuthorId(String id);
+
+    List<CourseServiceModel> findTopThreeRecentCourses();
 }

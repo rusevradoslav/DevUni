@@ -2,6 +2,8 @@ package app.web.controllers.view;
 
 import app.models.binding.CourseCreateBindingModel;
 import app.models.service.CourseServiceModel;
+import app.models.service.UserServiceModel;
+import app.services.CloudinaryService;
 import app.services.CourseService;
 import app.services.TopicService;
 import app.services.UserService;
@@ -22,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 
 import static app.constants.GlobalConstants.BINDING_RESULT;
 
@@ -32,6 +35,7 @@ public class CourseController {
     private TopicService topicService;
     private CourseService courseService;
     private UserService userService;
+    private CloudinaryService cloudinaryService;
     private ModelMapper modelMapper;
 
     @GetMapping("/create")
@@ -53,33 +57,40 @@ public class CourseController {
     public String createCourseConfirm(@Valid @ModelAttribute("courseCreateBindingModel") CourseCreateBindingModel courseCreateBindingModel,
                                       BindingResult bindingResult,
                                       RedirectAttributes redirectAttributes,
-                                      Principal principal)  {
-
+                                      Principal principal) {
+        System.out.println();
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("courseCreateBindingModel", courseCreateBindingModel);
             redirectAttributes.addFlashAttribute(String.format(BINDING_RESULT + "courseCreateBindingModel"), bindingResult);
             return "redirect:/courses/create";
         }
-
-        CourseServiceModel courseServiceModel = this.modelMapper.map(courseCreateBindingModel, CourseServiceModel.class);
-
+        String coursePhotoURL;
         try {
-            this.courseService.createCourse(principal.getName(),courseServiceModel);
+            coursePhotoURL = cloudinaryService.uploadImage(courseCreateBindingModel.getCoursePhoto());
         } catch (IOException e) {
-            redirectAttributes.addFlashAttribute("imageSizeException",e.getMessage());
+            redirectAttributes.addFlashAttribute("imageSizeException", e.getMessage());
             return "redirect:/courses/create";
         }
+        CourseServiceModel courseServiceModel = this.modelMapper.map(courseCreateBindingModel, CourseServiceModel.class);
+        courseServiceModel.setCoursePhoto(coursePhotoURL);
+
+
+        this.courseService.createCourse(principal.getName(), courseServiceModel);
+
 
         return "redirect:/courses/teacher-courses";
     }
+
     @GetMapping("/teacher-courses")
     @PreAuthorize("hasRole('ROLE_TEACHER')")
     @PageTitle("Teacher Course")
-    public String teacherCourses(Model model) {
+    public String teacherCourses(Model model, Principal principal) {
+        UserServiceModel userServiceModel = this.userService.findByName(principal.getName());
 
+        List<CourseServiceModel> allCoursesByAuthorId = courseService.findAllCoursesByAuthorId(userServiceModel.getId());
+        model.addAttribute("allCoursesByAuthorId", allCoursesByAuthorId);
         return "courses/teacher-courses";
     }
-
 
 
 }

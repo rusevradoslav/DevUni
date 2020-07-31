@@ -23,7 +23,7 @@ public class CourseCreateBindingModel {
     private String title;
 
     @NotNull(message = "Short description is required")
-    @Length(min = 50, max = 150, message = "Short Description must be between 50 and 150 characters")
+    @Length(min = 120, max = 150, message = "Short Description must be between 50 and 150 characters")
     private String shortDescription;
 
     @NotNull(message = "Description is required")

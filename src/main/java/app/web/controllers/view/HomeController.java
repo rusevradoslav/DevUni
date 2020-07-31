@@ -1,6 +1,8 @@
 package app.web.controllers.view;
 
 import app.models.service.UserServiceModel;
+import app.services.CourseService;
+import app.services.TopicService;
 import app.services.UserService;
 import app.validations.anotations.PageTitle;
 import lombok.AllArgsConstructor;
@@ -17,6 +19,8 @@ import java.security.Principal;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class HomeController {
     private final UserService userService;
+    private final CourseService courseService;
+    private final TopicService topicService;
 
 
     @GetMapping("/")
@@ -39,7 +43,10 @@ public class HomeController {
     public String home(Model model, HttpSession httpSession, Principal principal) {
         UserServiceModel currentUser = this.userService.findByName(principal.getName());
         httpSession.setAttribute("user", currentUser);
+        httpSession.setAttribute("fullName", String.format("%s %s",currentUser.getFirstName(),currentUser.getLastName()));
         httpSession.setAttribute("avatarImg", currentUser.getProfilePicture());
+        httpSession.setAttribute("allTopics",this.topicService.findAllTopics());
+        httpSession.setAttribute("top3RecentCourses",this.courseService.findTopThreeRecentCourses());
         model.addAttribute("teachers", this.userService.findAllTeachers());
 
         return "home";

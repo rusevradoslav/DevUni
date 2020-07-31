@@ -49,5 +49,10 @@ public class TopicServiceImpl implements TopicService {
         return this.topicRepository.findAll().stream().map(Topic::getName).collect(Collectors.toList());
     }
 
+    @Override
+    public List<TopicServiceModel> findAllTopics() {
+        return this.topicRepository.findAll().stream().map(topic -> this.modelMapper.map(topic,TopicServiceModel.class)).collect(Collectors.toList());
+    }
+
 
 }

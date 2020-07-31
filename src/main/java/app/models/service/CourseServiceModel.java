@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.Max;
@@ -27,7 +26,7 @@ public class CourseServiceModel extends BaseServiceModel {
     private String title;
 
     @NotNull(message = "Short description is required")
-    @Length(min = 50, max = 150, message = "Short Description must be between 50 and 150 characters")
+    @Length(min = 120, max = 150, message = "Short Description must be between 50 and 150 characters")
     private String shortDescription;
 
     @NotNull(message = "Description is required")
@@ -35,7 +34,7 @@ public class CourseServiceModel extends BaseServiceModel {
     private String description;
 
 
-    private MultipartFile coursePhoto;
+    private String coursePhoto;
 
 
     @Min(value = 1, message = "Pass percentage must be at least 1%")

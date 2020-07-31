@@ -16,11 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -34,7 +34,7 @@ public class CourseServiceImpl implements CourseService {
 
 
     @Override
-    public CourseServiceModel createCourse(String username, CourseServiceModel courseServiceModel) throws IOException {
+    public CourseServiceModel createCourse(String username, CourseServiceModel courseServiceModel) {
         System.out.println();
         Course course = this.modelMapper.map(courseServiceModel, Course.class);
 
@@ -48,19 +48,36 @@ public class CourseServiceImpl implements CourseService {
         coursesInTopic.add(course);
         topic.setCourses(coursesInTopic);
 
-        String coursePhotoURL = cloudinaryService.uploadImage(courseServiceModel.getCoursePhoto());
 
         LocalDateTime startingOn = courseServiceModel.getStartedOn();
-        LocalDateTime endingOn = startingOn.plus(courseServiceModel.getDurationWeeks()*7, ChronoUnit.DAYS);
+        LocalDateTime endingOn = startingOn.plus(courseServiceModel.getDurationWeeks() * 7, ChronoUnit.DAYS);
 
         course.setAuthor(user);
         course.setTopic(topic);
         course.setDifficulty(Difficulty.valueOf(courseServiceModel.getDifficulty()));
-        course.setCoursePhoto(coursePhotoURL);
         course.setEndedON(endingOn);
 
         this.courseRepository.saveAndFlush(course);
         Course newlyCreatedCourse = this.courseRepository.findById(course.getId()).orElse(null);
-        return this.modelMapper.map(newlyCreatedCourse,CourseServiceModel.class);
+        return this.modelMapper.map(newlyCreatedCourse, CourseServiceModel.class);
+    }
+
+    @Override
+    public List<CourseServiceModel> findAllCoursesByAuthorId(String id) {
+
+        return courseRepository.findAllCoursesByAuthorId(id)
+                .stream()
+                .map(course -> this.modelMapper.map(course, CourseServiceModel.class))
+                .collect(Collectors.toList());
+
+
+    }
+
+    @Override
+    public List<CourseServiceModel> findTopThreeRecentCourses() {
+        return this.courseRepository.findTopThreeRecentCourses().stream().limit(3)
+                .map(course -> this.modelMapper.map(course, CourseServiceModel.class))
+                .collect(Collectors.toList());
+
     }
 }
