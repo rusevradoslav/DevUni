@@ -11,4 +11,6 @@ public interface CourseService {
     List<CourseServiceModel> findAllCoursesByAuthorId(String id);
 
     List<CourseServiceModel> findRecentCourses();
+
+    List<CourseServiceModel> getAllCourses();
 }

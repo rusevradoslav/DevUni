@@ -5,6 +5,8 @@ import app.models.entity.Difficulty;
 import app.models.entity.Topic;
 import app.models.entity.User;
 import app.models.service.CourseServiceModel;
+import app.models.service.TopicServiceModel;
+import app.models.service.UserServiceModel;
 import app.repositories.CourseRepository;
 import app.services.CloudinaryService;
 import app.services.CourseService;
@@ -79,5 +81,18 @@ public class CourseServiceImpl implements CourseService {
                 .map(course -> this.modelMapper.map(course, CourseServiceModel.class))
                 .collect(Collectors.toList());
 
+    }
+
+    @Override
+    public List<CourseServiceModel> getAllCourses() {
+
+        return this.courseRepository.findAll().stream().map(course -> {
+            UserServiceModel userServiceModel = this.modelMapper.map(course.getAuthor(), UserServiceModel.class);
+            TopicServiceModel topicServiceModel = this.modelMapper.map(course.getTopic(), TopicServiceModel.class);
+            CourseServiceModel courseServiceModel = this.modelMapper.map(course, CourseServiceModel.class);
+            courseServiceModel.setAuthor(userServiceModel);
+            courseServiceModel.setTopic(topicServiceModel.getName());
+            return courseServiceModel;
+        }).collect(Collectors.toList());
     }
 }

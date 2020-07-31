@@ -21,7 +21,7 @@
                     <div class="dropdown-menu" aria-labelledby="dropdown04">
                         <a class="dropdown-item" href="courses.html">All Courses</a>
                         <a class="dropdown-item" href="courses.html"sec:authorize="hasRole('ROLE_ADMIN')">My Courses</a>
-                        <a class="dropdown-item" href="courses.html">Approve Course Request</a>
+                        <a class="dropdown-item" th:href ="@{/admins/all-courses-details}">Approve Courses</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">

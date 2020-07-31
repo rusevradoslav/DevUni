@@ -4,6 +4,7 @@ import app.error.UserAlreadyExistException;
 import app.models.binding.AdminCreateBindingModel;
 import app.models.service.UserServiceModel;
 import app.models.view.UserDetailsViewModel;
+import app.services.CourseService;
 import app.services.UserService;
 import app.validations.anotations.PageTitle;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,7 @@ import static app.constants.GlobalConstants.BINDING_RESULT;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class AdminController {
     private final UserService userService;
+    private final CourseService courseService;
 
     private final ModelMapper modelMapper;
 
@@ -171,7 +173,7 @@ public class AdminController {
     }
 
     @GetMapping("/cancel-teacher-request/{id}")
-    public String cancelTeacherRequest(@PathVariable("id") String id){
+    public String cancelTeacherRequest(@PathVariable("id") String id) {
         UserServiceModel userServiceModel = this.userService.findById(id);
         this.userService.cancelTeacherRequest(userServiceModel);
         return "redirect:/admins/all-teacher-requests";
@@ -210,4 +212,25 @@ public class AdminController {
         }
         return "redirect:/admins/all-admins";
     }
+
+    @GetMapping("/all-courses-details")
+    @PreAuthorize("hasAnyRole('ROLE_ROOT_ADMIN','ROLE_ADMIN')")
+    @PageTitle("All Courses")
+    public String allCourses(Model model) {
+        model.addAttribute("allCourses", this.courseService.getAllCourses());
+        return "admins/admin-all-courses";
+    }
+
+    @GetMapping("/enable-course/{id}")
+    public String enableCourse(@PathVariable("id") String id) throws RoleNotFoundException {
+
+        return "redirect:/admins/all-courses-details";
+    }
+
+    @GetMapping("/disable-course/{id}")
+    public String disableCourse(@PathVariable("id") String id) {
+
+        return "redirect:/admins/all-courses-details";
+    }
+
 }
