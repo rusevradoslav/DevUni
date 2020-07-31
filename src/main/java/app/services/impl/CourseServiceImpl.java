@@ -59,7 +59,8 @@ public class CourseServiceImpl implements CourseService {
         course.setCoursePhoto(coursePhotoURL);
         course.setEndedON(endingOn);
 
-        Course newlyCreatedCourse = this.courseRepository.saveAndFlush(course);
+        this.courseRepository.saveAndFlush(course);
+        Course newlyCreatedCourse = this.courseRepository.findById(course.getId()).orElse(null);
         return this.modelMapper.map(newlyCreatedCourse,CourseServiceModel.class);
     }
 }

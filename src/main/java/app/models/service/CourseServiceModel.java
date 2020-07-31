@@ -34,7 +34,7 @@ public class CourseServiceModel extends BaseServiceModel {
     @Length(min = 400, max = 850, message = "Description must be between 400 and 850 characters")
     private String description;
 
-    @NotNull(message = "Course photo is required")
+
     private MultipartFile coursePhoto;
 
 

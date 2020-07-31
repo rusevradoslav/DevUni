@@ -30,7 +30,7 @@ public class Course extends BaseEntity {
     @Length(min = 400, max = 850, message = "Description must be between 400 and 850 characters")
     private String description;
 
-    @Column(nullable = false)
+    @Column
     private String coursePhoto;
 
     @Column

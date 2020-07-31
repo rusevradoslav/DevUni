@@ -139,30 +139,6 @@ public class UserServiceImplTest {
 
     }
 
-/*    @Test
-    public void loadUserByUsername_shouldReturnUser_WhenUserExist() {
-        //Arrange
-        when(userRepository.findFirstByEmail(user.getEmail())).thenReturn(Optional.of(user));
-
-        //Act
-        UserDetails userDetails = userService.loadUserByUsername(VALID_EMAIL);
-
-        //Assert
-        String actual = user.getUsername();
-        String expected = userDetails.getUsername();
-
-        assertEquals(actual, expected);
-    }
-
-    @Test(expected = UsernameNotFoundException.class)
-    public void loadUserByUsername_shouldThrowException_WhenUserDoesNotExist() {
-        //Arrange
-        when(userRepository.findFirstByEmail(user.getEmail())).thenReturn(Optional.of(user));
-
-        //Act //Assert
-        userService.loadUserByUsername(INVALID_EMAIL);
-
-    }*/
 
     @Test(expected = UserAlreadyExistException.class)
     public void registerNewUser_shouldThrowException_WhenUsernameAlreadyExist() throws RoleNotFoundException, UserAlreadyExistException {
