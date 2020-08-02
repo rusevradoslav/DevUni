@@ -19,7 +19,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="courses.html" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Courses</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown04">
-                        <a class="dropdown-item" href="courses.html">All Courses</a>
+                        <a class="dropdown-item" th:href="@{/courses/allCourses}">All Courses</a>
                         <a class="dropdown-item" href="courses.html"sec:authorize="hasRole('ROLE_ADMIN')">My Courses</a>
                         <a class="dropdown-item" th:href ="@{/admins/all-courses-details}">Approve Courses</a>
                     </div>

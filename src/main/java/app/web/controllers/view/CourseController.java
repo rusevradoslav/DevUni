@@ -15,10 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -92,5 +89,22 @@ public class CourseController {
         return "courses/teacher-courses";
     }
 
+    @GetMapping("/allCourses")
+    @PageTitle("All Courses")
+    public String allCourses(Model model) {
 
+        model.addAttribute("allCourses", courseService.findAllCourses());
+        model.addAttribute("allTopics", topicService.findAllTopics());
+        model.addAttribute("top3RecentCourses", courseService.findRecentCourses());
+        return "courses/allCourses";
+    }
+
+    @GetMapping("/allCoursesInTopic/{id}")
+    @PageTitle("All Courses")
+    public String allCoursesInTopic(@PathVariable("id") String id, Model model) {
+        model.addAttribute("allCourses", courseService.findAllCoursesInTopic(id));
+        model.addAttribute("allTopics", topicService.findAllTopics());
+        model.addAttribute("top3RecentCourses", courseService.findRecentCourses());
+        return "courses/allCourses";
+    }
 }

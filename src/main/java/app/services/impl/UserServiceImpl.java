@@ -146,6 +146,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserServiceModel changePassword(UserServiceModel userServiceModel, String newPassword) {
+        System.out.println();
         String newEncodedPassword = bCryptPasswordEncoder.encode(newPassword);
         this.userRepository.changePassword(userServiceModel.getId(), newEncodedPassword);
         User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new CourseNotFoundException("User with given id was not found !"));

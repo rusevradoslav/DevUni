@@ -482,6 +482,7 @@ public class UserServiceImplTest {
 
     @Test
     public void changePassword_shouldChangeUserPasswordAndCallUserRepository() {
+        System.out.println();
         //Arrange
         String newEncodedPassword = bCryptPasswordEncoder.encode(VALID_NEW_PASSWORD);
         user.setPassword(newEncodedPassword);

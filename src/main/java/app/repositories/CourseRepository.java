@@ -25,4 +25,10 @@ public interface CourseRepository extends JpaRepository<Course, String> {
     @Modifying
     @Query("update Course c set c.status = false where c.id =:courseId")
     void changeCourseStatusToFalse(@Param("courseId") String courseId);
+
+    @Query("select c from Course as c where c.status = true order by c.startedOn desc")
+    List<Course> findAllCourses();
+
+    @Query("select c from Course as c where c.status = true and c.topic.id = :topicId")
+    List<Course> findAllCoursesInTopic(@Param("topicId") String topicId);
 }

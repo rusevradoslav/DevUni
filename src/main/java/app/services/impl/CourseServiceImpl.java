@@ -101,12 +101,28 @@ public class CourseServiceImpl implements CourseService {
     public CourseServiceModel enableCourse(String id) {
         this.courseRepository.changeCourseStatusToTrue(id);
         Course course = this.courseRepository.findById(id).orElseThrow(() -> new CourseNotFoundException("User with given id was not found"));
-        return this.modelMapper.map(course,CourseServiceModel.class);
+        return this.modelMapper.map(course, CourseServiceModel.class);
     }
+
     @Override
     public CourseServiceModel disableCourse(String id) {
         this.courseRepository.changeCourseStatusToFalse(id);
         Course course = this.courseRepository.findById(id).orElseThrow(() -> new CourseNotFoundException("User with given id was not found"));
-        return this.modelMapper.map(course,CourseServiceModel.class);
+        return this.modelMapper.map(course, CourseServiceModel.class);
+    }
+
+    @Override
+    public List<CourseServiceModel> findAllCourses() {
+        return this.courseRepository.findAllCourses()
+                .stream()
+                .map(course -> this.modelMapper.map(course, CourseServiceModel.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CourseServiceModel> findAllCoursesInTopic(String id) {
+        return this.courseRepository.findAllCoursesInTopic(id).stream()
+                .map(course -> this.modelMapper.map(course, CourseServiceModel.class))
+                .collect(Collectors.toList());
+
     }
 }
