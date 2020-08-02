@@ -21,19 +21,25 @@
             <div class="col-md-7 text-center">
 
                 <div class="mb-5 element-animate">
-                    <h1 class="mb-2">Advanced JavaScript Learning</h1>
-                    <p class="bcrumb"><a href="index.html">Home</a> <span
-                            class="sep ion-android-arrow-dropright px-2"></span> <a href="courses.html">Course</a> <span
-                            class="sep ion-android-arrow-dropright px-2"></span> <span class="current">Advanced JavaScript Learning</span>
-                    </p>
+                    <h1 class="mb-2" th:text="${course.title}"></h1>
                 </div>
 
             </div>
         </div>
     </div>
 </section>
+<th:block sec:authorize="hasRole('ROLE_TEACHER')"
+          th:if="${course.getLectures().size() == 0}">
+    <div class="alert alert-warning alert-danger fade show" role="alert" style="margin-bottom: 0px;height: 70px;">
+        Congratulations <strong> <span th:text="*{course.author.getUsername()}"></span></strong> you have create a new course !
+        Every DEVUNI course must have at least one lecture !
+        <a th:href="@{/lectures/createLecture}"><strong>Don't forget to add your first lecture in this course !</strong></a>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span class="closebtn" aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</th:block>
 <!-- END section -->
-
 <div class="site-section bg-light element-animate">
     <div class="container">
 
@@ -164,5 +170,6 @@
 
 <!-- loader -->
 <th:block th:include="~{/fragments/script-loaders}"></th:block>
+<script src="/js/close-button.js"></script>
 </body>
 </html>

@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface CourseRepository extends JpaRepository<Course, String> {
 
-    @Query("select c from Course as c where c.author.id = :authorId")
+    @Query("select c from Course as c where c.author.id = :authorId  order by c.startedOn desc")
     List<Course> findAllCoursesByAuthorId(@Param("authorId") String authorId);
 
     @Query("select c from Course c order by c.startedOn desc")
@@ -29,6 +29,6 @@ public interface CourseRepository extends JpaRepository<Course, String> {
     @Query("select c from Course as c where c.status = true order by c.startedOn desc")
     List<Course> findAllCoursesWithStatusTrue();
 
-    @Query("select c from Course as c where c.status = true and c.topic.id = :topicId")
+    @Query("select c from Course as c where c.status = true and c.topic.id = :topicId  order by c.startedOn desc")
     List<Course> findAllCoursesInTopic(@Param("topicId") String topicId);
 }

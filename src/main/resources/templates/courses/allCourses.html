@@ -53,6 +53,13 @@
                                     <div class="number" style="margin-right: 64px;">
                                         <p th:text="|Students: *{enrolledStudents.size()}|"></p>
                                     </div>
+                                    <div sec:authorize="hasAnyRole('ROLE_STUDENT','ROLE_ADMIN')"
+                                         th:unless="${c.startedOn.isBefore(localDateTime)}"
+                                         class="text-right">
+                                        <p><a href="#" class=" btn btn-primary "><span
+                                                class="ion-ios-book mr-2"></span>Enroll
+                                            Now</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static app.constants.GlobalConstants.BINDING_RESULT;
@@ -105,6 +106,7 @@ public class CourseController {
         model.addAttribute("allCourses", courseService.findAllCoursesInTopic(id));
         model.addAttribute("allTopics", topicService.findAllTopics());
         model.addAttribute("top3RecentCourses", courseService.findRecentCourses());
+        model.addAttribute("localDateTime", LocalDateTime.now());
         return "courses/allCourses";
     }
 
