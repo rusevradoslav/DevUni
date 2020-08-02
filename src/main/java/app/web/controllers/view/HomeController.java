@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
+import java.time.LocalDateTime;
 
 @Controller
 @AllArgsConstructor(onConstructor = @__(@Autowired))
@@ -25,14 +26,13 @@ public class HomeController {
 
     @GetMapping("/")
     @PageTitle("Index")
-    public String index(Model model,Principal principal) {
-
+    public String index(Model model, Principal principal) {
 
 
         if (principal != null) {
             return "home";
         } else {
-            model.addAttribute("topicNames",this.topicService.findAllTopics());
+            model.addAttribute("topicNames", this.topicService.findAllTopics());
             model.addAttribute("teachers", this.userService.findAllTeachers());
             model.addAttribute("allCourses", this.courseService.findAllCoursesWithStatusTrue());
             return "index";
@@ -45,12 +45,13 @@ public class HomeController {
     public String home(Model model, HttpSession httpSession, Principal principal) {
         UserServiceModel currentUser = this.userService.findByName(principal.getName());
         httpSession.setAttribute("user", currentUser);
-        httpSession.setAttribute("fullName", String.format("%s %s",currentUser.getFirstName(),currentUser.getLastName()));
+        httpSession.setAttribute("fullName", String.format("%s %s", currentUser.getFirstName(), currentUser.getLastName()));
         httpSession.setAttribute("avatarImg", currentUser.getProfilePicture());
-        httpSession.setAttribute("allTopics",this.topicService.findAllTopics());
-        httpSession.setAttribute("top3RecentCourses",this.courseService.findRecentCourses());
+        httpSession.setAttribute("allTopics", this.topicService.findAllTopics());
+        httpSession.setAttribute("top3RecentCourses", this.courseService.findRecentCourses());
         model.addAttribute("teachers", this.userService.findAllTeachers());
         model.addAttribute("allCourses", this.courseService.findAllCoursesWithStatusTrue());
+        model.addAttribute("localDateTime", LocalDateTime.now());
 
         return "home";
 

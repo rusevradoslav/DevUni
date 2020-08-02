@@ -2,12 +2,14 @@ package app.services;
 
 import app.error.InvalidEmailException;
 import app.error.UserAlreadyExistException;
+import app.error.UserNotFoundException;
 import app.models.entity.AboutMe;
 import app.models.entity.Role;
 import app.models.entity.User;
 import app.models.service.AboutMeServiceModel;
 import app.models.service.RoleServiceModel;
 import app.models.service.UserServiceModel;
+import app.models.view.AboutMeViewModel;
 import app.models.view.UserDetailsViewModel;
 import app.repositories.UserRepository;
 import app.services.impl.UserServiceImpl;
@@ -671,4 +673,63 @@ public class UserServiceImplTest {
     }
 
 
+    @Test
+    public void findTeacher_shouldReturnTeachersWithAboutMe() {
+
+        AboutMe firstAboutMe = new AboutMe();
+        aboutMe.setId("firstAboutMe");
+        Set<Role> roles = new HashSet<>();
+        Role role = new Role("ROLE_TEACHER");
+        roles.add(role);
+        User user = new User();
+        user.setId(VALID_ID);
+        user.setUsername("First");
+        user.setLastName("First");
+        user.setRegistrationDate(LocalDateTime.now());
+        user.setAboutMe(firstAboutMe);
+        user.setAuthorities(roles);
+
+        when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
+        //Act
+        UserDetailsViewModel teacher = userService.findTeacher(VALID_ID);
+
+        //Assert
+        String actual = "First";
+        String expected = teacher.getUsername();
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    public void findTeacher_shouldReturnTeachersWithoutAboutMe() {
+
+        Set<Role> roles = new HashSet<>();
+        Role role = new Role("ROLE_TEACHER");
+        roles.add(role);
+        User user = new User();
+        user.setId(VALID_ID);
+        user.setUsername("First");
+        user.setLastName("First");
+        user.setRegistrationDate(LocalDateTime.now());
+        user.setAboutMe(null);
+        user.setAuthorities(roles);
+
+        when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
+        //Act
+        UserDetailsViewModel teacher = userService.findTeacher(VALID_ID);
+
+        //Assert
+
+        AboutMeViewModel expected = teacher.getAboutMeViewModel();
+        assertEquals(null, expected);
+    }
+
+    @Test(expected = UserNotFoundException.class)
+    public void findTeacher_shouldThrowExceptionIfTeacherDoesNotExist() {
+        //Arrange
+        when(userRepository.findById(VALID_ID)).thenReturn(Optional.empty());
+        //Act
+        UserDetailsViewModel teacher = userService.findTeacher(VALID_ID);
+
+
+    }
 }

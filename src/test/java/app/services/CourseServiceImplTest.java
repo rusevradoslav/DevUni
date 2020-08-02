@@ -29,7 +29,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-
 @RunWith(MockitoJUnitRunner.class)
 public class CourseServiceImplTest {
     private static final String VALID_ID = "validId";
@@ -234,6 +233,31 @@ public class CourseServiceImplTest {
 
     }
 
+    @Test
+    public void findCourseById_shouldReturnCourseIfExist() {
+        //Arrange
+        when(courseRepository.findById(VALID_ID)).thenReturn(Optional.of(course));
+
+        //Act
+        CourseServiceModel courseServiceModel = this.courseService.findCourseById(VALID_ID);
+
+        String actual = VALID_ID;
+        String expected = courseServiceModel.getId();
+
+        assertEquals(actual,expected);
+    }
+    @Test(expected = CourseNotFoundException.class)
+    public void findCourseById_shouldThrowExceptionIfCourseDoesNotExist() {
+        //Arrange
+        when(courseRepository.findById(VALID_ID)).thenReturn(Optional.empty());
+
+        //Act
+        CourseServiceModel courseServiceModel = this.courseService.findCourseById(VALID_ID);
+
+    }
+
+
+
 
     private CourseServiceModel getCourseServiceModel(ModelMapper actualMapper) {
         CourseServiceModel courseServiceModel = actualMapper.map(course, CourseServiceModel.class);
@@ -308,3 +332,4 @@ public class CourseServiceImplTest {
         return course2;
     }
 }
+

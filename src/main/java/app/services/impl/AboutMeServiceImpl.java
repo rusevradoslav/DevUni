@@ -24,7 +24,7 @@ public class AboutMeServiceImpl implements AboutMeService {
 
     @Override
     public AboutMeServiceModel addTeacherAboutMe(UserServiceModel userServiceModel, AboutMeServiceModel aboutMeAddBindingModel) {
-        System.out.println();
+
         User user = this.modelMapper.map(userServiceModel, User.class);
         AboutMe aboutMe = user.getAboutMe();
 
