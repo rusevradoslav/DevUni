@@ -50,7 +50,7 @@
                             <input type="submit" class="search-submit btn btn-primary" value="Search">
                         </form>
                         <p class="text-center mb-5">We have more than 500 courses to improve your skills</p>
-                        <p class="text-center"><a href="#" class="btn py-3 px-5">Register Now</a></p>
+                        <p class="text-center"><a th:href="@{/users/register}" class="btn py-3 px-5">Register Now</a></p>
                     </div>
                 </div>
 
@@ -113,168 +113,27 @@
     </div>
     <div class="container-fluid block-11 element-animate">
         <div class="nonloop-block-11 owl-carousel">
-            <div class="item">
-                <div class="block-19">
+            <div  class="item" th:each="c : ${allCourses}" th:object="${c}">
+             <a  th:href="@{courses/courseDetails/{id}(id = *{id})}">
+                 <div class="block-19" style="height: 551px">
                     <figure>
-                        <img src="images/img_1.jpg" alt="Image" class="img-fluid">
+                        <img style="max-width:100%; height: 100%"   th:src="*{coursePhoto}" alt="Image" >
                     </figure>
                     <div class="text">
-                        <h2 class="heading"><a href="#">Advanced JavaScript Learning</a></h2>
-                        <p class="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit qui neque sint
+                        <h2 class="heading"><a th:text="*{title}"
+                                               th:href="@{courses/courseDetails/{id}(id = *{id})}"></a></h2>
+                        <p class="md-4" th:text="|Teacher: *{author.getFirstName()} *{author.getLastName()}|"></p>
+                        <p class="mb-4" th:text="*{shortDescription}">Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit qui neque sint
                             eveniet tempore sapiente.</p>
                         <div class="meta d-flex align-items-center">
                             <div class="number">
-                                <span>2,219/6,000</span>
+                                <p th:text="|Students: *{enrolledStudents.size()}|"></p>
                             </div>
-                            <div class="price text-right">
-                                <del class="mr-3">$23</del>
-                                <span>Free</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="item">
-                <div class="block-19">
-                    <figure>
-                        <img src="images/img_3.jpg" alt="Image" class="img-fluid">
-                    </figure>
-                    <div class="text">
-                        <h2 class="heading"><a href="#">Advanced JavaScript Learning</a></h2>
-                        <p class="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit qui neque sint
-                            eveniet tempore sapiente.</p>
-                        <div class="meta d-flex align-items-center">
-                            <div class="number">
-                                <span>2,219/6,000</span>
-                            </div>
-                            <div class="price text-right">
-                                <del class="mr-3">$23</del>
-                                <span>Free</span></div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="item">
-                <div class="block-19">
-                    <figure>
-                        <img src="images/img_2.jpg" alt="Image" class="img-fluid">
-                    </figure>
-                    <div class="text">
-                        <h2 class="heading"><a href="#">Introduction to CSS</a></h2>
-                        <p class="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit qui neque sint
-                            eveniet tempore sapiente.</p>
-                        <div class="meta d-flex align-items-center">
-                            <div class="number">
-                                <span>1,903/3,000</span>
-                            </div>
-                            <div class="price text-right"><span>$10.99</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="item">
-                <div class="block-19">
-                    <figure>
-                        <img src="images/img_1.jpg" alt="Image" class="img-fluid">
-                    </figure>
-                    <div class="text">
-                        <h2 class="heading"><a href="#">Design &amp; Develop</a></h2>
-                        <p class="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit qui neque sint
-                            eveniet tempore sapiente.</p>
-                        <div class="meta d-flex align-items-center">
-                            <div class="number">
-                                <span>23/100</span>
-                            </div>
-                            <div class="price text-right">
-                                <del class="mr-3">$23</del>
-                                <span>Free</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="item">
-                <div class="block-19">
-                    <figure>
-                        <img src="images/img_1.jpg" alt="Image" class="img-fluid">
-                    </figure>
-                    <div class="text">
-                        <h2 class="heading"><a href="#">Advanced JavaScript Learning</a></h2>
-                        <p class="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit qui neque sint
-                            eveniet tempore sapiente.</p>
-                        <div class="meta d-flex align-items-center">
-                            <div class="number">
-                                <span>2,219/6,000</span>
-                            </div>
-                            <div class="price text-right">
-                                <del class="mr-3">$23</del>
-                                <span>Free</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="item">
-                <div class="block-19">
-                    <figure>
-                        <img src="images/img_3.jpg" alt="Image" class="img-fluid">
-                    </figure>
-                    <div class="text">
-                        <h2 class="heading"><a href="#">Advanced JavaScript Learning</a></h2>
-                        <p class="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit qui neque sint
-                            eveniet tempore sapiente.</p>
-                        <div class="meta d-flex align-items-center">
-                            <div class="number">
-                                <span>2,219/6,000</span>
-                            </div>
-                            <div class="price text-right">
-                                <del class="mr-3">$23</del>
-                                <span>Free</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="item">
-                <div class="block-19">
-                    <figure>
-                        <img src="images/img_2.jpg" alt="Image" class="img-fluid">
-                    </figure>
-                    <div class="text">
-                        <h2 class="heading"><a href="#">Introduction to CSS</a></h2>
-                        <p class="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit qui neque sint
-                            eveniet tempore sapiente.</p>
-                        <div class="meta d-flex align-items-center">
-                            <div class="number">
-                                <span>1,903/3,000</span>
-                            </div>
-                            <div class="price text-right"><span>$10.99</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="item">
-                <div class="block-19">
-                    <figure>
-                        <img src="images/img_1.jpg" alt="Image" class="img-fluid">
-                    </figure>
-                    <div class="text">
-                        <h2 class="heading"><a href="#">Design &amp; Develop</a></h2>
-                        <p class="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit qui neque sint
-                            eveniet tempore sapiente.</p>
-                        <div class="meta d-flex align-items-center">
-                            <div class="number">
-                                <span>23/100</span>
-                            </div>
-                            <div class="price text-right">
-                                <del class="mr-3">$23</del>
-                                <span>Free</span></div>
-                        </div>
-                    </div>
-                </div>
+             </a>
             </div>
 
         </div>

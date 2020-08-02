@@ -33,6 +33,7 @@ public class HomeController {
             return "home";
         } else {
             model.addAttribute("teachers", this.userService.findAllTeachers());
+            model.addAttribute("allCourses", this.courseService.findAllCoursesWithStatusTrue());
             return "index";
         }
     }
@@ -48,6 +49,7 @@ public class HomeController {
         httpSession.setAttribute("allTopics",this.topicService.findAllTopics());
         httpSession.setAttribute("top3RecentCourses",this.courseService.findRecentCourses());
         model.addAttribute("teachers", this.userService.findAllTeachers());
+        model.addAttribute("allCourses", this.courseService.findAllCoursesWithStatusTrue());
 
         return "home";
 

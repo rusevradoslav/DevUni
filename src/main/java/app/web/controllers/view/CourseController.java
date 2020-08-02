@@ -93,7 +93,7 @@ public class CourseController {
     @PageTitle("All Courses")
     public String allCourses(Model model) {
 
-        model.addAttribute("allCourses", courseService.findAllCourses());
+        model.addAttribute("allCourses", courseService.findAllCoursesWithStatusTrue());
         model.addAttribute("allTopics", topicService.findAllTopics());
         model.addAttribute("top3RecentCourses", courseService.findRecentCourses());
         return "courses/allCourses";
@@ -106,5 +106,11 @@ public class CourseController {
         model.addAttribute("allTopics", topicService.findAllTopics());
         model.addAttribute("top3RecentCourses", courseService.findRecentCourses());
         return "courses/allCourses";
+    }
+    @GetMapping("/courseDetails/{id}")
+    @PageTitle("Course Details")
+    public String courseDetails(@PathVariable("id") String id, Model model) {
+
+        return "courses/courseDetails";
     }
 }

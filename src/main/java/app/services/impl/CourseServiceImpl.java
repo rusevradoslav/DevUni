@@ -112,8 +112,8 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<CourseServiceModel> findAllCourses() {
-        return this.courseRepository.findAllCourses()
+    public List<CourseServiceModel> findAllCoursesWithStatusTrue() {
+        return this.courseRepository.findAllCoursesWithStatusTrue()
                 .stream()
                 .map(course -> this.modelMapper.map(course, CourseServiceModel.class)).collect(Collectors.toList());
     }

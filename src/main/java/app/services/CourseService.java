@@ -18,7 +18,7 @@ public interface CourseService {
 
     CourseServiceModel disableCourse(String id);
 
-    List<CourseServiceModel> findAllCourses();
+    List<CourseServiceModel> findAllCoursesWithStatusTrue();
 
     List<CourseServiceModel> findAllCoursesInTopic(String id);
 }

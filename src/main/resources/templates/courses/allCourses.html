@@ -40,17 +40,18 @@
                     <div th:each="c : ${allCourses}" th:object="${c}" class="col-md-6 col-lg-6 mb-5">
                         <div class="block-19">
                             <figure>
-                                <a th:href="@{course/course-single/{id}(id = *{id})}"><img th:src="*{coursePhoto}"
+                                <a th:href="@{courses/courseDetails/{id}(id = *{id})}"><img th:src="*{coursePhoto}"
                                                                                            alt="Image"
-                                                                                           class="img-fluid"></a>
+                                                                                           class="img-fluid" ></a>
                             </figure>
                             <div class="text">
-                                <h2 class="heading"><a th:href="@{course/course-single/{id}(id = *{id})}"
+                                <h2 class="heading"><a th:href="@{courses/courseDetails/{id}(id = *{id})}"
                                                        th:text="*{title}"></a></h2>
+                                <p class="md-4" th:text="|Teacher: *{author.getFirstName()} *{author.getLastName()}|"></p>
                                 <p class="mb-4" th:text="*{shortDescription}"></p>
                                 <div class="meta d-flex align-items-center">
                                     <div class="number" style="margin-right: 64px;">
-                                        <span th:text="|Students: *{enrolledStudents.size()}|"></span>
+                                        <p th:text="|Students: *{enrolledStudents.size()}|"></p>
                                     </div>
                                 </div>
                             </div>
@@ -97,7 +98,7 @@
                     <div th:each="c : ${top3RecentCourses}" th:object="${c}">
                         <ul>
                             <li>
-                                <a th:href="@{course/course-single/{id}(id = *{id})}" class="d-flex">
+                                <a  th:href="@{courses/courseDetails/{id}(id = *{id})}" class="d-flex">
                                     <figure class="image mr-3">
                                         <img th:src="${c.coursePhoto}" alt="" class="img-fluid">
                                     </figure>
