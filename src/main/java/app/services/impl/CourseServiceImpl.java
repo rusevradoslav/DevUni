@@ -125,4 +125,15 @@ public class CourseServiceImpl implements CourseService {
                 .collect(Collectors.toList());
 
     }
+
+    @Override
+    public CourseServiceModel findCourseById(String id) {
+        Course course = this.courseRepository.findById(id).orElseThrow(() -> new CourseNotFoundException("Course with given id was not found"));
+        UserServiceModel userServiceModel = this.modelMapper.map(course.getAuthor(), UserServiceModel.class);
+        TopicServiceModel topicServiceModel = this.modelMapper.map(course.getTopic(), TopicServiceModel.class);
+        CourseServiceModel courseServiceModel = this.modelMapper.map(course, CourseServiceModel.class);
+        courseServiceModel.setAuthor(userServiceModel);
+        courseServiceModel.setTopic(topicServiceModel.getName());
+        return courseServiceModel;
+    }
 }

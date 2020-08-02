@@ -114,14 +114,14 @@
     <div class="container-fluid block-11 element-animate">
         <div class="nonloop-block-11 owl-carousel">
             <div  class="item" th:each="c : ${allCourses}" th:object="${c}">
-             <a  th:href="@{courses/courseDetails/{id}(id = *{id})}">
+             <a  th:href="@{/courses/courseDetails/{id}(id = *{id})}">
                  <div class="block-19" style="height: 551px">
                     <figure>
                         <img style="max-width:100%; height: 100%"   th:src="*{coursePhoto}" alt="Image" >
                     </figure>
                     <div class="text">
                         <h2 class="heading"><a th:text="*{title}"
-                                               th:href="@{courses/courseDetails/{id}(id = *{id})}"></a></h2>
+                                               th:href="@{/courses/courseDetails/{id}(id = *{id})}"></a></h2>
                         <p class="md-4" th:text="|Teacher: *{author.getFirstName()} *{author.getLastName()}|"></p>
                         <p class="mb-4" th:text="*{shortDescription}">Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit qui neque sint
                             eveniet tempore sapiente.</p>

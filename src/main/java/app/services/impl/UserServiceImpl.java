@@ -3,6 +3,7 @@ package app.services.impl;
 import app.error.InvalidEmailException;
 import app.error.UserAlreadyExistException;
 import app.error.CourseNotFoundException;
+import app.error.UserNotFoundException;
 import app.models.entity.AboutMe;
 import app.models.entity.Role;
 import app.models.entity.User;
@@ -223,6 +224,27 @@ public class UserServiceImpl implements UserService {
 
             return userDetailsViewModel;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public UserDetailsViewModel findTeacher(String teacherId) {
+        User user = this.userRepository.findById(teacherId).orElseThrow(() -> new UserNotFoundException("User with given id does not exist"));
+
+        UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(user, UserDetailsViewModel.class);
+        setFullNameAndRegistrationDate(user, userDetailsViewModel);
+
+        AboutMeViewModel aboutMeViewModel;
+        if (user.getAboutMe() == null) {
+            aboutMeViewModel = this.modelMapper.map(new AboutMe("", ""), AboutMeViewModel.class);
+        } else {
+            aboutMeViewModel = this.modelMapper.map(user.getAboutMe(), AboutMeViewModel.class);
+        }
+        userDetailsViewModel.setAboutMeViewModel(aboutMeViewModel);
+
+
+        return userDetailsViewModel;
+
+
     }
 
     @Override

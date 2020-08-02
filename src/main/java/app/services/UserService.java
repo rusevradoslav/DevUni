@@ -12,7 +12,7 @@ import javax.management.relation.RoleNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-public interface UserService{
+public interface UserService {
     UserServiceModel registerNewUserAccount(UserServiceModel map) throws UserAlreadyExistException, RoleNotFoundException;
 
     UserServiceModel findByEmail(String email) throws InvalidEmailException;
@@ -55,8 +55,9 @@ public interface UserService{
 
     UserServiceModel cancelTeacherRequest(UserServiceModel userServiceModel);
 
-    void setAboutMeToTheTeacher(AboutMe aboutMe, User user);
+    UserDetailsViewModel findTeacher(String teacherId);
 
+    void setAboutMeToTheTeacher(AboutMe aboutMe, User user);
 
 
 }

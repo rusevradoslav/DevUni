@@ -21,4 +21,6 @@ public interface CourseService {
     List<CourseServiceModel> findAllCoursesWithStatusTrue();
 
     List<CourseServiceModel> findAllCoursesInTopic(String id);
+
+    CourseServiceModel findCourseById(String id);
 }

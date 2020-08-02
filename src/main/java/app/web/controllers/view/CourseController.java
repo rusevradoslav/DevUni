@@ -107,10 +107,15 @@ public class CourseController {
         model.addAttribute("top3RecentCourses", courseService.findRecentCourses());
         return "courses/allCourses";
     }
+
     @GetMapping("/courseDetails/{id}")
     @PageTitle("Course Details")
     public String courseDetails(@PathVariable("id") String id, Model model) {
-
+        CourseServiceModel courseServiceModel = this.courseService.findCourseById(id);
+        model.addAttribute("course",courseServiceModel);
+        model.addAttribute("teacher", this.userService.findTeacher(courseServiceModel.getAuthor().getId()));
+        model.addAttribute("allTopics", topicService.findAllTopics());
+        model.addAttribute("top3RecentCourses", courseService.findRecentCourses());
         return "courses/courseDetails";
     }
 }
