@@ -29,28 +29,29 @@
                                                                                placeholder="Keyword search..."></div>
                                 <div class="select-wrap one-third">
                                     <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                                    <select name="" id="" class="form-control">
-                                        <option value="">Category Course</option>
-                                        <option value="">Laravel</option>
-                                        <option value="">PHP</option>
-                                        <option value="">JavaScript</option>
-                                        <option value="">Python</option>
+                                    <select name="topic" id="topic" class="form-control">
+                                        <option value="" selected>Topic Name</option>
+                                        <th:block th:each="t : ${topicNames}" th:object="${t}">
+                                            <option th:text="*{name}" th:value="*{name}" value=""></option>
+                                        </th:block>
                                     </select>
                                 </div>
                                 <div class="select-wrap one-third">
                                     <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                                    <select name="" id="" class="form-control">
-                                        <option value="">Difficulty</option>
-                                        <option value="">Beginner</option>
-                                        <option value="">Intermediate</option>
-                                        <option value="">Advance</option>
+                                    <select name="difficulty" id="difficulty" class="form-control">
+                                        <option value="" selected>Difficulty</option>
+                                        <th:block>
+                                            <option value="BEGINNER">BEGINNER</option>
+                                            <option value="INTERMEDIATE">INTERMEDIATE</option>
+                                            <option value="ADVANCE">ADVANCE</option>
+                                        </th:block>
                                     </select>
                                 </div>
                             </div>
                             <input type="submit" class="search-submit btn btn-primary" value="Search">
                         </form>
-                        <p class="text-center mb-5">We have more than 500 courses to improve your skills</p>
-                        <p class="text-center"><a th:href="@{/users/register}" class="btn py-3 px-5">Register Now</a></p>
+                        <p class="text-center"><a th:href="@{/users/register}" class="btn py-3 px-5">Register Now</a>
+                        </p>
                     </div>
                 </div>
 
@@ -84,10 +85,15 @@
                     </div>
                     <div class="text mb-5">
                         <p>
-                          We make the people we train real professionals in the software industry and help them start their careers!
-                          DevUni's Software University project was founded with the idea of ​​an innovative and modern educational center that creates true professionals in the world of programming. For us, as for the entire software industry, real practical skills are most important.
+                            We make the people we train real professionals in the software industry and help them start
+                            their careers!
+                            DevUni's Software University project was founded with the idea of ​​an innovative and modern
+                            educational center that creates true professionals in the world of programming. For us, as
+                            for the entire software industry, real practical skills are most important.
 
-                          That is why we use the "learning by doing" model, providing our students with programming training combined with real practical experience and knowledge in the most sought after and modern technologies, ready to start their careers as successful software engineers.
+                            That is why we use the "learning by doing" model, providing our students with programming
+                            training combined with real practical experience and knowledge in the most sought after and
+                            modern technologies, ready to start their careers as successful software engineers.
                         </p>
                     </div>
                 </div>
@@ -113,27 +119,28 @@
     </div>
     <div class="container-fluid block-11 element-animate">
         <div class="nonloop-block-11 owl-carousel">
-            <div  class="item" th:each="c : ${allCourses}" th:object="${c}">
-             <a  th:href="@{/courses/courseDetails/{id}(id = *{id})}">
-                 <div class="block-19" style="height: 551px">
-                    <figure>
-                        <img style="max-width:100%; height: 100%"   th:src="*{coursePhoto}" alt="Image" >
-                    </figure>
-                    <div class="text">
-                        <h2 class="heading"><a th:text="*{title}"
-                                               th:href="@{/courses/courseDetails/{id}(id = *{id})}"></a></h2>
-                        <p class="md-4" th:text="|Teacher: *{author.getFirstName()} *{author.getLastName()}|"></p>
-                        <p class="mb-4" th:text="*{shortDescription}">Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit qui neque sint
-                            eveniet tempore sapiente.</p>
-                        <div class="meta d-flex align-items-center">
-                            <div class="number">
-                                <p th:text="|Students: *{enrolledStudents.size()}|"></p>
-                            </div>
+            <div class="item" th:each="c : ${allCourses}" th:object="${c}">
+                <a th:href="@{/courses/courseDetails/{id}(id = *{id})}">
+                    <div class="block-19" style="height: 551px">
+                        <figure>
+                            <img style="max-width:100%; height: 100%" th:src="*{coursePhoto}" alt="Image">
+                        </figure>
+                        <div class="text">
+                            <h2 class="heading"><a th:text="*{title}"
+                                                   th:href="@{/courses/courseDetails/{id}(id = *{id})}"></a></h2>
+                            <p class="md-4" th:text="|Teacher: *{author.getFirstName()} *{author.getLastName()}|"></p>
+                            <p class="mb-4" th:text="*{shortDescription}">Lorem ipsum dolor sit amet consectetur
+                                adipisicing elit. Suscipit qui neque sint
+                                eveniet tempore sapiente.</p>
+                            <div class="meta d-flex align-items-center">
+                                <div class="number">
+                                    <p th:text="|Students: *{enrolledStudents.size()}|"></p>
+                                </div>
 
+                            </div>
                         </div>
                     </div>
-                </div>
-             </a>
+                </a>
             </div>
 
         </div>

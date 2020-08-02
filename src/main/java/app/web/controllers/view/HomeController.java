@@ -32,6 +32,7 @@ public class HomeController {
         if (principal != null) {
             return "home";
         } else {
+            model.addAttribute("topicNames",this.topicService.findAllTopics());
             model.addAttribute("teachers", this.userService.findAllTeachers());
             model.addAttribute("allCourses", this.courseService.findAllCoursesWithStatusTrue());
             return "index";

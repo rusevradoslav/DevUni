@@ -29,21 +29,22 @@
                                                                                placeholder="Keyword search..."></div>
                                 <div class="select-wrap one-third">
                                     <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                                    <select name="" id="" class="form-control">
-                                        <option value="">Topic Name</option>
-                                        <option value="">Laravel</option>
-                                        <option value="">PHP</option>
-                                        <option value="">JavaScript</option>
-                                        <option value="">Python</option>
+                                    <select name="topic" id="topic" class="form-control">
+                                        <option value="" selected>Topic Name</option>
+                                        <th:block th:each="t : ${#session.getAttribute('allTopics')}" th:object="${t}">
+                                            <option th:text="${t.name}" th:value="${t.name}" value=""></option>
+                                        </th:block>
                                     </select>
                                 </div>
                                 <div class="select-wrap one-third">
                                     <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                                    <select name="" id="" class="form-control">
-                                        <option value="">Difficulty</option>
-                                        <option value="">Beginner</option>
-                                        <option value="">Intermediate</option>
-                                        <option value="">Advance</option>
+                                    <select name="difficulty" id="difficulty" class="form-control">
+                                        <option value="" selected>Difficulty</option>
+                                        <th:block>
+                                            <option value="BEGINNER">BEGINNER</option>
+                                            <option value="INTERMEDIATE">INTERMEDIATE</option>
+                                            <option value="ADVANCE">ADVANCE</option>
+                                        </th:block>
                                     </select>
                                 </div>
                             </div>

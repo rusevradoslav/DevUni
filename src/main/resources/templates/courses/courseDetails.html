@@ -64,71 +64,40 @@
                         </div>
                         <div class="row bg-light align-items-center p-4 episode">
                             <div class="col-md-10">
-                                <p class="meta">Episode 1 <a href="#">Runtime 2:53</a></p>
+                                <p class="meta">Episode 1 </p>
                                 <h2><a href="#">Some Title Here For The Video</a></h2>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto, fugit!</p>
                             </div>
-                            <div class="col-md-2 text-center">
-                                <a href="#" class="play"><span class="ion-ios-play"></span></a>
+                            <div sec:authorize="isAuthenticated()">
+                                <div class="col-md-2 text-center">
+                                    <a href="#" class="play"><span class="ion-ios-play"></span></a>
+                                </div>
                             </div>
+                        </div>
+                        <br>
+                        <div sec:authorize="hasRole('ROLE_TEACHER')">
+                            <a type="button" class="btn btn-primary row align-items-center p-4 episode "
+                               th:href="@{/lectures/createLecture}">Create Lecture </a>
                         </div>
 
-                        <div class="row align-items-center p-4 episode">
-                            <div class="col-md-10">
-                                <p class="meta">Episode 2 <a href="#">Runtime 5:12</a></p>
-                                <h2><a href="#">Some Title Here For The Video</a></h2>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto, fugit!</p>
-                            </div>
-                            <div class="col-md-2 text-center">
-                                <a href="#" class="play"><span class="ion-ios-play"></span></a>
-                            </div>
-                        </div>
-
-                        <div class="row bg-light align-items-center p-4 episode">
-                            <div class="col-md-10">
-                                <p class="meta">Episode 3 <a href="#">Runtime 5:12</a></p>
-                                <h2><a href="#">Some Title Here For The Video</a></h2>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto, fugit!</p>
-                            </div>
-                            <div class="col-md-2 text-center">
-                                <a href="#" class="play"><span class="ion-ios-play"></span></a>
-                            </div>
-                        </div>
-
-                        <div class="row align-items-center p-4 episode">
-                            <div class="col-md-10">
-                                <p class="meta">Episode 4 <a href="#">Runtime 6:55</a></p>
-                                <h2><a href="#">Some Title Here For The Video</a></h2>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto, fugit!</p>
-                            </div>
-                            <div class="col-md-2 text-center">
-                                <a href="#" class="play"><span class="ion-ios-play"></span></a>
-                            </div>
-                        </div>
-
-                        <div class="row bg-light align-items-center p-4 episode">
-                            <div class="col-md-10">
-                                <p class="meta">Episode 5 <a href="#">Runtime 14:33</a></p>
-                                <h2><a href="#">Some Title Here For The Video</a></h2>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto, fugit!</p>
-                            </div>
-                            <div class="col-md-2 text-center">
-                                <a href="#" class="play"><span class="ion-ios-play"></span></a>
-                            </div>
-                        </div>
                     </div>
                 </section>
+
             </div>
             <!-- END content -->
             <div class="col-md-6 col-lg-4 order-md-1">
 
-                <div class="block-29 mb-5" >
+                <div class="block-29 mb-5">
                     <h2 class="heading">Course Details</h2>
                     <ul>
-                        <li><span class="text-1">Duration: </span> <span class="text-2" th:text="|*{durationWeeks} weeks|"></span> </li>
-                        <li><span class="text-1">Lectures: </span> <span class="text-2" th:text="*{lectures.size()}"></span></li>
-                        <li><span class="text-1">Homeworks: </span> <span class="text-2" th:text="*{lectures.size()}"></span></li>
-                        <li><span class="text-1">Pass Percentage: </span> <span class="text-2" th:text="*{passPercentage}"></span></li>
+                        <li><span class="text-1">Duration: </span> <span class="text-2"
+                                                                         th:text="|*{durationWeeks} weeks|"></span></li>
+                        <li><span class="text-1">Lectures: </span> <span class="text-2"
+                                                                         th:text="*{lectures.size()}"></span></li>
+                        <li><span class="text-1">Homeworks: </span> <span class="text-2"
+                                                                          th:text="*{lectures.size()}"></span></li>
+                        <li><span class="text-1">Pass Percentage: </span> <span class="text-2"
+                                                                                th:text="*{passPercentage}"></span></li>
                         <li><span class="text-1">Subject: </span> <span class="text-2" th:text="*{title}"></span></li>
                         <li><span class="text-1">Language: </span> <span class="text-2" th:text="*{topic}"></span></li>
                     </ul>
