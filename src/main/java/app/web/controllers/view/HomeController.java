@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
-import java.time.LocalDateTime;
 
 @Controller
 @AllArgsConstructor(onConstructor = @__(@Autowired))
@@ -51,7 +50,6 @@ public class HomeController {
         httpSession.setAttribute("top3RecentCourses", this.courseService.findRecentCourses());
         model.addAttribute("teachers", this.userService.findAllTeachers());
         model.addAttribute("allCourses", this.courseService.findAllCoursesWithStatusTrue());
-        model.addAttribute("localDateTime", LocalDateTime.now());
 
         return "home";
 

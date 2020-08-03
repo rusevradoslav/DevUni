@@ -89,15 +89,14 @@ public class CourseServiceImpl implements CourseService {
         return this.courseRepository
                 .findAll()
                 .stream()
-                .filter(course -> !course.getStartedOn().isBefore(LocalDateTime.now()))
                 .map(course -> {
-            UserServiceModel userServiceModel = this.modelMapper.map(course.getAuthor(), UserServiceModel.class);
-            TopicServiceModel topicServiceModel = this.modelMapper.map(course.getTopic(), TopicServiceModel.class);
-            CourseServiceModel courseServiceModel = this.modelMapper.map(course, CourseServiceModel.class);
-            courseServiceModel.setAuthor(userServiceModel);
-            courseServiceModel.setTopic(topicServiceModel.getName());
-            return courseServiceModel;
-        }).collect(Collectors.toList());
+                    UserServiceModel userServiceModel = this.modelMapper.map(course.getAuthor(), UserServiceModel.class);
+                    TopicServiceModel topicServiceModel = this.modelMapper.map(course.getTopic(), TopicServiceModel.class);
+                    CourseServiceModel courseServiceModel = this.modelMapper.map(course, CourseServiceModel.class);
+                    courseServiceModel.setAuthor(userServiceModel);
+                    courseServiceModel.setTopic(topicServiceModel.getName());
+                    return courseServiceModel;
+                }).collect(Collectors.toList());
     }
 
     @Override
@@ -141,5 +140,33 @@ public class CourseServiceImpl implements CourseService {
         courseServiceModel.setAuthor(userServiceModel);
         courseServiceModel.setTopic(topicServiceModel.getName());
         return courseServiceModel;
+    }
+
+    @Override
+    public CourseServiceModel enrollCourse(CourseServiceModel courseServiceModel, UserServiceModel userServiceModel) {
+
+        Course course = courseRepository.findById(courseServiceModel.getId())
+                .orElseThrow(() -> new CourseNotFoundException("Course with given id does not exist"));
+
+        User user = this.modelMapper.map(userServiceModel, User.class);
+
+        List<User> studentInCourse = course.getEnrolledStudents();
+        studentInCourse.add(user);
+        course.setEnrolledStudents(studentInCourse);
+
+        Course course1 = this.courseRepository.save(course);
+        return this.modelMapper.map(course1, CourseServiceModel.class);
+    }
+
+    @Override
+    public boolean checkIfCourseContainStudent(CourseServiceModel courseServiceModel, UserServiceModel user) {
+        System.out.println();
+        for (UserServiceModel enrolledStudent : courseServiceModel.getEnrolledStudents()) {
+            if (enrolledStudent.getUsername().equals(user.getUsername())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

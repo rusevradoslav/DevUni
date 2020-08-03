@@ -60,7 +60,7 @@ public class Course extends BaseEntity {
     @ManyToOne
     private User author;
 
-    @ManyToMany(mappedBy = "enrolledCourses")
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<User> enrolledStudents;
 
     @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)

@@ -97,7 +97,6 @@ public class CourseController {
         model.addAttribute("allCourses", courseService.findAllCoursesWithStatusTrue());
         model.addAttribute("allTopics", topicService.findAllTopics());
         model.addAttribute("top3RecentCourses", courseService.findRecentCourses());
-        model.addAttribute("localDateTime", LocalDateTime.now());
         return "courses/allCourses";
     }
 
@@ -108,7 +107,7 @@ public class CourseController {
         model.addAttribute("allCourses", courseService.findAllCoursesInTopic(id));
         model.addAttribute("allTopics", topicService.findAllTopics());
         model.addAttribute("top3RecentCourses", courseService.findRecentCourses());
-        model.addAttribute("localDateTime", LocalDateTime.now());
+
         return "courses/allCourses";
     }
 
@@ -116,12 +115,13 @@ public class CourseController {
     @GetMapping("/courseDetails/{id}")
     @PageTitle("Course Details")
     public String courseDetails(@PathVariable("id") String id, Model model, Principal principal) {
-        System.out.println();
         CourseServiceModel courseServiceModel = this.courseService.findCourseById(id);
+        System.out.println();
         if (principal != null) {
             UserServiceModel user = userService.findByName(principal.getName());
-            boolean contains = courseServiceModel.getEnrolledStudents().contains(user);
-            //TODO
+            boolean contains = courseService.checkIfCourseContainStudent(courseServiceModel,user);
+
+            model.addAttribute("containStudent",contains);
         }
 
         model.addAttribute("course", courseServiceModel);
@@ -133,4 +133,11 @@ public class CourseController {
     }
 
 
+    @GetMapping("/enrollCourse/{id}")
+    public String enrollCourse(@PathVariable("id") String id, Principal principal) {
+        CourseServiceModel courseServiceModel = this.courseService.findCourseById(id);
+        UserServiceModel userServiceModel = this.userService.findByName(principal.getName());
+        courseService.enrollCourse(courseServiceModel, userServiceModel);
+        return "redirect:/home";
+    }
 }

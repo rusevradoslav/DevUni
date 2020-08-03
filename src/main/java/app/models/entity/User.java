@@ -58,7 +58,7 @@ public class User extends BaseEntity implements UserDetails {
     @OneToMany(mappedBy = "author")
     private Set<Course> createdCourses;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "enrolledStudents")
     private Set<Course> enrolledCourses;
 
     @Override
