@@ -38,7 +38,6 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseServiceModel createCourse(String username, CourseServiceModel courseServiceModel) {
-        System.out.println();
         Course course = this.modelMapper.map(courseServiceModel, Course.class);
 
         User user = this.modelMapper.map(this.userService.findByName(username), User.class);
@@ -87,7 +86,11 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<CourseServiceModel> getAllCourses() {
 
-        return this.courseRepository.findAll().stream().map(course -> {
+        return this.courseRepository
+                .findAll()
+                .stream()
+                .filter(course -> !course.getStartedOn().isBefore(LocalDateTime.now()))
+                .map(course -> {
             UserServiceModel userServiceModel = this.modelMapper.map(course.getAuthor(), UserServiceModel.class);
             TopicServiceModel topicServiceModel = this.modelMapper.map(course.getTopic(), TopicServiceModel.class);
             CourseServiceModel courseServiceModel = this.modelMapper.map(course, CourseServiceModel.class);
@@ -115,12 +118,15 @@ public class CourseServiceImpl implements CourseService {
     public List<CourseServiceModel> findAllCoursesWithStatusTrue() {
         return this.courseRepository.findAllCoursesWithStatusTrue()
                 .stream()
+                .filter(course -> !course.getStartedOn().isBefore(LocalDateTime.now()))
                 .map(course -> this.modelMapper.map(course, CourseServiceModel.class)).collect(Collectors.toList());
     }
 
     @Override
     public List<CourseServiceModel> findAllCoursesInTopic(String id) {
-        return this.courseRepository.findAllCoursesInTopic(id).stream()
+        return this.courseRepository.findAllCoursesInTopic(id)
+                .stream()
+                .filter(course -> !course.getStartedOn().isBefore(LocalDateTime.now()))
                 .map(course -> this.modelMapper.map(course, CourseServiceModel.class))
                 .collect(Collectors.toList());
 

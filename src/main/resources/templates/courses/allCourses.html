@@ -40,14 +40,17 @@
                     <div th:each="c : ${allCourses}" th:object="${c}" class="col-md-6 col-lg-6 mb-5">
                         <div class="block-19">
                             <figure>
-                                <a th:href="@{/courses/courseDetails/{id}(id = *{id})}"><img th:src="*{coursePhoto}"
-                                                                                           alt="Image"
-                                                                                           class="img-fluid" ></a>
+                                <a th:href="@{/courses/courseDetails/{id}(id = *{id})}">
+                                    <img th:src="*{coursePhoto}"
+                                         alt="Image"
+                                         class="img-fluid">
+                                </a>
                             </figure>
                             <div class="text">
                                 <h2 class="heading"><a th:href="@{/courses/courseDetails/{id}(id = *{id})}"
                                                        th:text="*{title}"></a></h2>
-                                <p class="md-4" th:text="|Teacher: *{author.getFirstName()} *{author.getLastName()}|"></p>
+                                <p class="md-4"
+                                   th:text="|Teacher: *{author.getFirstName()} *{author.getLastName()}|"></p>
                                 <p class="mb-4" th:text="*{shortDescription}"></p>
                                 <div class="meta d-flex align-items-center">
                                     <div class="number" style="margin-right: 64px;">
@@ -87,12 +90,12 @@
 
                 <div class="block-24 mb-5">
                     <h3 class="heading">Topics</h3>
-                    <br>
+
                     <div th:each="t : ${allTopics}" th:object="${t}">
 
                         <ul>
                             <li>
-                                <a th:text="${t.name}" th:href="@{/courses/allCoursesInTopic/{id}(id = ${t.id})}">
+                                <a th:text="*{name}" th:href="@{/courses/allCoursesInTopic/{id}(id = *{id})}">
                                 </a>
                             </li>
 
@@ -105,12 +108,12 @@
                     <div th:each="c : ${top3RecentCourses}" th:object="${c}">
                         <ul>
                             <li>
-                                <a  th:href="@{/courses/courseDetails/{id}(id = *{id})}" class="d-flex">
+                                <a th:href="@{/courses/courseDetails/{id}(id = *{id})}" class="d-flex">
                                     <figure class="image mr-3">
-                                        <img th:src="${c.coursePhoto}" alt="" class="img-fluid">
+                                        <img th:src="*{coursePhoto}" alt="" class="img-fluid">
                                     </figure>
                                     <div class="text">
-                                        <h3 th:text="${c.title}" class="heading"></h3>
+                                        <h3 th:text="*{title}" class="heading"></h3>
                                     </div>
                                 </a>
                             </li>

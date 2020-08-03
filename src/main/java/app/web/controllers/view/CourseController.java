@@ -97,12 +97,14 @@ public class CourseController {
         model.addAttribute("allCourses", courseService.findAllCoursesWithStatusTrue());
         model.addAttribute("allTopics", topicService.findAllTopics());
         model.addAttribute("top3RecentCourses", courseService.findRecentCourses());
+        model.addAttribute("localDateTime", LocalDateTime.now());
         return "courses/allCourses";
     }
 
     @GetMapping("/allCoursesInTopic/{id}")
-    @PageTitle("All Courses")
+    @PageTitle("All Courses In Topic")
     public String allCoursesInTopic(@PathVariable("id") String id, Model model) {
+
         model.addAttribute("allCourses", courseService.findAllCoursesInTopic(id));
         model.addAttribute("allTopics", topicService.findAllTopics());
         model.addAttribute("top3RecentCourses", courseService.findRecentCourses());
@@ -110,14 +112,25 @@ public class CourseController {
         return "courses/allCourses";
     }
 
+
     @GetMapping("/courseDetails/{id}")
     @PageTitle("Course Details")
-    public String courseDetails(@PathVariable("id") String id, Model model) {
+    public String courseDetails(@PathVariable("id") String id, Model model, Principal principal) {
+        System.out.println();
         CourseServiceModel courseServiceModel = this.courseService.findCourseById(id);
-        model.addAttribute("course",courseServiceModel);
+        if (principal != null) {
+            UserServiceModel user = userService.findByName(principal.getName());
+            boolean contains = courseServiceModel.getEnrolledStudents().contains(user);
+            //TODO
+        }
+
+        model.addAttribute("course", courseServiceModel);
         model.addAttribute("teacher", this.userService.findTeacher(courseServiceModel.getAuthor().getId()));
         model.addAttribute("allTopics", topicService.findAllTopics());
         model.addAttribute("top3RecentCourses", courseService.findRecentCourses());
+        model.addAttribute("localDateTime", LocalDateTime.now());
         return "courses/courseDetails";
     }
+
+
 }

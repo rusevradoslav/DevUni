@@ -141,9 +141,8 @@
                                      th:unless="${c.startedOn.isBefore(localDateTime)}"
                                      class="text-right"
                                      style="padding-left: 85px">
-                                    <p><a href="#" class=" btn btn-primary py-1 px-1"><span
-                                            class="ion-ios-book mr-2"></span>Enroll
-                                        Now</a>
+                                    <p><a th:href="@{/courses/enrollCourse}" class=" btn btn-primary py-1 px-1"><span
+                                            class="ion-ios-book mr-2"></span>Enroll Now</a>
                                 </div>
                             </div>
                         </div>
