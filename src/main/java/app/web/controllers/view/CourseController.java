@@ -97,7 +97,7 @@ public class CourseController {
         model.addAttribute("allCourses", courseService.findAllCoursesWithStatusTrue());
         model.addAttribute("allTopics", topicService.findAllTopics());
         model.addAttribute("top3RecentCourses", courseService.findRecentCourses());
-        return "courses/allCourses";
+        return "courses/all-courses";
     }
 
     @GetMapping("/allCoursesInTopic/{id}")
@@ -108,7 +108,7 @@ public class CourseController {
         model.addAttribute("allTopics", topicService.findAllTopics());
         model.addAttribute("top3RecentCourses", courseService.findRecentCourses());
 
-        return "courses/allCourses";
+        return "courses/all-courses";
     }
 
 
@@ -116,12 +116,11 @@ public class CourseController {
     @PageTitle("Course Details")
     public String courseDetails(@PathVariable("id") String id, Model model, Principal principal) {
         CourseServiceModel courseServiceModel = this.courseService.findCourseById(id);
-        System.out.println();
         if (principal != null) {
             UserServiceModel user = userService.findByName(principal.getName());
-            boolean contains = courseService.checkIfCourseContainStudent(courseServiceModel,user);
+            boolean contains = courseService.checkIfCourseContainStudent(courseServiceModel, user);
 
-            model.addAttribute("containStudent",contains);
+            model.addAttribute("containStudent", contains);
         }
 
         model.addAttribute("course", courseServiceModel);
@@ -129,7 +128,7 @@ public class CourseController {
         model.addAttribute("allTopics", topicService.findAllTopics());
         model.addAttribute("top3RecentCourses", courseService.findRecentCourses());
         model.addAttribute("localDateTime", LocalDateTime.now());
-        return "courses/courseDetails";
+        return "courses/course-details";
     }
 
 
@@ -138,6 +137,6 @@ public class CourseController {
         CourseServiceModel courseServiceModel = this.courseService.findCourseById(id);
         UserServiceModel userServiceModel = this.userService.findByName(principal.getName());
         courseService.enrollCourse(courseServiceModel, userServiceModel);
-        return "redirect:/home";
+        return "redirect:/courses/courseDetails/" + id;
     }
 }

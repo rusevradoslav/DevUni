@@ -25,6 +25,16 @@ public class Lecture extends BaseEntity {
     @Length(min = 50, max = 150, message = "Description must be between 50 and 150 characters")
     private String description;
 
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String lectureVideoUrl;
+
+
+    @ManyToOne
+    private CustomFile resources;
+
+
     @ManyToOne
     private Course course;
+
+
 }

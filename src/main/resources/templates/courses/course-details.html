@@ -34,7 +34,9 @@
         Congratulations <strong> <span th:text="*{course.author.getUsername()}"></span></strong> you have create a new
         course !
         Every DEVUNI course must have at least one lecture !
-        <a th:href="@{/lectures/createLecture}"><strong>Don't forget to add your first lecture in this course !</strong></a>
+        <a th:href="@{/lectures/createLecture/{id}(id = ${course.id})}"><strong>Don't forget to add your first lecture
+            in this
+            course !</strong></a>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span class="closebtn" aria-hidden="true">&times;</span>
         </button>
@@ -84,11 +86,12 @@
                         <br>
                         <div sec:authorize="hasRole('ROLE_TEACHER')">
                             <a type="button" class="btn btn-primary row align-items-center p-4 episode "
-                               th:href="@{/lectures/createLecture}">Create Lecture </a>
+                               th:href="@{/lectures/createLecture/{id}(id = *{id})}">Add Lecture </a>
                         </div>
                         <div sec:authorize="hasAnyRole('ROLE_STUDENT','ROLE_ADMIN')"
                              th:unless="${course.startedOn.isBefore(localDateTime)}">
-                            <p><a th:unless="${containStudent}" th:href="@{/courses/enrollCourse/{id}(id=*{id})}" type="button"
+                            <p><a th:unless="${containStudent}" th:href="@{/courses/enrollCourse/{id}(id=*{id})}"
+                                  type="button"
                                   class=" btn btn-primary py-1 px-1 row align-items-center p-4 episode"><span
                                     class="ion-ios-book mr-2"></span>Enroll Now</a>
                         </div>
