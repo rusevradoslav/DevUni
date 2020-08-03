@@ -144,7 +144,6 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseServiceModel enrollCourse(CourseServiceModel courseServiceModel, UserServiceModel userServiceModel) {
-
         Course course = courseRepository.findById(courseServiceModel.getId())
                 .orElseThrow(() -> new CourseNotFoundException("Course with given id does not exist"));
 
@@ -154,13 +153,13 @@ public class CourseServiceImpl implements CourseService {
         studentInCourse.add(user);
         course.setEnrolledStudents(studentInCourse);
 
-        Course course1 = this.courseRepository.save(course);
-        return this.modelMapper.map(course1, CourseServiceModel.class);
+        Course updatedCourse = this.courseRepository.save(course);
+        return this.modelMapper.map(updatedCourse, CourseServiceModel.class);
     }
 
     @Override
     public boolean checkIfCourseContainStudent(CourseServiceModel courseServiceModel, UserServiceModel user) {
-        System.out.println();
+
         for (UserServiceModel enrolledStudent : courseServiceModel.getEnrolledStudents()) {
             if (enrolledStudent.getUsername().equals(user.getUsername())) {
                 return true;

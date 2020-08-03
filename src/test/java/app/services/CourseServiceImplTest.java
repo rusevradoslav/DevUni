@@ -75,9 +75,9 @@ public class CourseServiceImplTest {
     @Before
     public void setUp() {
         ModelMapper actualMapper = new ModelMapper();
-   /*     when(modelMapper.map(any(TopicServiceModel.class), eq(Topic.class)))
+        when(modelMapper.map(any(TopicServiceModel.class), eq(Topic.class)))
                 .thenAnswer(invocationOnMock ->
-                        actualMapper.map(invocationOnMock.getArguments()[0], Topic.class));*/
+                        actualMapper.map(invocationOnMock.getArguments()[0], Topic.class));
 
         when(modelMapper.map(any(Topic.class), eq(TopicServiceModel.class)))
                 .thenAnswer(invocationOnMock ->
@@ -153,30 +153,32 @@ public class CourseServiceImplTest {
     }
 
     @Test
-    public  void getAllCourses_ShouldReturnAllCourses(){
+    public void getAllCourses_ShouldReturnAllCourses() {
         //Arrange
         course2.setStartedOn(LocalDateTime.now().plus(VALID_DURATION_WEEKS * 7, ChronoUnit.DAYS));
-        when(courseRepository.findAll()).thenReturn(Arrays.asList(course,course2));
+        when(courseRepository.findAll()).thenReturn(Arrays.asList(course, course2));
         //Act
         List<CourseServiceModel> allCourses = this.courseService.getAllCourses();
         //Assert
-        assertEquals(allCourses.get(0).getTitle(),course.getTitle());
-        assertEquals(allCourses.get(1).getTitle(),course2.getTitle());
+        assertEquals(allCourses.get(0).getTitle(), course.getTitle());
+        assertEquals(allCourses.get(1).getTitle(), course2.getTitle());
 
     }
+
     @Test
-    public  void enableCourse_ShouldReturnCourseWithStatusTrue(){
+    public void enableCourse_ShouldReturnCourseWithStatusTrue() {
         //Arrange
         course.setStatus(true);
         when(courseRepository.findById(VALID_ID)).thenReturn(Optional.of(course));
         //Act
         CourseServiceModel courseServiceModel = courseService.enableCourse(course.getId());
         //Assert
-        assertEquals(true,courseServiceModel.isStatus());
+        assertEquals(true, courseServiceModel.isStatus());
 
     }
+
     @Test(expected = CourseNotFoundException.class)
-    public  void enableCourse_ShouldThrowExceptionWhenCourseDoesNotExist(){
+    public void enableCourse_ShouldThrowExceptionWhenCourseDoesNotExist() {
         //Arrange
         course.setStatus(true);
         when(courseRepository.findById(VALID_ID)).thenReturn(Optional.empty());
@@ -185,19 +187,21 @@ public class CourseServiceImplTest {
 
 
     }
+
     @Test
-    public  void disableCourse_ShouldReturnCourseWithStatusFalse(){
+    public void disableCourse_ShouldReturnCourseWithStatusFalse() {
         //Arrange
         course.setStatus(false);
         when(courseRepository.findById(VALID_ID)).thenReturn(Optional.of(course));
         //Act
         CourseServiceModel courseServiceModel = courseService.enableCourse(course.getId());
         //Assert
-        assertEquals(false,courseServiceModel.isStatus());
+        assertEquals(false, courseServiceModel.isStatus());
 
     }
+
     @Test(expected = CourseNotFoundException.class)
-    public  void disableCourse_ShouldThrowExceptionWhenCourseDoesNotExist(){
+    public void disableCourse_ShouldThrowExceptionWhenCourseDoesNotExist() {
         //Arrange
         course.setStatus(false);
         when(courseRepository.findById(VALID_ID)).thenReturn(Optional.empty());
@@ -206,8 +210,9 @@ public class CourseServiceImplTest {
 
 
     }
+
     @Test
-    public  void findAllCoursesWithStatusTrue_ShouldReturnAllCourses(){
+    public void findAllCoursesWithStatusTrue_ShouldReturnAllCourses() {
         //Arrange
         course2.setStartedOn(LocalDateTime.now().plus(VALID_DURATION_WEEKS * 7, ChronoUnit.DAYS));
         course.setStatus(true);
@@ -216,12 +221,14 @@ public class CourseServiceImplTest {
         //Act
         List<CourseServiceModel> allCourses = this.courseService.findAllCoursesWithStatusTrue();
         //Assert
-        assertEquals(allCourses.get(0).getTitle(),course2.getTitle());
+        assertEquals(allCourses.get(0).getTitle(), course2.getTitle());
 
     }
+
     @Test
-    public  void findAllCoursesInTopic_ShouldReturnAllCoursesInTopic(){
+    public void findAllCoursesInTopic_ShouldReturnAllCoursesInTopic() {
         //Arrange
+        course.setStartedOn(LocalDateTime.now().plus(VALID_DURATION_WEEKS * 7, ChronoUnit.DAYS));
         when(courseRepository.findAllCoursesInTopic(VALID_TOPIC_ID)).thenReturn(Arrays.asList(course));
         //Act
         List<CourseServiceModel> allCourses = this.courseService.findAllCoursesInTopic(VALID_TOPIC_ID);
@@ -229,7 +236,7 @@ public class CourseServiceImplTest {
         String actual = VALID_TITLE;
         String expected = allCourses.get(0).getTitle();
         //Assert
-        assertEquals(actual,expected);
+        assertEquals(actual, expected);
 
     }
 
@@ -244,8 +251,9 @@ public class CourseServiceImplTest {
         String actual = VALID_ID;
         String expected = courseServiceModel.getId();
 
-        assertEquals(actual,expected);
+        assertEquals(actual, expected);
     }
+
     @Test(expected = CourseNotFoundException.class)
     public void findCourseById_shouldThrowExceptionIfCourseDoesNotExist() {
         //Arrange
@@ -256,8 +264,62 @@ public class CourseServiceImplTest {
 
     }
 
+    @Test
+    public void enrollCourse_shouldAddStudentToEnrolledStudentsList() {
 
+        course.setEnrolledStudents(new ArrayList<>());
+        //Arrange
+        when(courseRepository.findById(VALID_ID)).thenReturn(Optional.of(course));
+        when(courseRepository.save(course)).thenReturn(course);
 
+        //Act
+        CourseServiceModel courseServiceModel = this.courseService.enrollCourse(this.courseServiceModel, userServiceModel);
+
+        //Assert
+        String actual = userServiceModel.getUsername();
+        String expected = courseServiceModel.getEnrolledStudents().get(0).getUsername();
+
+        assertEquals(actual, expected);
+    }
+
+    @Test(expected = CourseNotFoundException.class)
+    public void enrollCourse_shouldThrowCourseNotFoundException() {
+        //Arrange
+        when(courseRepository.findById(VALID_ID)).thenReturn(Optional.empty());
+
+        //Act
+        CourseServiceModel courseServiceModel = this.courseService.enrollCourse(this.courseServiceModel, userServiceModel);
+
+    }
+
+    @Test
+    public void checkIfCourseContainStudent_shouldReturnTrueIfStudentExist() {
+        List<UserServiceModel> enrolledStudents = new ArrayList<>();
+        enrolledStudents.add(userServiceModel);
+        courseServiceModel.setEnrolledStudents(enrolledStudents);
+        //Act
+        boolean courseServiceModel = this.courseService.checkIfCourseContainStudent(this.courseServiceModel, userServiceModel);
+
+        //Assert
+        boolean actual = true;
+        boolean expected = courseServiceModel;
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    public void checkIfCourseContainStudent_shouldReturnFalseIfStudentDoesNotExist() {
+        List<UserServiceModel> enrolledStudents = new ArrayList<>();
+        courseServiceModel.setEnrolledStudents(enrolledStudents);
+        //Act
+        boolean courseServiceModel = this.courseService.checkIfCourseContainStudent(this.courseServiceModel, userServiceModel);
+
+        //Assert
+        boolean actual = false;
+        boolean expected = courseServiceModel;
+
+        assertEquals(actual, expected);
+    }
 
     private CourseServiceModel getCourseServiceModel(ModelMapper actualMapper) {
         CourseServiceModel courseServiceModel = actualMapper.map(course, CourseServiceModel.class);
@@ -279,7 +341,6 @@ public class CourseServiceImplTest {
         courseServiceModel.setStartedOn(LocalDateTime.now());
         return courseServiceModel;
     }
-
 
 
     private Course getCourse1() {
