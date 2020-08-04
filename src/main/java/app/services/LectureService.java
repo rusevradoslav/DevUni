@@ -10,4 +10,6 @@ public interface LectureService {
 
 
     String findLectureResourcesIDByLectureId(String lectureId);
+
+    LectureServiceModel findLectureById(String lectureId);
 }

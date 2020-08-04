@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -60,6 +61,9 @@ public class User extends BaseEntity implements UserDetails {
 
     @ManyToMany(mappedBy = "enrolledStudents")
     private Set<Course> enrolledCourses;
+
+    @OneToMany(mappedBy = "user" )
+    private List<Assignment> solutionAssignments;
 
     @Override
     @Transient

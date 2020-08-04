@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,9 +30,13 @@ public class Lecture extends BaseEntity {
     @OneToOne
     private CustomFile resources;
 
-
     @ManyToOne
     private Course course;
+
+    @OneToMany(mappedBy = "lecture")
+    List<Assignment> studentsAssignmentSolutions;
+
+
 
 
 

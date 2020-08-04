@@ -1,5 +1,6 @@
 package app.web.controllers.view;
 
+import app.models.binding.AssignmentSolutionAddBindingModel;
 import app.models.binding.CourseCreateBindingModel;
 import app.models.service.CourseServiceModel;
 import app.models.service.UserServiceModel;
@@ -89,6 +90,7 @@ public class CourseController {
         model.addAttribute("allCoursesByAuthorId", allCoursesByAuthorId);
         return "courses/teacher-courses";
     }
+
     @GetMapping("/enrolledCourses")
     @PreAuthorize("hasAnyRole('ROLE_STUDENT','ROLE_ADMIN')")
     @PageTitle("Student Courses")
@@ -124,21 +126,28 @@ public class CourseController {
 
     @GetMapping("/courseDetails/{id}")
     @PageTitle("Course Details")
-    public String courseDetails(@PathVariable("id") String id, Model model, Principal principal) {
+    public String courseDetails(@PathVariable("id") String id,
+                                Model model,
+                                Principal principal,
+                                AssignmentSolutionAddBindingModel solutionAddBindingModel) {
+
         CourseServiceModel courseServiceModel = this.courseService.findCourseById(id);
+
         if (principal != null) {
             UserServiceModel user = userService.findByName(principal.getName());
             boolean contains = courseService.checkIfCourseContainStudent(courseServiceModel, user);
             boolean isAuthor = courseServiceModel.getAuthor().getId().equals(user.getId());
-
-            model.addAttribute("author",isAuthor);
+            if (!model.containsAttribute("solutionAddBindingModel")) {
+                model.addAttribute("solutionAddBindingModel", new AssignmentSolutionAddBindingModel());
+            }
+            model.addAttribute("author", isAuthor);
             model.addAttribute("containStudent", contains);
 
         }
 
         model.addAttribute("course", courseServiceModel);
         model.addAttribute("teacher", this.userService.findTeacher(courseServiceModel.getAuthor().getId()));
-        model.addAttribute("lectures",courseService.findAllLecturesForCourse(id));
+        model.addAttribute("lectures", courseService.findAllLecturesForCourse(id));
         model.addAttribute("allTopics", topicService.findAllTopics());
         model.addAttribute("top3RecentCourses", courseService.findRecentCourses());
         model.addAttribute("localDateTime", LocalDateTime.now());

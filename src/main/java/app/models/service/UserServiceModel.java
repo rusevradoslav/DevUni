@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -49,4 +50,6 @@ public class UserServiceModel extends BaseServiceModel {
 
 
     private Set<CourseServiceModel> enrolledCourses;
+
+    private List<AssignmentServiceModel> solutionAssignments;
 }

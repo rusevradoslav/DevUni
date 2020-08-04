@@ -88,6 +88,33 @@
                                             th:href="@{/files/resources/{id}(id=*{id})}">Download</a></span>
 
                                     </li>
+                                    <form enctype="multipart/form-data"
+                                          th:object="${solutionAddBindingModel}"
+                                          th:action="@{/assignments/upload/userAssignment/{id}(id = ${l.id})}"
+                                          th:method="POST"
+                                          sec:authorize="hasAnyRole('ROLE_STUDENT', 'ROLE_ADMIN')">
+
+                                        <i aria-hidden="true"></i><span> Assignment Solution:</span>
+                                        <li class="d-flex flex-row align-items-center justify-content-start">
+
+                                            <input th:field="*{file}"
+                                                   type="file"
+                                                   class="form-control-file"
+
+                                                   id="file"
+                                                   name="file" required
+                                                   accept=".zip,.rar,.7zip,.pdf,.txt">
+                                            <input type="submit" value="Save" class="btn btn-primary px-2 py-1">
+
+                                            <th:block th:if="${fileSizeException != null}">
+                                                <div th:text="${fileSizeException}"
+                                                     class="alert alert-danger text-center"
+                                                     role="alert">
+                                                </div>
+                                            </th:block>
+                                        </li>
+
+                                    </form>
                                 </ul>
                             </div>
                             <div th:if="${containStudent} or ${author}"

@@ -40,7 +40,6 @@ public class LectureServiceImpl implements LectureService {
         Lecture newLecture = this.lectureRepository.save(lecture);
 
 
-
         return this.modelMapper.map(newLecture, LectureServiceModel.class);
     }
 
@@ -48,5 +47,12 @@ public class LectureServiceImpl implements LectureService {
     public String findLectureResourcesIDByLectureId(String lectureId) {
         Lecture lecture = this.lectureRepository.findById(lectureId).orElseThrow(() -> new LectureNotFoundException("Lecture with given id was not found !"));
         return lecture.getResources().getId();
+    }
+
+    @Override
+    public LectureServiceModel findLectureById(String lectureId) {
+        Lecture lecture = this.lectureRepository.findById(lectureId).orElseThrow(() -> new LectureNotFoundException("Lecture with given id was not found !"));
+
+        return this.modelMapper.map(lecture, LectureServiceModel.class);
     }
 }
