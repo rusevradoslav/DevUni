@@ -143,6 +143,30 @@ public class LectureServiceImplTest {
 
     }
 
+    @Test
+    public void findLectureByIdShouldReturnLecture_whenLectureExist(){
+        //Arrange
+        when(lectureRepository.findById(VALID_ID)).thenReturn(Optional.of(lecture));
+
+        //Act
+        LectureServiceModel lecture = lectureService.findLectureById(VALID_ID);
+
+        //Assert
+        String actual = VALID_ID;
+        String expected = lecture.getId();
+
+        assertEquals(actual,expected);
+    }
+    @Test(expected = LectureNotFoundException.class)
+    public void findLectureByIdShouldReturnLecture_shouldThrowException(){
+        //Arrange
+        when(lectureRepository.findById(VALID_ID)).thenReturn(Optional.empty());
+
+        //Act
+        LectureServiceModel lecture = lectureService.findLectureById(VALID_ID);
+
+    }
+
     private Course getCourse() {
         Course course = new Course();
         course.setId(VALID_COURSE_ID);

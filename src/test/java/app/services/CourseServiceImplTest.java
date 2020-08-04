@@ -73,9 +73,7 @@ public class CourseServiceImplTest {
     @Before
     public void setUp() {
         ModelMapper actualMapper = new ModelMapper();
-        when(modelMapper.map(any(TopicServiceModel.class), eq(Topic.class)))
-                .thenAnswer(invocationOnMock ->
-                        actualMapper.map(invocationOnMock.getArguments()[0], Topic.class));
+
 
         when(modelMapper.map(any(Topic.class), eq(TopicServiceModel.class)))
                 .thenAnswer(invocationOnMock ->
@@ -354,7 +352,7 @@ public class CourseServiceImplTest {
         ArrayList<Lecture> lectures = new ArrayList<>();
         lectures.add(lecture);
         course.setLectures(lectures);
-        when(courseRepository.findById(VALID_ID)).thenReturn(Optional.of(course));
+        when(courseRepository.findById(VALID_ID)).thenReturn(Optional.empty());
 
         //Act
         List<LectureServiceModel> allLecturesForCourse = courseService.findAllLecturesForCourse(VALID_ID);
