@@ -81,13 +81,23 @@ public class CourseController {
 
     @GetMapping("/teacher-courses")
     @PreAuthorize("hasRole('ROLE_TEACHER')")
-    @PageTitle("Teacher Course")
+    @PageTitle("Teacher Courses")
     public String teacherCourses(Model model, Principal principal) {
         UserServiceModel userServiceModel = this.userService.findByName(principal.getName());
 
         List<CourseServiceModel> allCoursesByAuthorId = courseService.findAllCoursesByAuthorId(userServiceModel.getId());
         model.addAttribute("allCoursesByAuthorId", allCoursesByAuthorId);
         return "courses/teacher-courses";
+    }
+    @GetMapping("/enrolledCourses")
+    @PreAuthorize("hasAnyRole('ROLE_STUDENT','ROLE_ADMIN')")
+    @PageTitle("Student Courses")
+    public String studentCourses(Model model, Principal principal) {
+        UserServiceModel userServiceModel = this.userService.findByName(principal.getName());
+
+        List<CourseServiceModel> allCoursesByUserId = userService.findAllCoursesByUserId(userServiceModel.getId());
+        model.addAttribute("allCoursesByUserId", allCoursesByUserId);
+        return "courses/student-enrolled-courses";
     }
 
     @GetMapping("/allCourses")

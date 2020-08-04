@@ -4,6 +4,7 @@ import app.error.InvalidEmailException;
 import app.error.UserAlreadyExistException;
 import app.models.entity.AboutMe;
 import app.models.entity.User;
+import app.models.service.CourseServiceModel;
 import app.models.service.UserServiceModel;
 import app.models.view.UserDetailsViewModel;
 import org.springframework.web.multipart.MultipartFile;
@@ -60,4 +61,5 @@ public interface UserService {
     void setAboutMeToTheTeacher(AboutMe aboutMe, User user);
 
 
+    List<CourseServiceModel> findAllCoursesByUserId(String id);
 }

@@ -8,6 +8,7 @@ import app.models.entity.AboutMe;
 import app.models.entity.Role;
 import app.models.entity.User;
 import app.models.service.AboutMeServiceModel;
+import app.models.service.CourseServiceModel;
 import app.models.service.RoleServiceModel;
 import app.models.service.UserServiceModel;
 import app.models.view.AboutMeViewModel;
@@ -147,7 +148,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserServiceModel changePassword(UserServiceModel userServiceModel, String newPassword) {
-        System.out.println();
         String newEncodedPassword = bCryptPasswordEncoder.encode(newPassword);
         this.userRepository.changePassword(userServiceModel.getId(), newEncodedPassword);
         User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new CourseNotFoundException("User with given id was not found !"));
@@ -286,6 +286,16 @@ public class UserServiceImpl implements UserService {
         this.userRepository.changeRole(role.getId(), userServiceModel.getId());
         User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new CourseNotFoundException("User with given id was not found !"));
         return this.modelMapper.map(user, UserServiceModel.class);
+    }
+
+    @Override
+    public List<CourseServiceModel> findAllCoursesByUserId(String id) {
+        User user = this.userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User with given id was not found !"));
+
+        return user.getEnrolledCourses()
+                .stream()
+                .map(course -> this.modelMapper.map(course, CourseServiceModel.class))
+                .collect(Collectors.toList());
     }
 
     private UserServiceModel registerNewUser(UserServiceModel userServiceModel) {

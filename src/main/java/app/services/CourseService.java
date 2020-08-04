@@ -28,4 +28,6 @@ public interface CourseService {
     CourseServiceModel enrollCourse(CourseServiceModel courseServiceModel, UserServiceModel userServiceModel);
 
     boolean checkIfCourseContainStudent(CourseServiceModel courseServiceModel, UserServiceModel user);
+
+
 }
