@@ -2,7 +2,6 @@ package app.services.impl;
 
 import app.error.InvalidEmailException;
 import app.error.UserAlreadyExistException;
-import app.error.CourseNotFoundException;
 import app.error.UserNotFoundException;
 import app.models.entity.AboutMe;
 import app.models.entity.Role;
@@ -75,7 +74,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserServiceModel findById(String id) {
-        User user = this.userRepository.findById(id).orElseThrow(() -> new CourseNotFoundException("User with given id was not found !"));
+        User user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
         return this.modelMapper.map(user, UserServiceModel.class);
     }
 
@@ -119,7 +118,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserServiceModel sentTeacherRequest(UserServiceModel userServiceModel) {
         this.userRepository.changeTeacherRequestToTrue(userServiceModel.getId());
-        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new CourseNotFoundException("User with given id was not found !"));
+        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
         return this.modelMapper.map(user, UserServiceModel.class);
 
     }
@@ -129,14 +128,14 @@ public class UserServiceImpl implements UserService {
         Role role = this.roleService.findAuthorityByName("ROLE_TEACHER");
         this.userRepository.changeRole(role.getId(), userServiceModel.getId());
         this.userRepository.changeTeacherRequestToFalse(userServiceModel.getId());
-        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new CourseNotFoundException("User with given id was not found !"));
+        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
         return this.modelMapper.map(user, UserServiceModel.class);
     }
 
     @Override
     public UserServiceModel cancelTeacherRequest(UserServiceModel userServiceModel) {
         this.userRepository.changeTeacherRequestToFalse(userServiceModel.getId());
-        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new CourseNotFoundException("User with given id was not found !"));
+        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
         return this.modelMapper.map(user, UserServiceModel.class);
 
     }
@@ -150,7 +149,7 @@ public class UserServiceImpl implements UserService {
     public UserServiceModel changePassword(UserServiceModel userServiceModel, String newPassword) {
         String newEncodedPassword = bCryptPasswordEncoder.encode(newPassword);
         this.userRepository.changePassword(userServiceModel.getId(), newEncodedPassword);
-        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new CourseNotFoundException("User with given id was not found !"));
+        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
         return this.modelMapper.map(user, UserServiceModel.class);
 
     }
@@ -164,7 +163,7 @@ public class UserServiceImpl implements UserService {
         }
         this.userRepository.changeEmail(userServiceModel.getId(), newEmail);
 
-        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new CourseNotFoundException("User with given id was not found !"));
+        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
         return this.modelMapper.map(user, UserServiceModel.class);
 
     }
@@ -250,7 +249,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserServiceModel blockUser(UserServiceModel userServiceModel) {
         this.userRepository.blockUser(userServiceModel.getId());
-        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new CourseNotFoundException("User with given id was not found !"));
+        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
         return this.modelMapper.map(user, UserServiceModel.class);
 
     }
@@ -259,7 +258,7 @@ public class UserServiceImpl implements UserService {
     public UserServiceModel activateUser(UserServiceModel userServiceModel) {
 
         this.userRepository.activateUser(userServiceModel.getId());
-        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new CourseNotFoundException("User with given id was not found !"));
+        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
         return this.modelMapper.map(user, UserServiceModel.class);
     }
 
@@ -267,7 +266,7 @@ public class UserServiceImpl implements UserService {
     public UserServiceModel changeRoleToStudent(UserServiceModel userServiceModel) throws RoleNotFoundException {
         Role role = this.roleService.findAuthorityByName("ROLE_STUDENT");
         this.userRepository.changeRole(role.getId(), userServiceModel.getId());
-        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new CourseNotFoundException("User with given id was not found !"));
+        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
         return this.modelMapper.map(user, UserServiceModel.class);
 
     }
@@ -276,7 +275,7 @@ public class UserServiceImpl implements UserService {
     public UserServiceModel changeRoleToTeacher(UserServiceModel userServiceModel) throws RoleNotFoundException {
         Role role = this.roleService.findAuthorityByName("ROLE_TEACHER");
         this.userRepository.changeRole(role.getId(), userServiceModel.getId());
-        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new CourseNotFoundException("User with given id was not found !"));
+        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
         return this.modelMapper.map(user, UserServiceModel.class);
     }
 
@@ -284,13 +283,13 @@ public class UserServiceImpl implements UserService {
     public UserServiceModel changeRoleToAdmin(UserServiceModel userServiceModel) throws RoleNotFoundException {
         Role role = this.roleService.findAuthorityByName("ROLE_ADMIN");
         this.userRepository.changeRole(role.getId(), userServiceModel.getId());
-        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new CourseNotFoundException("User with given id was not found !"));
+        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
         return this.modelMapper.map(user, UserServiceModel.class);
     }
 
     @Override
     public List<CourseServiceModel> findAllCoursesByUserId(String id) {
-        User user = this.userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User with given id was not found !"));
+        User user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
 
         return user.getEnrolledCourses()
                 .stream()
