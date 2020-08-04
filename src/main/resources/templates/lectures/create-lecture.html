@@ -42,7 +42,8 @@
                     <h2 class="mb-4">Create Lecture</h2>
 
                     <form enctype="multipart/form-data"
-                          th:action="@{/lectures/createLecture/{courseId}(courseId = ${courseId})}" th:method="post" th:object="${lectureAddBindingModel}">
+                          th:action="@{/lectures/createLecture/{courseId}(courseId = ${courseId})}" th:method="post"
+                          th:object="${lectureAddBindingModel}">
 
                         <div class="row">
                             <div class="col-md-12 form-group">
@@ -81,7 +82,8 @@
                         <div class="row">
                             <div class="col-md-12 form-group">
                                 <label for="lectureVideoUrl">Video URL</label>
-                                <input th:field="*{lectureVideoUrl}" th:errorclass="alert-danger" name="lectureVideoUrl" type="text"
+                                <input th:field="*{lectureVideoUrl}" th:errorclass="alert-danger" name="lectureVideoUrl"
+                                       type="text"
                                        id="lectureVideoUrl" class="form-control py-2"
                                        placeholder="Enter lecture video URL..." required/>
                                 <th:block th:each="e : ${#fields.errors('lectureVideoUrl')}">
@@ -96,13 +98,14 @@
                                 <label for="resources"> Resources File</label>
 
                                 <input th:field="*{resources}" type="file" class="form-control-file" id="resources"
-                                       name="resources" accept=".zip,.rar,.7zip,.pdf,.txt">
+                                       name="resources" accept=".zip,.rar,.7zip,.pdf,.txt" required>
 
                                 <th:block th:if="${fileSizeException != null}">
-                                <div th:text="${fileSizeException}" class="alert alert-danger text-center"
-                                     role="alert">
-                                </div>
-                            </th:block>
+                                    <div th:text="${fileSizeException}" class="alert alert-danger text-center"
+                                         role="alert">
+                                    </div>
+                                </th:block>
+
                             </div>
                         </div>
 

@@ -45,7 +45,7 @@
                           th:object="${userAddProfilePictureBindingModel}"
                           enctype="multipart/form-data" >
                         <input th:field="*{profilePicture}" type="file" class="form-control-file" id="profilePicture"
-                               name="profilePicture">
+                               name="profilePicture" accept="image/x-png,image/jpeg,image/jpg">
                         <br>
                         <input class="btn btn-primary" type="submit">
                         <th:block th:if="${imageSizeException != null}">

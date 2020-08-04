@@ -6,6 +6,7 @@ import app.models.entity.Difficulty;
 import app.models.entity.Topic;
 import app.models.entity.User;
 import app.models.service.CourseServiceModel;
+import app.models.service.LectureServiceModel;
 import app.models.service.TopicServiceModel;
 import app.models.service.UserServiceModel;
 import app.repositories.CourseRepository;
@@ -167,6 +168,17 @@ public class CourseServiceImpl implements CourseService {
         }
 
         return false;
+    }
+
+    @Override
+    public List<LectureServiceModel> findAllLecturesForCourse(String id) {
+
+        Course course = this.courseRepository.findById(id)
+                .orElseThrow(() -> new CourseNotFoundException("Course with given id does not exist"));
+
+        return course.getLectures()
+                .stream()
+                .map(lecture -> this.modelMapper.map(lecture, LectureServiceModel.class)).collect(Collectors.toList());
     }
 
 }

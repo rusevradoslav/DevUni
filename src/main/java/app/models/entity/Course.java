@@ -63,7 +63,7 @@ public class Course extends BaseEntity {
     @ManyToMany(cascade = CascadeType.ALL)
     private List<User> enrolledStudents;
 
-    @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "course", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<Lecture> lectures;
 
     @ManyToOne(fetch = FetchType.EAGER)

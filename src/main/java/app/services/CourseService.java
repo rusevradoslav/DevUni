@@ -1,6 +1,7 @@
 package app.services;
 
 import app.models.service.CourseServiceModel;
+import app.models.service.LectureServiceModel;
 import app.models.service.UserServiceModel;
 
 import java.util.List;
@@ -30,4 +31,5 @@ public interface CourseService {
     boolean checkIfCourseContainStudent(CourseServiceModel courseServiceModel, UserServiceModel user);
 
 
+    List<LectureServiceModel> findAllLecturesForCourse(String id);
 }

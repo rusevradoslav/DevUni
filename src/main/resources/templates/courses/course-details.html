@@ -68,20 +68,35 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-md-12 mb-2">
-                                <h2>Lesson</h2>
+                                <h2>Lectures</h2>
                             </div>
                         </div>
-                        <div class="row bg-light align-items-center p-4 episode">
+                        <div class="row bg-light align-items-center p-4 episode"
+                             th:each="l : ${lectures}" th:object="${l}">
                             <div class="col-md-10">
-                                <p class="meta">Episode 1 </p>
-                                <h2><a href="#">Some Title Here For The Video</a></h2>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto, fugit!</p>
+                                <p class="meta" th:text="|Episode ${lStat.index+1}|"></p>
+                                <h2><a href="#" th:text="*{title}"></a></h2>
+                                <p th:text="*{description}"></p>
+                                <ul th:if="${containStudent} or ${author}"
+
+                                    sec:authorize="hasAnyRole('ROLE_STUDENT', 'ROLE_TEACHER','ROLE_ADMIN')"
+                                    class="col-md-10">
+
+                                    <li class="d-flex flex-row align-items-center justify-content-start">
+                                        <i aria-hidden="true"></i><span> Assignment description:
+                                    <a
+                                            th:href="@{/files/resources/{id}(id=*{id})}">Download</a></span>
+
+                                    </li>
+                                </ul>
                             </div>
-                            <div sec:authorize="isAuthenticated()  ">
+                            <div th:if="${containStudent} or ${author}"
+                                 sec:authorize="hasAnyRole('ROLE_STUDENT', 'ROLE_TEACHER','ROLE_ADMIN')">
                                 <div class="col-md-2 text-center">
                                     <a href="#" class="play"><span class="ion-ios-play"></span></a>
                                 </div>
                             </div>
+
                         </div>
                         <br>
                         <div sec:authorize="hasRole('ROLE_TEACHER')">

@@ -1,8 +1,13 @@
 package app.web.controllers.view;
 
+import app.error.FileStorageException;
 import app.models.binding.LectureAddBindingModel;
+import app.models.service.CourseServiceModel;
+import app.models.service.LectureServiceModel;
 import app.services.CourseService;
+import app.services.LectureService;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +24,8 @@ import static app.constants.GlobalConstants.BINDING_RESULT;
 @RequestMapping("/lectures")
 public class LectureController {
     private CourseService courseService;
+    private LectureService lectureService;
+    private ModelMapper modelMapper;
 
     @GetMapping("/createLecture/{courseId}")
     public String createLecture(@PathVariable("courseId") String courseId, Model model) {
@@ -40,6 +47,15 @@ public class LectureController {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("lectureAddBindingModel", lectureAddBindingModel);
             redirectAttributes.addFlashAttribute(String.format(BINDING_RESULT + "lectureAddBindingModel"), bindingResult);
+            return "redirect:/lectures/createLecture/" + courseId;
+        }
+
+        CourseServiceModel courseServiceModel = courseService.findCourseById(courseId);
+        LectureServiceModel lectureServiceModel = this.modelMapper.map(lectureAddBindingModel, LectureServiceModel.class);
+        try {
+            this.lectureService.addLecture(courseServiceModel, lectureServiceModel);
+        } catch (FileStorageException fileException) {
+            redirectAttributes.addFlashAttribute("fileSizeException", fileException.getMessage());
             return "redirect:/lectures/createLecture/" + courseId;
         }
 

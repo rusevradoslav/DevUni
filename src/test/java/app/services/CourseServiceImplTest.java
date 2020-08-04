@@ -1,11 +1,9 @@
 package app.services;
 
 import app.error.CourseNotFoundException;
-import app.models.entity.Course;
-import app.models.entity.Difficulty;
-import app.models.entity.Topic;
-import app.models.entity.User;
+import app.models.entity.*;
 import app.models.service.CourseServiceModel;
+import app.models.service.LectureServiceModel;
 import app.models.service.TopicServiceModel;
 import app.models.service.UserServiceModel;
 import app.repositories.CourseRepository;
@@ -294,6 +292,7 @@ public class CourseServiceImplTest {
 
     @Test
     public void checkIfCourseContainStudent_shouldReturnTrueIfStudentExist() {
+        //Arrange
         List<UserServiceModel> enrolledStudents = new ArrayList<>();
         enrolledStudents.add(userServiceModel);
         courseServiceModel.setEnrolledStudents(enrolledStudents);
@@ -309,6 +308,7 @@ public class CourseServiceImplTest {
 
     @Test
     public void checkIfCourseContainStudent_shouldReturnFalseIfStudentDoesNotExist() {
+        //Arrange
         List<UserServiceModel> enrolledStudents = new ArrayList<>();
         courseServiceModel.setEnrolledStudents(enrolledStudents);
         //Act
@@ -319,6 +319,51 @@ public class CourseServiceImplTest {
         boolean expected = courseServiceModel;
 
         assertEquals(actual, expected);
+    }
+
+    @Test
+    public void findAllLecturesForCourse_ShouldReturnAllLecturesInCourse() {
+        //Arrange
+        Lecture lecture = new Lecture();
+        lecture.setId("validLectureId");
+        lecture.setTitle("Spring Security");
+        lecture.setDescription(VALID_DESCRIPTION);
+        lecture.setLectureVideoUrl("https://www.youtube.com/watch?v=xRE12Y-PFQs");
+        ArrayList<Lecture> lectures = new ArrayList<>();
+        lectures.add(lecture);
+        course.setLectures(lectures);
+        when(courseRepository.findById(VALID_ID)).thenReturn(Optional.of(course));
+
+        //Act
+        List<LectureServiceModel> allLecturesForCourse = courseService.findAllLecturesForCourse(VALID_ID);
+
+        //Assert
+        int actual = 1;
+        int expected = allLecturesForCourse.size();
+        assertEquals(actual, expected);
+
+    }
+    @Test(expected = CourseNotFoundException.class)
+    public void findAllLecturesForCourse_ShouldThrowExceptionIfCourseDoesNotExist() {
+        //Arrange
+        Lecture lecture = new Lecture();
+        lecture.setId("validLectureId");
+        lecture.setTitle("Spring Security");
+        lecture.setDescription(VALID_DESCRIPTION);
+        lecture.setLectureVideoUrl("https://www.youtube.com/watch?v=xRE12Y-PFQs");
+        ArrayList<Lecture> lectures = new ArrayList<>();
+        lectures.add(lecture);
+        course.setLectures(lectures);
+        when(courseRepository.findById(VALID_ID)).thenReturn(Optional.of(course));
+
+        //Act
+        List<LectureServiceModel> allLecturesForCourse = courseService.findAllLecturesForCourse(VALID_ID);
+
+        //Assert
+        int actual = 1;
+        int expected = allLecturesForCourse.size();
+        assertEquals(actual, expected);
+
     }
 
     private CourseServiceModel getCourseServiceModel(ModelMapper actualMapper) {

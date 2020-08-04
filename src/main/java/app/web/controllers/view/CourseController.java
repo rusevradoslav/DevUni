@@ -129,12 +129,16 @@ public class CourseController {
         if (principal != null) {
             UserServiceModel user = userService.findByName(principal.getName());
             boolean contains = courseService.checkIfCourseContainStudent(courseServiceModel, user);
+            boolean isAuthor = courseServiceModel.getAuthor().getId().equals(user.getId());
 
+            model.addAttribute("author",isAuthor);
             model.addAttribute("containStudent", contains);
+
         }
 
         model.addAttribute("course", courseServiceModel);
         model.addAttribute("teacher", this.userService.findTeacher(courseServiceModel.getAuthor().getId()));
+        model.addAttribute("lectures",courseService.findAllLecturesForCourse(id));
         model.addAttribute("allTopics", topicService.findAllTopics());
         model.addAttribute("top3RecentCourses", courseService.findRecentCourses());
         model.addAttribute("localDateTime", LocalDateTime.now());

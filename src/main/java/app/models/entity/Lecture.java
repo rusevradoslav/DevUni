@@ -5,10 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -29,12 +26,13 @@ public class Lecture extends BaseEntity {
     private String lectureVideoUrl;
 
 
-    @ManyToOne
+    @OneToOne
     private CustomFile resources;
 
 
     @ManyToOne
     private Course course;
+
 
 
 }

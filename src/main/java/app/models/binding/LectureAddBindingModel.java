@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @Getter
@@ -26,6 +27,6 @@ public class LectureAddBindingModel {
             "YouTube URL must looks like https://www.youtube.com/watch?v={video id }")
     private String lectureVideoUrl;
 
-
+    @NotNull(message = "Resource file is required")
     private MultipartFile resources;
 }

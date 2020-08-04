@@ -168,7 +168,7 @@
                                 <label for="title">Course Photo</label>
                                 <input  th:field="*{coursePhoto}" type="file" class="form-control-file"
                                        id="profilePicture"
-                                       name="coursePhoto" required>
+                                       name="coursePhoto" required accept="image/x-png,image/jpeg,image/jpg,image/png">
                                 <br>
                                 <th:block th:if="${imageSizeException != null}">
                                     <div th:text="${imageSizeException}" class="alert alert-danger text-center"
