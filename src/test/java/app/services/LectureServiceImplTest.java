@@ -18,7 +18,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Optional;
@@ -144,7 +143,7 @@ public class LectureServiceImplTest {
     }
 
     @Test
-    public void findLectureByIdShouldReturnLecture_whenLectureExist(){
+    public void findLectureByIdShouldReturnLecture_whenLectureExist() {
         //Arrange
         when(lectureRepository.findById(VALID_ID)).thenReturn(Optional.of(lecture));
 
@@ -155,10 +154,11 @@ public class LectureServiceImplTest {
         String actual = VALID_ID;
         String expected = lecture.getId();
 
-        assertEquals(actual,expected);
+        assertEquals(actual, expected);
     }
+
     @Test(expected = LectureNotFoundException.class)
-    public void findLectureByIdShouldReturnLecture_shouldThrowException(){
+    public void findLectureByIdShouldReturnLecture_shouldThrowException() {
         //Arrange
         when(lectureRepository.findById(VALID_ID)).thenReturn(Optional.empty());
 
@@ -179,8 +179,8 @@ public class LectureServiceImplTest {
         course.setStatus(VALID_STATUS);
         course.setCourseRating(VALID_COURSE_RATING);
         course.setDifficulty(VALID_COURSE_DIFFICULTY);
-        course.setStartedOn(LocalDateTime.now().plus(VALID_DURATION_WEEKS * 7, ChronoUnit.DAYS));
-        course.setEndedON(LocalDateTime.now().plus(VALID_DURATION_WEEKS * 8, ChronoUnit.DAYS));
+        course.setStartedOn(LocalDateTime.now().plusDays(6));
+        course.setEndedON(LocalDateTime.now().plusDays(12));
         course.setLectures(new ArrayList<>());
         course.setEnrolledStudents(new ArrayList<>());
         User author = new User();

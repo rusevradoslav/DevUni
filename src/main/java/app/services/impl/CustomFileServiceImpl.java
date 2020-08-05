@@ -25,6 +25,8 @@ public class CustomFileServiceImpl implements CustomFileService {
     private final CustomFileRepository customFileRepository;
 
     public CustomFile storeFile(MultipartFile file) throws FileStorageException {
+
+        System.out.println();
         System.out.println();
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
