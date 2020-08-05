@@ -4,9 +4,11 @@ import app.models.entity.Assignment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface AssignmentRepository extends JpaRepository<Assignment, String> {
 
-    Assignment findFirstByDescription(String description);
+    Optional<Assignment> findFirstByDescription(String description);
 
 }

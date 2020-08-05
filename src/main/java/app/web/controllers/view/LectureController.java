@@ -6,9 +6,11 @@ import app.models.service.CourseServiceModel;
 import app.models.service.LectureServiceModel;
 import app.services.CourseService;
 import app.services.LectureService;
+import app.validations.anotations.PageTitle;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -60,6 +62,16 @@ public class LectureController {
         }
 
         return "redirect:/courses/courseDetails/" + courseId;
+    }
+
+    @GetMapping("/lectureVideo/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER','ROLE_STUDENT')")
+    @PageTitle("Lecture Video")
+    public String watchLectureVideo(@PathVariable("id")String lectureId, Model model){
+
+        LectureServiceModel lecture = lectureService.findLectureById(lectureId);
+        model.addAttribute("lecture",lecture);
+        return "lectures/lecture-video";
     }
 
 }

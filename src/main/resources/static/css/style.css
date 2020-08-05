@@ -2306,3 +2306,19 @@ td a {
 #userLogin > div > div > div > div > form > div.row.mb-5{
     margin-bottom: 1rem!important;
 }
+.play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    font-size: 40px;
+    width: 90px;
+    height: 90px;
+    background: #fff;
+    display: block;
+    border-radius: 50%;
+    opacity: .8;
+}
+

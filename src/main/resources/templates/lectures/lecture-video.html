@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="~{/fragments/head}"></th:block>
+</head>
+<body>
+
+<header role="banner">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <th:block th:include="~{/fragments/nav}"></th:block>
+    </nav>
+</header>
+
+
+<section class="site-section element-animate" style="    padding: 10em 0;">
+    <div class="container">
+
+        <div class="embed-responsive embed-responsive-21by9" th:object="${lecture}">
+            <iframe class="embed-responsive-item" th:src="@{https://www.youtube.com/embed/{id}(id=*{lectureVideoUrl})}"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+
+        </div>
+    </div>
+</section>
+<!-- END section -->
+
+
+<footer class="site-footer bg-dark">
+    <th:block th:include="~{/fragments/footer}"></th:block>
+</footer>
+<!-- END footer -->
+
+<!-- loader -->
+<th:block th:include="~{/fragments/script-loaders}"></th:block>
+<script src="/js/close-button.js"></script>
+</body>
+</html>

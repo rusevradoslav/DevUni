@@ -11,12 +11,15 @@ import app.repositories.LectureRepository;
 import app.services.CustomFileService;
 import app.services.LectureService;
 import lombok.AllArgsConstructor;
+import org.jetbrains.annotations.Nullable;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Transactional
@@ -33,6 +36,11 @@ public class LectureServiceImpl implements LectureService {
         Course course = this.modelMapper.map(courseServiceModel, Course.class);
         lecture.setCourse(course);
 
+
+        String code = extractYouTubeCode(lecture);
+
+        lecture.setLectureVideoUrl(code);
+
         MultipartFile resources = lectureServiceModel.getResources();
         CustomFile customFile = customFileService.storeFile(resources);
         lecture.setResources(customFile);
@@ -41,6 +49,20 @@ public class LectureServiceImpl implements LectureService {
 
 
         return this.modelMapper.map(newLecture, LectureServiceModel.class);
+    }
+
+    @Nullable
+    private String extractYouTubeCode(Lecture lecture) {
+        Pattern pattern = Pattern.compile("^(?:https?:\\/\\/)?(?:www\\.)?(?:youtu\\.be\\/|youtube\\.com\\/(?:embed\\/|v\\/|watch\\?v=|watch\\?.+&v=))(?<myGroup>.*)$");
+        String lectureVideoUrl = lecture.getLectureVideoUrl();
+        Matcher matcher = pattern.matcher(lectureVideoUrl);
+        String nameStr = null;
+        if(matcher.find())
+        {
+            nameStr=matcher.group("myGroup");
+
+        }
+        return nameStr;
     }
 
     @Override

@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -62,8 +63,15 @@ public class User extends BaseEntity implements UserDetails {
     @ManyToMany(mappedBy = "enrolledStudents")
     private Set<Course> enrolledCourses;
 
-    @OneToMany(mappedBy = "user" )
+    @OneToMany(mappedBy = "user")
     private List<Assignment> solutionAssignments;
+
+
+
+
+
+    @Transient
+    private HashMap<Course, Double> map = new HashMap<>();
 
     @Override
     @Transient

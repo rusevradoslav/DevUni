@@ -181,4 +181,11 @@ public class CourseServiceImpl implements CourseService {
                 .map(lecture -> this.modelMapper.map(lecture, LectureServiceModel.class)).collect(Collectors.toList());
     }
 
+    public void calculateAvgGrade(String id){
+        Course course = courseRepository.findById(id).orElse(null);
+
+
+
+    }
+
 }

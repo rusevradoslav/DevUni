@@ -53,8 +53,10 @@ public class Course extends BaseEntity {
     @Column
     private int courseRating;
 
+
+
     @Enumerated(EnumType.ORDINAL)
-    @Column(nullable = false,updatable = false)
+    @Column(nullable = false, updatable = false)
     private Difficulty difficulty;
 
     @ManyToOne
@@ -63,7 +65,7 @@ public class Course extends BaseEntity {
     @ManyToMany(cascade = CascadeType.ALL)
     private List<User> enrolledStudents;
 
-    @OneToMany(mappedBy = "course", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "course", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Lecture> lectures;
 
     @ManyToOne(fetch = FetchType.EAGER)

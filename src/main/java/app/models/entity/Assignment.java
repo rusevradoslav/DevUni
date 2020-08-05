@@ -18,6 +18,8 @@ public class Assignment extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+
+
     @OneToOne
     private CustomFile file;
 
