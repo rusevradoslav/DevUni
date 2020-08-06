@@ -40,8 +40,11 @@
 
 </div>
 <div class="container col-md-11">
-    <table class="table table-bordered"
-    >
+    <h2>Search Bar</h2>
+    <input id="myInput" type="text" placeholder="Search..">
+    <br>
+    <br>
+    <table class="table table-bordered">
         <thead>
         <tr>
             <th scope="col">#</th>
@@ -52,7 +55,7 @@
             <th scope="col">Operation</th>
         </tr>
         </thead>
-        <tbody id="all-admins">
+        <tbody id="all-admins" class="myTable">
 
         </tbody>
     </table>
@@ -67,5 +70,7 @@
 <th:block th:include="~{/fragments/script-loaders}"></th:block>
 
 <script src="/js/users/admins-details.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="/js/search-table/search-table.js"></script>
 </body>
 </html>
