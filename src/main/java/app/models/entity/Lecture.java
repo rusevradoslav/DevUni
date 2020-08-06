@@ -37,7 +37,4 @@ public class Lecture extends BaseEntity {
     List<Assignment> studentsAssignmentSolutions;
 
 
-
-
-
 }

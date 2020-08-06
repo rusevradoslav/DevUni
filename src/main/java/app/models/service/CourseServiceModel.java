@@ -64,6 +64,8 @@ public class CourseServiceModel extends BaseServiceModel {
 
     private List<UserServiceModel> enrolledStudents;
 
+    private List<UserServiceModel> graduatedStudents;
+
 
     private List<LectureServiceModel> lectures;
 

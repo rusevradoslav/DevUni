@@ -69,19 +69,24 @@
             <td><a th:href="@{/files/resources/{id}(id=*{getLecture().getId()})}">Download Resource</a></span></td>
             <td><a th:href="@{/files/submission/{id}(id=*{id})}">Download Submission</a></span></td>
 
-            <form >
+            <form th:action="@{/assignments/check-assignment/{id}(id =${a.id})}" th:method="post"
+                  th:object="${assignmentCheckBindingModel}">
+
                 <td>
                     <input type="number"
                            class="form-control "
                            style="width: 47%;margin-right: -81px;font-size:1.4em"
-                           step="5.0" min="5.0" max="100.0">
+                           step="5.0" min="5.0" max="100.0"
+                           name="gradePercentage" id="gradePercentage"
+                           th:field="*{gradePercentage}"
+                           required>
 
+                </td>
+                <td>
+                    <input type="submit" value="Check Assignment" class="form-group btn btn-primary px-5 py-2">
                 </td>
             </form>
 
-            <td>
-                <a th:href="@{/assignments/check-assignment/{id}(id =*{id})}">Check Assignment</a>
-            </td>
         </tr>
         </tbody>
     </table>

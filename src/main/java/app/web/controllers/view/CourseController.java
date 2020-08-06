@@ -117,6 +117,21 @@ public class CourseController {
         return "courses/student-enrolled-courses";
     }
 
+    @GetMapping("/completedCourses")
+    @PreAuthorize("hasAnyRole('ROLE_STUDENT','ROLE_ADMIN')")
+    @PageTitle("Completed Courses")
+    public String completedCourses(Model model, Principal principal) {
+
+
+        UserServiceModel userServiceModel = this.userService.findByName(principal.getName());
+        List<CourseServiceModel> allCompletedCoursesByUserId = userService.findAllCompletedCourses(userServiceModel.getId());
+        System.out.println();
+
+        model.addAttribute("allCompletedCoursesByUserId", allCompletedCoursesByUserId);
+
+        return "courses/student-completed-courses";
+    }
+
     @GetMapping("/allCourses")
     @PageTitle("All Courses")
     public String allCourses(Model model) {
@@ -159,9 +174,9 @@ public class CourseController {
             model.addAttribute("containStudent", contains);
 
         }
-        System.out.println();
 
-        if (principal!=null){
+
+        if (principal != null) {
             RoleServiceModel role = this.userService.findByName(principal.getName()).getAuthorities().stream().findFirst().orElse(null);
             boolean isRoot = role.getAuthority().equals("ROLE_ROOT_ADMIN");
             boolean isAdmin = role.getAuthority().equals("ROLE_ADMIN");

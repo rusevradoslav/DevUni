@@ -15,6 +15,8 @@ public class AssignmentServiceModel extends BaseServiceModel {
 
     private String description;
 
+    private double gradePercentage;
+
     private MultipartFile file;
 
     private UserServiceModel user;

@@ -14,6 +14,12 @@ public interface AssignmentRepository extends JpaRepository<Assignment, String> 
 
     Optional<Assignment> findFirstByDescription(String description);
 
-    @Query("select a from Assignment as a where a.lecture.id =:lectureID")
+    @Query("select a from Assignment as a where a.lecture.id =:lectureID and a.checked=false ")
     List<Assignment> findAllByLecture_Id(@Param("lectureID") String lectureID);
+
+    @Query(value = "select * from assigments as a \n" +
+            "join lectures l on a.lecture_id = l.id\n" +
+            "join courses c on l.course_id = c.id\n" +
+            "where c.id =:courseId and a.user_id = :userId and a.checked =true", nativeQuery = true)
+    List<Assignment> findAllAssignmentsByUserIdAndCourseId(@Param("userId") String userId, @Param("courseId") String courseId);
 }

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="~{/fragments/head}"></th:block>
+</head>
+<body>
+
+<header role="banner">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <th:block th:include="~{/fragments/nav}"></th:block>
+    </nav>
+</header>
+<!-- END header -->
+
+<section class="site-hero site-sm-hero overlay" data-stellar-background-ratio="0.5"
+         style="background-image: url(/images/big_image_2.jpg);">
+    <div class="container">
+        <div class="row align-items-center justify-content-center site-hero-inner">
+            <div class="col-md-10">
+
+                <div class="mb-5 element-animate">
+                    <h1 class="mb-2 text-center">Hello, <span th:text="*{#session.getAttribute('fullName')}"></span>
+                        these are your enrolled courses</h1>
+                    <p class="bcrumb text-center"><a th:href="@{/home}">Home</a> <span
+                            class="sep ion-android-arrow-dropright px-2"></span> <span class="current">Courses</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- END section -->
+<div class="site-section bg-light">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-6 col-lg-8 order-lg-2">
+                <div class="row">
+
+                    <div th:each="c : ${allCompletedCoursesByUserId}" th:object="${c}" class="col-md-6 col-lg-6 mb-5">
+                        <div class="block-19">
+                            <figure>
+                                <a th:href="@{/courses/courseDetails/{id}(id = *{id})}">
+                                    <img th:src="*{coursePhoto}"
+                                         alt="Image"
+                                         class="img-fluid">
+                                </a>
+                            </figure>
+                            <div class="text">
+                                <h2 class="heading"><a th:href="@{/courses/courseDetails/{id}(id = *{id})}"
+                                                       th:text="*{title}"></a></h2>
+                                <p class="md-4"
+                                   th:text="|Teacher: *{author.getFirstName()} *{author.getLastName()}|"></p>
+                                <p class="mb-4" th:text="*{shortDescription}"></p>
+                                <div class="meta d-flex align-items-center">
+                                    <div class="number" style="margin-right: 64px;">
+                                        <p th:text="|Students: *{enrolledStudents.size()}|"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+              <!--  <div class="row mb-5">
+                    <div class="col-md-12 text-center">
+                        <div class="block-27">
+                            <ul>
+                                <li><a href="#">&lt;</a></li>
+                                <li class="active"><span>1</span></li>
+                                <li><a href="#">2</a></li>
+                                <li><a href="#">3</a></li>
+                                <li><a href="#">&gt;</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>-->
+            </div>
+            <!-- END content -->
+            <div class="col-md-6 col-lg-4 order-md-1">
+
+                <div class="block-24 mb-5">
+                    <h3 class="heading">Topics</h3>
+                    <ul th:each="t : ${#session.getAttribute('allTopics')}" th:object="${t}">
+                        <li>
+                            <a th:text="${t.name}" th:href="@{/courses/allCoursesInTopic/{id}(id = ${t.id})}">
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+
+                <div class="block-25 mb-5">
+                    <div class="heading">Recent Courses</div>
+                    <div th:each="c : ${#session.getAttribute('top3RecentCourses')}" th:object="${c}">
+                        <ul>
+                            <li>
+                                <a th:href="@{/courses/courseDetails/{id}(id = *{id})}" class="d-flex">
+                                    <figure class="image mr-3">
+                                        <img th:src="${c.coursePhoto}" alt="" class="img-fluid">
+                                    </figure>
+                                    <div class="text">
+                                        <h3 th:text="${c.title}" class="heading">Create cool websites using this
+                                            template</h3>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+
+            </div>
+            <!-- END Sidebar -->
+        </div>
+    </div>
+</div>
+
+
+<footer class="site-footer bg-dark">
+    <th:block th:include="~{/fragments/footer}"></th:block>
+</footer>
+<!-- END footer -->
+
+<!-- loader -->
+<th:block th:include="~{/fragments/script-loaders}"></th:block>
+</body>
+</html>

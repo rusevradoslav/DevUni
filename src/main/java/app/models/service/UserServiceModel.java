@@ -51,5 +51,7 @@ public class UserServiceModel extends BaseServiceModel {
 
     private Set<CourseServiceModel> enrolledCourses;
 
+    private Set<CourseServiceModel> completedCourses;
+
     private List<AssignmentServiceModel> solutionAssignments;
 }

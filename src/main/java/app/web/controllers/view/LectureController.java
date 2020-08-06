@@ -77,7 +77,7 @@ public class LectureController {
         return "lectures/lecture-video";
     }
 
-    @GetMapping("course-check-lectures/{id}")
+    @GetMapping("/course-check-lectures/{id}")
     @PreAuthorize("hasRole('ROLE_TEACHER')")
     @PageTitle("Course Lectures")
     public String teacherCheckAssignmentCourses(@PathVariable("id") String courseId, Model model) {

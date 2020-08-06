@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -57,6 +58,7 @@ public class CourseServiceImpl implements CourseService {
         course.setTopic(topic);
         course.setDifficulty(Difficulty.valueOf(courseServiceModel.getDifficulty()));
         course.setEndedON(endingOn);
+        course.setGraduatedStudents(new ArrayList<>());
 
         this.courseRepository.saveAndFlush(course);
         Course newlyCreatedCourse = this.courseRepository.findById(course.getId()).orElse(null);
@@ -143,6 +145,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseServiceModel enrollCourse(CourseServiceModel courseServiceModel, UserServiceModel userServiceModel) {
+
         Course course = courseRepository.findById(courseServiceModel.getId())
                 .orElseThrow(() -> new CourseNotFoundException("Course with given id does not exist"));
 
@@ -153,6 +156,7 @@ public class CourseServiceImpl implements CourseService {
         course.setEnrolledStudents(studentInCourse);
 
         Course updatedCourse = this.courseRepository.save(course);
+
         return this.modelMapper.map(updatedCourse, CourseServiceModel.class);
     }
 
@@ -179,13 +183,10 @@ public class CourseServiceImpl implements CourseService {
                 .map(lecture -> this.modelMapper.map(lecture, LectureServiceModel.class)).collect(Collectors.toList());
     }
 
-
-
-
-    public void calculateAvgGrade(String id) {
-        Course course = courseRepository.findById(id).orElse(null);
-
-
+    @Override
+    public Course findById(String id) {
+        return this.courseRepository.findById(id).orElseThrow(()-> new CourseNotFoundException());
     }
+
 
 }

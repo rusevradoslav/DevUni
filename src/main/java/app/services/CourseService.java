@@ -1,5 +1,6 @@
 package app.services;
 
+import app.models.entity.Course;
 import app.models.service.CourseServiceModel;
 import app.models.service.LectureServiceModel;
 import app.models.service.UserServiceModel;
@@ -34,6 +35,5 @@ public interface CourseService {
     List<LectureServiceModel> findAllLecturesForCourse(String id);
 
 
-
-
+    Course findById(String id);
 }

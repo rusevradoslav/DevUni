@@ -18,7 +18,8 @@ public class Assignment extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-
+    @Column
+    private double gradePercentage = 0.0;
 
     @OneToOne
     private CustomFile file;
@@ -28,4 +29,7 @@ public class Assignment extends BaseEntity {
 
     @ManyToOne
     private Lecture lecture;
+
+    @Column
+    boolean checked;
 }

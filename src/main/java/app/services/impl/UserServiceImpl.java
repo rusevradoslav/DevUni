@@ -4,6 +4,7 @@ import app.error.InvalidEmailException;
 import app.error.UserAlreadyExistException;
 import app.error.UserNotFoundException;
 import app.models.entity.AboutMe;
+import app.models.entity.Course;
 import app.models.entity.Role;
 import app.models.entity.User;
 import app.models.service.AboutMeServiceModel;
@@ -29,6 +30,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -75,6 +77,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserServiceModel findById(String id) {
         User user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
+
         return this.modelMapper.map(user, UserServiceModel.class);
     }
 
@@ -297,6 +300,31 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void updateUser(String id, Course course) {
+        System.out.println();
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException());
+
+        List<Course> completedCourses = user.getCompletedCourses();
+        completedCourses.add(course);
+        user.setCompletedCourses(completedCourses);
+
+        userRepository.save(user);
+
+    }
+
+    @Override
+    public List<CourseServiceModel> findAllCompletedCourses(String id) {
+
+        User user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
+
+        return user.getCompletedCourses()
+                .stream()
+                .map(course -> this.modelMapper.map(course, CourseServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+
     private UserServiceModel registerNewUser(UserServiceModel userServiceModel) {
         throwExceptionIfUserExist(userServiceModel.getUsername(), userServiceModel.getEmail());
 
@@ -304,6 +332,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(bCryptPasswordEncoder.encode(userServiceModel.getPassword()));
         user.setProfilePicture(DEFAULT_PROFILE_PICTURE);
         user.setStatus(true);
+        user.setCompletedCourses(new ArrayList<>());
 
 
         return this.modelMapper.map(this.userRepository.saveAndFlush(user), UserServiceModel.class);

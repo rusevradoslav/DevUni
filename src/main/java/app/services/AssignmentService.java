@@ -13,4 +13,8 @@ public interface AssignmentService {
     List<AssignmentServiceModel> findAllSubmittedAssignments(LectureServiceModel lecture);
 
     String findAssignmentById(String assignmentId);
+
+    AssignmentServiceModel getAssignmentById(String assignmentId);
+
+    AssignmentServiceModel checkAssignment(AssignmentServiceModel assignmentServiceModel);
 }

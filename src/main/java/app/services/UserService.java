@@ -3,6 +3,7 @@ package app.services;
 import app.error.InvalidEmailException;
 import app.error.UserAlreadyExistException;
 import app.models.entity.AboutMe;
+import app.models.entity.Course;
 import app.models.entity.User;
 import app.models.service.CourseServiceModel;
 import app.models.service.UserServiceModel;
@@ -62,4 +63,8 @@ public interface UserService {
 
 
     List<CourseServiceModel> findAllCoursesByUserId(String id);
+
+    void updateUser(String id, Course completedCourses);
+
+    List<CourseServiceModel> findAllCompletedCourses(String id);
 }
