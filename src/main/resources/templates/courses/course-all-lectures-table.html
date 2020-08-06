@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:include="~{/fragments/head}"></th:block>
+</head>
+<body>
+
+<header role="banner">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <th:block th:include="~{/fragments/nav}"></th:block>
+    </nav>
+</header>
+
+<section class="site-hero site-sm-hero overlay" data-stellar-background-ratio="0.5"
+         style="background-image: url(/images/big_image_2.jpg);">
+    <div class="container">
+        <div class="row align-items-center justify-content-center site-hero-sm-inner">
+            <div class="col-md-7 text-center">
+
+                <div class="mb-5 element-animate">
+                    <h1 class="mb-2 text-center">Hello, <span th:text="*{#session.getAttribute('fullName')}"></span>
+                        these are your course lectures</h1>
+                    <p class="bcrumb text-center"><a th:href="@{/home}">Home</a> <span
+                            class="sep ion-android-arrow-dropright px-2"></span> <span class="current">Courses</span>
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container site-section element-animate">
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-7 text-center section-heading">
+            <h2 class="text-primary heading">All Lectures In Course</h2>
+        </div>
+    </div>
+
+</div>
+<div class="container col-md-11">
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Course Title</th>
+            <th scope="col">Lecture Title</th>
+            <th scope="col">Assignments</th>
+            <th scope="col">Students</th>
+            <th scope="col">Course Status</th>
+            <th scope="col">Operation</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="l: ${allLectures}" th:object="${l}">
+            <th scope="row" th:text="${lStat.index+1}"></th>
+            <td ><a  th:text="*{getCourse().getTitle()}" ></a></td>
+            <td th:text="*{title}"></td>
+            <td th:text="*{studentsAssignmentSolutions.size()}"></td>
+            <td  th:text="*{course.enrolledStudents.size()}"></td>
+            <td>
+                <span id="badgeStatus" th:if="*{course.status}" class="badge badge-success"> Active</span>
+            </td>
+            <td>
+                <a th:href="@{/assignments/check-assignment/{id}(id =*{id})}">Check Assignment</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<footer class="site-footer bg-dark">
+    <th:block th:include="~{/fragments/footer}"></th:block>
+</footer>
+<!-- END footer -->
+
+<!-- loader -->
+<th:block th:include="~{/fragments/script-loaders}"></th:block>
+</body>
+</html>

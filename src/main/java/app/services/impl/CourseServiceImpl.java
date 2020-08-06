@@ -10,10 +10,7 @@ import app.models.service.LectureServiceModel;
 import app.models.service.TopicServiceModel;
 import app.models.service.UserServiceModel;
 import app.repositories.CourseRepository;
-import app.services.CloudinaryService;
-import app.services.CourseService;
-import app.services.TopicService;
-import app.services.UserService;
+import app.services.*;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +31,7 @@ public class CourseServiceImpl implements CourseService {
     private final UserService userService;
     private final TopicService topicService;
     private final CloudinaryService cloudinaryService;
+    private final LectureService lectureService;
     private final ModelMapper modelMapper;
 
 
@@ -181,9 +179,15 @@ public class CourseServiceImpl implements CourseService {
                 .map(lecture -> this.modelMapper.map(lecture, LectureServiceModel.class)).collect(Collectors.toList());
     }
 
-    public void calculateAvgGrade(String id){
-        Course course = courseRepository.findById(id).orElse(null);
+    @Override
+    public int findAllSubmissionsInCoursesByAuthorId(List<CourseServiceModel> courseServiceModelList) {
+        int allLecturesAssignmentCount = lectureService.findAllLecturesAssignmentCount(courseServiceModelList);
+        return allLecturesAssignmentCount;
+    }
 
+
+    public void calculateAvgGrade(String id) {
+        Course course = courseRepository.findById(id).orElse(null);
 
 
     }

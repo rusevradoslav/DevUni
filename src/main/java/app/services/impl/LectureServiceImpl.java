@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,9 +58,8 @@ public class LectureServiceImpl implements LectureService {
         String lectureVideoUrl = lecture.getLectureVideoUrl();
         Matcher matcher = pattern.matcher(lectureVideoUrl);
         String nameStr = null;
-        if(matcher.find())
-        {
-            nameStr=matcher.group("myGroup");
+        if (matcher.find()) {
+            nameStr = matcher.group("myGroup");
 
         }
         return nameStr;
@@ -77,4 +77,17 @@ public class LectureServiceImpl implements LectureService {
 
         return this.modelMapper.map(lecture, LectureServiceModel.class);
     }
+
+    @Override
+    public int findAllLecturesAssignmentCount(List<CourseServiceModel> courseServiceModelList) {
+        int count = 0;
+        for (CourseServiceModel courseServiceModel : courseServiceModelList) {
+            for (LectureServiceModel lecture : courseServiceModel.getLectures()) {
+                count += lecture.getStudentsAssignmentSolutions().size();
+            }
+        }
+        return count;
+    }
+
+
 }

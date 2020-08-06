@@ -32,4 +32,8 @@ public interface CourseService {
 
 
     List<LectureServiceModel> findAllLecturesForCourse(String id);
+
+   int findAllSubmissionsInCoursesByAuthorId(List<CourseServiceModel> id);
+
+
 }

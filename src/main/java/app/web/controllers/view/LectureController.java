@@ -6,6 +6,7 @@ import app.models.service.CourseServiceModel;
 import app.models.service.LectureServiceModel;
 import app.services.CourseService;
 import app.services.LectureService;
+import app.services.UserService;
 import app.validations.anotations.PageTitle;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.List;
 
 import static app.constants.GlobalConstants.BINDING_RESULT;
 
@@ -27,6 +29,7 @@ import static app.constants.GlobalConstants.BINDING_RESULT;
 public class LectureController {
     private CourseService courseService;
     private LectureService lectureService;
+    private UserService userService;
     private ModelMapper modelMapper;
 
     @GetMapping("/createLecture/{courseId}")
@@ -67,11 +70,20 @@ public class LectureController {
     @GetMapping("/lectureVideo/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER','ROLE_STUDENT')")
     @PageTitle("Lecture Video")
-    public String watchLectureVideo(@PathVariable("id")String lectureId, Model model){
+    public String watchLectureVideo(@PathVariable("id") String lectureId, Model model) {
 
         LectureServiceModel lecture = lectureService.findLectureById(lectureId);
-        model.addAttribute("lecture",lecture);
+        model.addAttribute("lecture", lecture);
         return "lectures/lecture-video";
     }
 
+    @GetMapping("course-check-lectures/{id}")
+    @PreAuthorize("hasRole('ROLE_TEACHER')")
+    @PageTitle("Course Lectures")
+    public String teacherCheckAssignmentCourses(@PathVariable("id") String courseId, Model model) {
+
+        List<LectureServiceModel> allLecturesForCourse = courseService.findAllLecturesForCourse(courseId);
+        model.addAttribute("allLectures", allLecturesForCourse);
+        return "courses/course-all-lectures-table";
+    }
 }

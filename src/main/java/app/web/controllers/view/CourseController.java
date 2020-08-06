@@ -4,10 +4,7 @@ import app.models.binding.AssignmentSolutionAddBindingModel;
 import app.models.binding.CourseCreateBindingModel;
 import app.models.service.CourseServiceModel;
 import app.models.service.UserServiceModel;
-import app.services.CloudinaryService;
-import app.services.CourseService;
-import app.services.TopicService;
-import app.services.UserService;
+import app.services.*;
 import app.validations.anotations.PageTitle;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -34,6 +31,7 @@ public class CourseController {
     private TopicService topicService;
     private CourseService courseService;
     private UserService userService;
+    private LectureService lectureService;
     private CloudinaryService cloudinaryService;
     private ModelMapper modelMapper;
 
@@ -85,20 +83,36 @@ public class CourseController {
     @PageTitle("Teacher Courses")
     public String teacherCourses(Model model, Principal principal) {
         UserServiceModel userServiceModel = this.userService.findByName(principal.getName());
-
         List<CourseServiceModel> allCoursesByAuthorId = courseService.findAllCoursesByAuthorId(userServiceModel.getId());
         model.addAttribute("allCoursesByAuthorId", allCoursesByAuthorId);
         return "courses/teacher-courses";
     }
 
+    @GetMapping("/teacher-check-courses")
+    @PreAuthorize("hasRole('ROLE_TEACHER')")
+    @PageTitle("Teacher Courses")
+    public String teacherCheckAssignmentCourses(Model model, Principal principal) {
+        UserServiceModel userServiceModel = this.userService.findByName(principal.getName());
+        List<CourseServiceModel> allCoursesByAuthorId = courseService.findAllCoursesByAuthorId(userServiceModel.getId());
+        int lectureAssignments = courseService.findAllSubmissionsInCoursesByAuthorId(allCoursesByAuthorId);
+        model.addAttribute("allAssignmentsCount", lectureAssignments);
+        model.addAttribute("allCoursesByAuthorId", allCoursesByAuthorId);
+        return "courses/teacher-all-courses-table";
+    }
+
+
     @GetMapping("/enrolledCourses")
     @PreAuthorize("hasAnyRole('ROLE_STUDENT','ROLE_ADMIN')")
     @PageTitle("Student Courses")
     public String studentCourses(Model model, Principal principal) {
-        UserServiceModel userServiceModel = this.userService.findByName(principal.getName());
 
+
+        UserServiceModel userServiceModel = this.userService.findByName(principal.getName());
         List<CourseServiceModel> allCoursesByUserId = userService.findAllCoursesByUserId(userServiceModel.getId());
+
+
         model.addAttribute("allCoursesByUserId", allCoursesByUserId);
+
         return "courses/student-enrolled-courses";
     }
 
