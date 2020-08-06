@@ -40,6 +40,10 @@
 
 </div>
 <div class="container col-md-11">
+    <h2>Search Bar</h2>
+    <input id="myInput" type="text" placeholder="Search..">
+    <br>
+    <br>
     <table class="table table-bordered">
         <thead>
         <tr>
@@ -52,11 +56,11 @@
             <th scope="col">Operation</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody class="myTable">
         <tr th:each="c: ${allCourses}" th:object="${c}">
             <th scope="row" th:text="${cStat.index+1}"></th>
             <td ><a th:href="@{/courses/courseDetails/{id}(id=*{id})}" th:text="*{title}" ></a></td>
-            <td th:text="*{author.getUsername()}"></td>
+            <td th:text="*{author.username}"></td>
             <td th:text="*{lectures.size()}"></td>
             <td th:text="*{enrolledStudents.size()}"></td>
             <td>
@@ -80,5 +84,7 @@
 
 <!-- loader -->
 <th:block th:include="~{/fragments/script-loaders}"></th:block>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="/js/search-table/search-table.js"></script>
 </body>
 </html>
