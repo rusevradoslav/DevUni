@@ -70,6 +70,7 @@ public class User extends BaseEntity implements UserDetails {
 
 
 
+
     @Transient
     private HashMap<Course, Double> map = new HashMap<>();
 

@@ -77,15 +77,14 @@
                                 <p class="meta" th:text="|Episode ${lStat.index+1}|"></p>
                                 <h2><a th:href="@{/lectures/lectureVideo/{id}(id=*{id})}" th:text="*{title}"></a></h2>
                                 <p th:text="*{description}"></p>
-                                <ul th:if="${containStudent} or ${author}"
+                                <ul th:if="${containStudent} or ${author} or ${isRoot}  or ${isAdmin}"
 
-                                    sec:authorize="hasAnyRole('ROLE_STUDENT', 'ROLE_TEACHER','ROLE_ADMIN')"
+                                    sec:authorize="isAuthenticated()"
                                     class="col-md-10">
 
                                     <li class="d-flex flex-row align-items-center justify-content-start">
                                         <i aria-hidden="true"></i><span> Assignment description:
-                                    <a
-                                            th:href="@{/files/resources/{id}(id=*{id})}">Download</a></span>
+                                    <a th:href="@{/files/resources/{id}(id=*{id})}">Download</a></span>
 
                                     </li>
                                     <form enctype="multipart/form-data"
@@ -117,8 +116,8 @@
                                     </form>
                                 </ul>
                             </div>
-                            <div th:if="${containStudent} or ${author}"
-                                 sec:authorize="hasAnyRole('ROLE_STUDENT', 'ROLE_TEACHER','ROLE_ADMIN')">
+                            <div th:if="${containStudent} or ${author} or ${isRoot}  or ${isAdmin}"
+                                 sec:authorize="isAuthenticated()">
                                 <div class="col-md-2 text-center">
                                     <a th:href="@{/lectures/lectureVideo/{id}(id=*{id})}" class="play"><span class="ion-ios-play"></span></a>
                                 </div>
@@ -126,7 +125,7 @@
 
                         </div>
                         <br>
-                        <div sec:authorize="hasRole('ROLE_TEACHER')">
+                        <div sec:authorize="hasRole('ROLE_TEACHER')" th:unless="*{status}">
                             <a type="button" class="btn btn-primary row align-items-center p-4 episode "
                                th:href="@{/lectures/createLecture/{id}(id = *{id})}">Add Lecture </a>
                         </div>

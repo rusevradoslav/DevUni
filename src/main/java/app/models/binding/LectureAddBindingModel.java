@@ -15,7 +15,7 @@ import javax.validation.constraints.Pattern;
 public class LectureAddBindingModel {
 
 
-    @Length(min = 10, max = 40, message = "Title must be between 10 and 40 characters !")
+    @Length(min = 5, max = 40, message = "Title must be between 5 and 40 characters !")
     private String title;
 
     @Length(min = 50, max = 150, message = "Description must be between 50 and 150 characters")

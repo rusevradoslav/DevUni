@@ -1,6 +1,7 @@
 package app.web.controllers.view;
 
 import app.models.entity.CustomFile;
+import app.services.AssignmentService;
 import app.services.CustomFileService;
 import app.services.LectureService;
 import lombok.AllArgsConstructor;
@@ -23,11 +24,18 @@ import java.io.InputStream;
 public class CustomFileController {
     private final CustomFileService customFileService;
     private final LectureService lectureService;
+    private final AssignmentService assignmentService;
 
     @GetMapping("/resources/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN,ROLE_TEACHER,ROLE_STUDENT')")
+    @PreAuthorize("isAuthenticated()")
     public void downloadResources(@PathVariable("id") String lectureId, HttpServletResponse httpServletResponse) {
         String resourceId = lectureService.findLectureResourcesIDByLectureId(lectureId);
+        downloadFileByFileId(resourceId, httpServletResponse);
+    }
+    @GetMapping("/submission/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN,ROLE_TEACHER,ROLE_STUDENT')")
+    public void downloadSubmission(@PathVariable("id") String assignmentId, HttpServletResponse httpServletResponse) {
+        String resourceId = assignmentService.findAssignmentById(assignmentId);
         downloadFileByFileId(resourceId, httpServletResponse);
     }
 

@@ -112,9 +112,7 @@ public class UserServiceImplTest {
                 .thenAnswer(invocationOnMock ->
                         actualMapper.map(invocationOnMock.getArguments()[0], UserServiceModel.class));
 
-        when(modelMapper.map(any(CourseServiceModel.class), eq(Course.class)))
-                .thenAnswer(invocationOnMock ->
-                        actualMapper.map(invocationOnMock.getArguments()[0], Course.class));
+
 
         when(modelMapper.map(any(Course.class), eq(CourseServiceModel.class)))
                 .thenAnswer(invocationOnMock ->

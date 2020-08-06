@@ -8,17 +8,17 @@ import app.models.service.UserServiceModel;
 import app.services.AssignmentService;
 import app.services.LectureService;
 import app.services.UserService;
+import app.validations.anotations.PageTitle;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @AllArgsConstructor
@@ -43,10 +43,22 @@ public class AssigmentController {
         String courseId = lectureServiceModel.getCourse().getId();
 
 
-        assignmentService.uploadUserAssignmentSolution(lectureServiceModel, userServiceModel, assignmentServiceModel);
+        this.assignmentService.uploadUserAssignmentSolution(lectureServiceModel, userServiceModel, assignmentServiceModel);
 
 
         return "redirect:/courses/courseDetails/" + courseId;
 
     }
+
+    @GetMapping("/check-assignment/{id}")
+    @PreAuthorize("hasRole('ROLE_TEACHER')")
+    @PageTitle("Check Assignment")
+    public String checkAssignment(@PathVariable("id") String lectureId, Model model) {
+        LectureServiceModel lecture = lectureService.findLectureById(lectureId);
+        List<AssignmentServiceModel> allSubmittedAssignments = this.assignmentService.findAllSubmittedAssignments(lecture);
+        model.addAttribute("allSubmittedAssignments", allSubmittedAssignments);
+        return "assignments/teacher-check-assignment";
+    }
+
+
 }

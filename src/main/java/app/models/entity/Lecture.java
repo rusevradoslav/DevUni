@@ -16,7 +16,7 @@ import java.util.List;
 public class Lecture extends BaseEntity {
 
     @Column(nullable = false, updatable = false)
-    @Length(min = 10, max = 40, message = "Title must be between 10 and 40 characters !")
+    @Length(min = 5, max = 40, message = "Title must be between 5 and 40 characters !")
     private String title;
 
     @Column(nullable = false, columnDefinition = "TEXT")

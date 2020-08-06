@@ -5,6 +5,12 @@ import app.models.service.AssignmentServiceModel;
 import app.models.service.LectureServiceModel;
 import app.models.service.UserServiceModel;
 
+import java.util.List;
+
 public interface AssignmentService {
     AssignmentServiceModel uploadUserAssignmentSolution(LectureServiceModel lectureServiceModel, UserServiceModel userServiceModel, AssignmentServiceModel assignmentServiceModel) throws FileStorageException;
+
+    List<AssignmentServiceModel> findAllSubmittedAssignments(LectureServiceModel lecture);
+
+    String findAssignmentById(String assignmentId);
 }

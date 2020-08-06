@@ -55,7 +55,7 @@
         <tbody>
         <tr th:each="c: ${allCourses}" th:object="${c}">
             <th scope="row" th:text="${cStat.index+1}"></th>
-            <td ><a th:href="@{/courses/single-course/{id}(id=*{id})}" th:text="*{title}" ></a></td>
+            <td ><a th:href="@{/courses/courseDetails/{id}(id=*{id})}" th:text="*{title}" ></a></td>
             <td th:text="*{author.getUsername()}"></td>
             <td th:text="*{lectures.size()}"></td>
             <td th:text="*{enrolledStudents.size()}"></td>

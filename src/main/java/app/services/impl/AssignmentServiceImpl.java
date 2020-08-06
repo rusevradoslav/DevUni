@@ -1,5 +1,6 @@
 package app.services.impl;
 
+import app.error.AssignmentNotFoundException;
 import app.error.FileStorageException;
 import app.models.entity.Assignment;
 import app.models.entity.CustomFile;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -63,7 +66,22 @@ public class AssignmentServiceImpl implements AssignmentService {
         return this.modelMapper.map(newAssignment, AssignmentServiceModel.class);
     }
 
+    @Override
+    public List<AssignmentServiceModel> findAllSubmittedAssignments(LectureServiceModel lecture) {
+        return this.assignmentRepository
+                .findAllByLecture_Id(lecture.getId())
+                .stream()
+                .map(assignment -> this.modelMapper.map(assignment, AssignmentServiceModel.class))
+                .collect(Collectors.toList());
 
+    }
+
+    @Override
+    public String findAssignmentById(String assignmentId) {
+        Assignment assignment = this.assignmentRepository.findById(assignmentId).orElseThrow(() -> new AssignmentNotFoundException("Assignment with given id was not found !"));
+
+        return assignment.getFile().getId();
+    }
 
 
 }

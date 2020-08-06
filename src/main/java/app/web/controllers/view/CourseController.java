@@ -3,6 +3,7 @@ package app.web.controllers.view;
 import app.models.binding.AssignmentSolutionAddBindingModel;
 import app.models.binding.CourseCreateBindingModel;
 import app.models.service.CourseServiceModel;
+import app.models.service.RoleServiceModel;
 import app.models.service.UserServiceModel;
 import app.services.*;
 import app.validations.anotations.PageTitle;
@@ -97,6 +98,7 @@ public class CourseController {
         int lectureAssignments = courseService.findAllSubmissionsInCoursesByAuthorId(allCoursesByAuthorId);
         model.addAttribute("allAssignmentsCount", lectureAssignments);
         model.addAttribute("allCoursesByAuthorId", allCoursesByAuthorId);
+
         return "courses/teacher-all-courses-table";
     }
 
@@ -158,7 +160,15 @@ public class CourseController {
             model.addAttribute("containStudent", contains);
 
         }
+        System.out.println();
 
+        if (principal!=null){
+            RoleServiceModel role = this.userService.findByName(principal.getName()).getAuthorities().stream().findFirst().orElse(null);
+            boolean isRoot = role.getAuthority().equals("ROLE_ROOT_ADMIN");
+            boolean isAdmin = role.getAuthority().equals("ROLE_ADMIN");
+            model.addAttribute("isRoot", isRoot);
+            model.addAttribute("isAdmin", isAdmin);
+        }
         model.addAttribute("course", courseServiceModel);
         model.addAttribute("teacher", this.userService.findTeacher(courseServiceModel.getAuthor().getId()));
         model.addAttribute("lectures", courseService.findAllLecturesForCourse(id));

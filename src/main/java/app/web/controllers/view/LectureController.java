@@ -68,7 +68,7 @@ public class LectureController {
     }
 
     @GetMapping("/lectureVideo/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER','ROLE_STUDENT')")
+    @PreAuthorize("isAuthenticated()")
     @PageTitle("Lecture Video")
     public String watchLectureVideo(@PathVariable("id") String lectureId, Model model) {
 

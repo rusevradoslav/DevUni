@@ -22,9 +22,10 @@
 
                 <div class="mb-5 element-animate">
                     <h1 class="mb-2 text-center">Hello, <span th:text="*{#session.getAttribute('fullName')}"></span>
-                        these are your course lectures</h1>
+                        these are your lecture assignments</h1>
                     <p class="bcrumb text-center"><a th:href="@{/home}">Home</a> <span
-                            class="sep ion-android-arrow-dropright px-2"></span> <span class="current">Courses</span>
+                            class="sep ion-android-arrow-dropright px-2"></span> <span
+                            class="current">Assignments</span>
                     </p>
                 </div>
 
@@ -36,7 +37,7 @@
 <div class="container site-section element-animate">
     <div class="row justify-content-center mb-5">
         <div class="col-md-7 text-center section-heading">
-            <h2 class="text-primary heading">All Lectures In Course</h2>
+            <h2 class="text-primary heading">All Submitted Assignments</h2>
         </div>
     </div>
 
@@ -49,18 +50,32 @@
             <th scope="col">#</th>
             <th scope="col">Course Title</th>
             <th scope="col">Lecture Title</th>
-            <th scope="col">Assignments</th>
             <th scope="col">Students</th>
+            <th scope="col">Assignments Resource</th>
+            <th scope="col">Assignments Submission</th>
+            <th scope="col">Assignment Percentages</th>
             <th scope="col">Operation</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="l: ${allLectures}" th:object="${l}">
-            <th scope="row" th:text="${lStat.index+1}"></th>
-            <td ><a  th:text="*{getCourse().getTitle()}" ></a></td>
-            <td th:text="*{title}"></td>
-            <td th:text="*{studentsAssignmentSolutions.size()}"></td>
-            <td  th:text="*{course.enrolledStudents.size()}"></td>
+        <tr th:each="a: ${allSubmittedAssignments}" th:object="${a}">
+            <th scope="row" th:text="${aStat.index+1}"></th>
+            <td><a th:text="*{getLecture().getCourse().getTitle()}"></a></td>
+            <td th:text="*{getLecture().getTitle()}"></td>
+            <td th:text="*{getUser().getUsername()}"></td>
+            <td><a th:href="@{/files/resources/{id}(id=*{getLecture().getId()})}">Download Resource</a></span></td>
+            <td><a th:href="@{/files/submission/{id}(id=*{id})}">Download Submission</a></span></td>
+
+            <form >
+                <td>
+                    <input type="number"
+                           class="form-control "
+                           style="width: 47%;margin-right: -81px;font-size:1.4em"
+                           step="5.0" min="5.0" max="100.0">
+
+                </td>
+            </form>
+
             <td>
                 <a th:href="@{/assignments/check-assignment/{id}(id =*{id})}">Check Assignment</a>
             </td>
