@@ -95,8 +95,7 @@ public class CourseController {
     public String teacherCheckAssignmentCourses(Model model, Principal principal) {
         UserServiceModel userServiceModel = this.userService.findByName(principal.getName());
         List<CourseServiceModel> allCoursesByAuthorId = courseService.findAllCoursesByAuthorId(userServiceModel.getId());
-        int lectureAssignments = courseService.findAllSubmissionsInCoursesByAuthorId(allCoursesByAuthorId);
-        model.addAttribute("allAssignmentsCount", lectureAssignments);
+
         model.addAttribute("allCoursesByAuthorId", allCoursesByAuthorId);
 
         return "courses/teacher-all-courses-table";

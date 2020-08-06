@@ -179,11 +179,7 @@ public class CourseServiceImpl implements CourseService {
                 .map(lecture -> this.modelMapper.map(lecture, LectureServiceModel.class)).collect(Collectors.toList());
     }
 
-    @Override
-    public int findAllSubmissionsInCoursesByAuthorId(List<CourseServiceModel> courseServiceModelList) {
-        int allLecturesAssignmentCount = lectureService.findAllLecturesAssignmentCount(courseServiceModelList);
-        return allLecturesAssignmentCount;
-    }
+
 
 
     public void calculateAvgGrade(String id) {
