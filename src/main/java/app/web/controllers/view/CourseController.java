@@ -32,7 +32,6 @@ public class CourseController {
     private TopicService topicService;
     private CourseService courseService;
     private UserService userService;
-    private LectureService lectureService;
     private CloudinaryService cloudinaryService;
     private ModelMapper modelMapper;
 
@@ -56,7 +55,6 @@ public class CourseController {
                                       BindingResult bindingResult,
                                       RedirectAttributes redirectAttributes,
                                       Principal principal) {
-        System.out.println();
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("courseCreateBindingModel", courseCreateBindingModel);
             redirectAttributes.addFlashAttribute(String.format(BINDING_RESULT + "courseCreateBindingModel"), bindingResult);
@@ -125,7 +123,8 @@ public class CourseController {
 
         UserServiceModel userServiceModel = this.userService.findByName(principal.getName());
         List<CourseServiceModel> allCompletedCoursesByUserId = userService.findAllCompletedCourses(userServiceModel.getId());
-        System.out.println();
+
+
 
         model.addAttribute("allCompletedCoursesByUserId", allCompletedCoursesByUserId);
 
@@ -166,11 +165,13 @@ public class CourseController {
         if (principal != null) {
             UserServiceModel user = userService.findByName(principal.getName());
             boolean contains = courseService.checkIfCourseContainStudent(courseServiceModel, user);
+            boolean graduated = courseService.checkIfUserIsGraduated(courseServiceModel, user);
             boolean isAuthor = courseServiceModel.getAuthor().getId().equals(user.getId());
             if (!model.containsAttribute("solutionAddBindingModel")) {
                 model.addAttribute("solutionAddBindingModel", new AssignmentSolutionAddBindingModel());
             }
             model.addAttribute("author", isAuthor);
+            model.addAttribute("graduated", graduated );
             model.addAttribute("containStudent", contains);
 
         }

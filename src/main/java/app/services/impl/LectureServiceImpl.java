@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -76,17 +75,6 @@ public class LectureServiceImpl implements LectureService {
         Lecture lecture = this.lectureRepository.findById(lectureId).orElseThrow(() -> new LectureNotFoundException("Lecture with given id was not found !"));
 
         return this.modelMapper.map(lecture, LectureServiceModel.class);
-    }
-
-    @Override
-    public int findAllLecturesAssignmentCount(List<CourseServiceModel> courseServiceModelList) {
-        int count = 0;
-        for (CourseServiceModel courseServiceModel : courseServiceModelList) {
-            for (LectureServiceModel lecture : courseServiceModel.getLectures()) {
-                count += lecture.getStudentsAssignmentSolutions().size();
-            }
-        }
-        return count;
     }
 
 

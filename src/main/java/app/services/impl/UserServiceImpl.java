@@ -30,7 +30,6 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -301,15 +300,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(String id, Course course) {
+    public UserServiceModel updateUser(String id, Course course) {
         System.out.println();
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException());
 
-        List<Course> completedCourses = user.getCompletedCourses();
+        Set<Course> completedCourses = user.getCompletedCourses();
         completedCourses.add(course);
         user.setCompletedCourses(completedCourses);
 
-        userRepository.save(user);
+        Set<Course> enrolledCourses = user.getEnrolledCourses();
+
+        boolean b = enrolledCourses.removeIf(course1 -> course1.getTitle().equals(course.getTitle()));
+
+
+        user.setEnrolledCourses(enrolledCourses);
+
+        User updatedUser = userRepository.save(user);
+
+        return this.modelMapper.map(updatedUser,UserServiceModel.class);
 
     }
 
@@ -332,7 +340,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(bCryptPasswordEncoder.encode(userServiceModel.getPassword()));
         user.setProfilePicture(DEFAULT_PROFILE_PICTURE);
         user.setStatus(true);
-        user.setCompletedCourses(new ArrayList<>());
+        user.setCompletedCourses(new HashSet<>());
 
 
         return this.modelMapper.map(this.userRepository.saveAndFlush(user), UserServiceModel.class);

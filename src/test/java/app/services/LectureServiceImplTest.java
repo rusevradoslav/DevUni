@@ -107,7 +107,7 @@ public class LectureServiceImplTest {
     @Test
     public void addLecture_shouldAddNewLectureToCourse() throws FileStorageException {
         //Arrange
-        when(lectureRepository.save(lecture)).thenReturn(lecture);
+        when(lectureRepository.save(Mockito.any(Lecture.class))).thenReturn(lecture);
         when(customFileService.storeFile(multipartFile)).thenReturn(dbFile);
         //Act
 

@@ -9,7 +9,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Throwable.class)
     public ModelAndView exceptionHandler(Throwable e){
-        System.out.println();
+
         ModelAndView modelAndView = new ModelAndView("error");
         Throwable throwable = e;
 

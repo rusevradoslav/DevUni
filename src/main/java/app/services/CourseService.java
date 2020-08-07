@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface CourseService {
 
-   CourseServiceModel createCourse(String username, CourseServiceModel courseServiceModel) ;
+    CourseServiceModel createCourse(String username, CourseServiceModel courseServiceModel);
 
     List<CourseServiceModel> findAllCoursesByAuthorId(String id);
 
@@ -31,6 +31,7 @@ public interface CourseService {
 
     boolean checkIfCourseContainStudent(CourseServiceModel courseServiceModel, UserServiceModel user);
 
+    boolean checkIfUserIsGraduated(CourseServiceModel courseServiceModel, UserServiceModel user);
 
     List<LectureServiceModel> findAllLecturesForCourse(String id);
 

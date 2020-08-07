@@ -92,7 +92,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @Override
     public AssignmentServiceModel checkAssignment(AssignmentServiceModel assignmentServiceModel) {
-        System.out.println();
+
         LectureServiceModel lectureServiceModel = assignmentServiceModel.getLecture();
 
         Course course = this.modelMapper.map(lectureServiceModel.getCourse(), Course.class);
@@ -113,6 +113,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         for (Assignment assignment1 : allAssignmentsByUserIdAndCourseId) {
             sum += assignment1.getGradePercentage();
         }
+
         double avgSum = sum / lecturesCountInCourse;
         if (avgSum >= course.getPassPercentage()){
             userService.updateUser(user.getId(),course);

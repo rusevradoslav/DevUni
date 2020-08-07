@@ -75,7 +75,7 @@ public class UserController {
     @GetMapping("/register")
     @PageTitle("Register")
     public String register(Model model) {
-        System.out.println();
+
         if (!SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
             return "redirect:/home";
         }
@@ -130,7 +130,7 @@ public class UserController {
                               BindingResult bindingResult,
                               RedirectAttributes redirectAttributes) {
         UserServiceModel user = this.userService.findByName(principal.getName());
-        System.out.println();
+
         if (bindingResult.hasErrors()){
             redirectAttributes.addFlashAttribute("userAddProfilePictureBindingModel", userAddProfilePictureBindingModel);
             redirectAttributes.addFlashAttribute(String.format(BINDING_RESULT + "userAddProfilePictureBindingModel"), bindingResult);

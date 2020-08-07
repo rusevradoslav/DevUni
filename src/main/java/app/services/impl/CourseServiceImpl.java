@@ -173,6 +173,18 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public boolean checkIfUserIsGraduated(CourseServiceModel courseServiceModel, UserServiceModel user) {
+
+        for (UserServiceModel enrolledStudent : courseServiceModel.getGraduatedStudents()) {
+            if (enrolledStudent.getUsername().equals(user.getUsername())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
     public List<LectureServiceModel> findAllLecturesForCourse(String id) {
 
         Course course = this.courseRepository.findById(id)

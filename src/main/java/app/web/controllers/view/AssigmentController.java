@@ -38,6 +38,7 @@ public class AssigmentController {
                                                RedirectAttributes redirectAttributes,
                                                Principal principal) throws FileStorageException {
 
+
         LectureServiceModel lectureServiceModel = lectureService.findLectureById(lectureId);
         UserServiceModel userServiceModel = userService.findByName(principal.getName());
         AssignmentServiceModel assignmentServiceModel = this.modelMapper.map(solutionAddBindingModel, AssignmentServiceModel.class);

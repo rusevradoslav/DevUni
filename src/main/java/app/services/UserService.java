@@ -64,7 +64,7 @@ public interface UserService {
 
     List<CourseServiceModel> findAllCoursesByUserId(String id);
 
-    void updateUser(String id, Course completedCourses);
+    UserServiceModel updateUser(String id, Course completedCourses);
 
     List<CourseServiceModel> findAllCompletedCourses(String id);
 }

@@ -48,7 +48,6 @@ public class LectureController {
                                        @Valid @ModelAttribute("lectureAddBindingModel") LectureAddBindingModel lectureAddBindingModel,
                                        BindingResult bindingResult,
                                        RedirectAttributes redirectAttributes) {
-        System.out.println();
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("lectureAddBindingModel", lectureAddBindingModel);
             redirectAttributes.addFlashAttribute(String.format(BINDING_RESULT + "lectureAddBindingModel"), bindingResult);

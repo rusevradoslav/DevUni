@@ -79,6 +79,7 @@
                                 <p th:text="*{description}"></p>
                                 <ul th:if="${containStudent} or ${author} or ${isRoot}  or ${isAdmin}"
 
+
                                     sec:authorize="isAuthenticated()"
                                     class="col-md-10">
 
@@ -91,7 +92,9 @@
                                           th:object="${solutionAddBindingModel}"
                                           th:action="@{/assignments/upload/userAssignment/{id}(id = ${l.id})}"
                                           th:method="POST"
-                                          sec:authorize="hasAnyRole('ROLE_STUDENT', 'ROLE_ADMIN')" th:if="${containStudent}">
+                                          sec:authorize="hasAnyRole('ROLE_STUDENT', 'ROLE_ADMIN')"
+                                          th:if="${containStudent}"
+                                          th:unless="${graduated}">
 
                                         <i aria-hidden="true"></i><span> Assignment Solution:</span>
                                         <li class="d-flex flex-row align-items-center justify-content-start">
@@ -117,9 +120,11 @@
                                 </ul>
                             </div>
                             <div th:if="${containStudent} or ${author} or ${isRoot}  or ${isAdmin}"
+
                                  sec:authorize="isAuthenticated()">
                                 <div class="col-md-2 text-center">
-                                    <a th:href="@{/lectures/lectureVideo/{id}(id=*{id})}" class="play"><span class="ion-ios-play"></span></a>
+                                    <a th:href="@{/lectures/lectureVideo/{id}(id=*{id})}" class="play"><span
+                                            class="ion-ios-play"></span></a>
                                 </div>
                             </div>
 

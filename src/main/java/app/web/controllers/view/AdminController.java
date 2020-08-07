@@ -44,7 +44,6 @@ public class AdminController {
         UserServiceModel loggedUser = this.userService.findByName(principal.getName());
         httpSession.setAttribute("avatarImg", loggedUser.getProfilePicture());
         List<UserDetailsViewModel> allAdmins = this.userService.findAllAdmins();
-        System.out.println();
         model.addAttribute("allAdmins", allAdmins);
         return "admins/admin-home";
     }

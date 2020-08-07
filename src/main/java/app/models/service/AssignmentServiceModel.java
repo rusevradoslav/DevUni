@@ -10,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class AssignmentServiceModel extends BaseServiceModel {
 
     private String description;
