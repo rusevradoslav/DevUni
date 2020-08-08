@@ -23,7 +23,10 @@ public class AdminRestController {
     @GetMapping("/all-admins-rest")
     @PreAuthorize("hasAnyRole('ROLE_ROOT_ADMIN','ROLE_ADMIN')")
     @PageTitle("All Admins")
-    public List<UserDetailsViewModel> allAdmins() { return userService.findAllAdmins(); }
+    public List<UserDetailsViewModel> allAdmins() {
+
+        List<UserDetailsViewModel> allAdmins = userService.findAllAdmins();
+        return allAdmins; }
 
     @GetMapping("/all-students-rest")
     @PreAuthorize("hasAnyRole('ROLE_ROOT_ADMIN','ROLE_ADMIN')")
@@ -40,9 +43,7 @@ public class AdminRestController {
     @GetMapping("/all-teachers-requests-rest")
     @PreAuthorize("hasAnyRole('ROLE_ROOT_ADMIN','ROLE_ADMIN')")
     @PageTitle("All Teacher Requests")
-    public List<UserDetailsViewModel> allTeacherRequests() {
-
-        return userService.findAllStudentsWithRequests();
+    public List<UserDetailsViewModel> allTeacherRequests() { return userService.findAllStudentsWithRequests();
     }
 
 }
