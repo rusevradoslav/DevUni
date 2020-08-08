@@ -7,7 +7,6 @@ import app.models.binding.user.UserChangeEmailBindingModel;
 import app.models.binding.user.UserChangePasswordBindingModel;
 import app.models.binding.user.UserRegisterBindingModel;
 import app.models.service.AboutMeServiceModel;
-import app.models.service.AssignmentServiceModel;
 import app.models.service.UserServiceModel;
 import app.services.AboutMeService;
 import app.services.AssignmentService;
@@ -276,13 +275,7 @@ public class UserController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_STUDENT')")
     public String getUserCheckedAssignments(Model model, Principal principal) {
         UserServiceModel userServiceModel = userService.findByName(principal.getName());
-        double avgGrade = 0;
-        for (AssignmentServiceModel assignmentServiceModel : assignmentService.getCheckedAssignmentsByUser(userServiceModel)) {
-            double lecturesCount = (double) assignmentServiceModel.getLecture().getCourse().getLectures().size();
-            double gradePercentage = assignmentServiceModel.getGradePercentage();
-            avgGrade += (gradePercentage / lecturesCount);
-        }
-        model.addAttribute("avgGradeByCourse", avgGrade);
+
         model.addAttribute("allCheckedAssignments", assignmentService.getCheckedAssignmentsByUser(userServiceModel));
         return "users/user-checked-assignments-tabel";
     }

@@ -55,8 +55,7 @@
             <th scope="col">Courses</th>
             <th scope="col">Lectures</th>
             <th scope="col">Submission Author</th>
-            <th scope="col">Current Grade</th>
-            <th scope="col">Course Pass Percentage</th>
+            <th scope="col">Grade</th>
         </tr>
         </thead>
         <tbody class="myTable">
@@ -66,8 +65,7 @@
             <td th:text="*{lecture.course.title}"></td>
             <td th:text="*{lecture.title}"></td>
             <td th:text="*{user.username}"></td>
-            <td th:text="${avgGradeByCourse}"></td>
-            <td th:text="*{lecture.getCourse().passPercentage}"></td>
+            <td th:text="*{gradePercentage}">/100</td>
         </tr>
         </tbody>
     </table>
