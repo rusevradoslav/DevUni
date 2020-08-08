@@ -17,4 +17,6 @@ public interface AssignmentService {
     AssignmentServiceModel getAssignmentById(String assignmentId);
 
     AssignmentServiceModel checkAssignment(AssignmentServiceModel assignmentServiceModel);
+
+    List<AssignmentServiceModel> getCheckedAssignmentsByUser(UserServiceModel userServiceModel);
 }

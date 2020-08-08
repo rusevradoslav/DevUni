@@ -119,9 +119,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserServiceModel sentTeacherRequest(UserServiceModel userServiceModel) {
-        this.userRepository.changeTeacherRequestToTrue(userServiceModel.getId());
         User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
-        return this.modelMapper.map(user, UserServiceModel.class);
+        user.setTeacherRequest(true);
+        User updatedUser = userRepository.save(user);
+        return this.modelMapper.map(updatedUser, UserServiceModel.class);
 
     }
 
@@ -129,32 +130,47 @@ public class UserServiceImpl implements UserService {
     public UserServiceModel confirmTeacherRequest(UserServiceModel userServiceModel) throws RoleNotFoundException {
         Role role = this.roleService.findAuthorityByName("ROLE_TEACHER");
         this.userRepository.changeRole(role.getId(), userServiceModel.getId());
-        this.userRepository.changeTeacherRequestToFalse(userServiceModel.getId());
         User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
-        return this.modelMapper.map(user, UserServiceModel.class);
+        user.setTeacherRequest(false);
+        User updatedUser = userRepository.save(user);
+        return this.modelMapper.map(updatedUser, UserServiceModel.class);
     }
 
 
     @Override
     public UserServiceModel cancelTeacherRequest(UserServiceModel userServiceModel) {
-        this.userRepository.changeTeacherRequestToFalse(userServiceModel.getId());
         User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
-        return this.modelMapper.map(user, UserServiceModel.class);
+
+        user.setTeacherRequest(false);
+        User updatedUser = userRepository.save(user);
+        return this.modelMapper.map(updatedUser, UserServiceModel.class);
 
     }
 
     @Override
-    public void setAboutMeToTheTeacher(AboutMe aboutMe, User user) {
-        this.userRepository.updateTeacherAboutMe(aboutMe.getId(), user.getId());
+    public UserServiceModel setAboutMeToTheTeacher(AboutMe aboutMe, User user) {
+        User user1 = this.userRepository.findById(user.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
+        user1.setAboutMe(aboutMe);
+        User updatedUser = userRepository.save(user1);
+
+        UserServiceModel userServiceModel = this.modelMapper.map(updatedUser, UserServiceModel.class);
+        AboutMeServiceModel aboutMeServiceModel = this.modelMapper.map(updatedUser.getAboutMe(), AboutMeServiceModel.class);
+
+        userServiceModel.setAboutMeServiceModel(aboutMeServiceModel);
+        return userServiceModel;
     }
 
     @Override
     public UserServiceModel changePassword(UserServiceModel userServiceModel, String newPassword) {
-        String newEncodedPassword = bCryptPasswordEncoder.encode(newPassword);
-        this.userRepository.changePassword(userServiceModel.getId(), newEncodedPassword);
-        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
-        return this.modelMapper.map(user, UserServiceModel.class);
 
+        String newEncodedPassword = bCryptPasswordEncoder.encode(newPassword);
+        User user = userRepository.findById(userServiceModel.getId())
+                .orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
+        user.setPassword(newEncodedPassword);
+
+        User updatedUser = userRepository.save(user);
+
+        return this.modelMapper.map(updatedUser, UserServiceModel.class);
     }
 
     @Override
@@ -164,10 +180,12 @@ public class UserServiceImpl implements UserService {
                     "There is an account with that email address: "
                             + newEmail);
         }
-        this.userRepository.changeEmail(userServiceModel.getId(), newEmail);
+        User user = userRepository.findById(userServiceModel.getId())
+                .orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
 
-        User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
-        return this.modelMapper.map(user, UserServiceModel.class);
+        user.setEmail(newEmail);
+        User updatedUser = userRepository.save(user);
+        return this.modelMapper.map(updatedUser, UserServiceModel.class);
     }
 
     @Override
@@ -253,18 +271,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserServiceModel blockUser(UserServiceModel userServiceModel) {
-        this.userRepository.blockUser(userServiceModel.getId());
         User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
-        return this.modelMapper.map(user, UserServiceModel.class);
+        user.setStatus(false);
+        User updatedUser = userRepository.save(user);
+        return this.modelMapper.map(updatedUser, UserServiceModel.class);
 
     }
 
     @Override
     public UserServiceModel activateUser(UserServiceModel userServiceModel) {
-
-        this.userRepository.activateUser(userServiceModel.getId());
         User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
-        return this.modelMapper.map(user, UserServiceModel.class);
+        user.setStatus(true);
+        User updatedUser = userRepository.save(user);
+        return this.modelMapper.map(updatedUser, UserServiceModel.class);
     }
 
     @Override
@@ -334,6 +353,7 @@ public class UserServiceImpl implements UserService {
                 .map(course -> this.modelMapper.map(course, CourseServiceModel.class))
                 .collect(Collectors.toList());
     }
+
 
 
     private UserServiceModel registerNewUser(UserServiceModel userServiceModel) {

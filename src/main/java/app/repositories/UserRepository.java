@@ -42,6 +42,7 @@ public interface UserRepository extends JpaRepository<User, String> {
             "where authority = 'ROLE_STUDENT'and u.teacher_request = true;", nativeQuery = true)
     List<User> findAllStudentsWithRequests();
 
+
     @Modifying
     @Transactional
     @Query(value = "update users_authorities ua " +
@@ -49,32 +50,7 @@ public interface UserRepository extends JpaRepository<User, String> {
             "where user_id = :userId", nativeQuery = true)
     void changeRole(@Param("authorityId") String authorityId, @Param("userId") String userId);
 
-    @Modifying
-    @Query("update User  u set u.password = :newPassword where u.id = :userId")
-    void changePassword(@Param("userId") String userId, @Param("newPassword") String newPassword);
-
-    @Modifying
-    @Query("update User  u set u.email = :newEmail where u.id = :userId")
-    void changeEmail(@Param("userId") String userId, @Param("newEmail") String newEmail);
-
-    @Modifying
-    @Query("update User  u set u.teacherRequest = true where u.id = :userId")
-    void changeTeacherRequestToTrue(@Param("userId") String userId);
-
-    @Modifying
-    @Query("update User u set u.teacherRequest = false where u.id = :userId")
-    void changeTeacherRequestToFalse(@Param("userId") String userId);
-
-    @Modifying
-    @Query("update User  u set u.aboutMe.id = :aboutMeId where u.id = :userId")
-    void updateTeacherAboutMe(String aboutMeId, String userId);
 
 
-    @Modifying
-    @Query("update User u set u.status = false where u.id = :userId ")
-    void blockUser(@Param("userId") String userId);
 
-    @Modifying
-    @Query("update User u set u.status = true where u.id = :userId ")
-    void activateUser(@Param("userId") String userId);
 }

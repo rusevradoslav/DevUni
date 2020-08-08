@@ -7,8 +7,10 @@ import app.models.binding.user.UserChangeEmailBindingModel;
 import app.models.binding.user.UserChangePasswordBindingModel;
 import app.models.binding.user.UserRegisterBindingModel;
 import app.models.service.AboutMeServiceModel;
+import app.models.service.AssignmentServiceModel;
 import app.models.service.UserServiceModel;
 import app.services.AboutMeService;
+import app.services.AssignmentService;
 import app.services.UserService;
 import app.validations.anotations.PageTitle;
 import lombok.AllArgsConstructor;
@@ -40,6 +42,7 @@ public class UserController {
 
     private final UserService userService;
     private final AboutMeService aboutMeService;
+    private final AssignmentService assignmentService;
     private final ModelMapper modelMapper;
 
     @GetMapping("/login")
@@ -135,7 +138,7 @@ public class UserController {
                               RedirectAttributes redirectAttributes) {
         UserServiceModel user = this.userService.findByName(principal.getName());
 
-        if (bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("userAddProfilePictureBindingModel", userAddProfilePictureBindingModel);
             redirectAttributes.addFlashAttribute(String.format(BINDING_RESULT + "userAddProfilePictureBindingModel"), bindingResult);
             return "redirect:/users/user-details";
@@ -266,6 +269,22 @@ public class UserController {
 
         this.aboutMeService.addTeacherAboutMe(userServiceModel, aboutMeServiceModel);
         return "redirect:/home";
+    }
+
+    @GetMapping("/userCheckedAssignments")
+    @PageTitle("Cheked Assignments")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_STUDENT')")
+    public String getUserCheckedAssignments(Model model, Principal principal) {
+        UserServiceModel userServiceModel = userService.findByName(principal.getName());
+        double avgGrade = 0;
+        for (AssignmentServiceModel assignmentServiceModel : assignmentService.getCheckedAssignmentsByUser(userServiceModel)) {
+            double lecturesCount = (double) assignmentServiceModel.getLecture().getCourse().getLectures().size();
+            double gradePercentage = assignmentServiceModel.getGradePercentage();
+            avgGrade += (gradePercentage / lecturesCount);
+        }
+        model.addAttribute("avgGradeByCourse", avgGrade);
+        model.addAttribute("allCheckedAssignments", assignmentService.getCheckedAssignmentsByUser(userServiceModel));
+        return "users/user-checked-assignments-tabel";
     }
 }
 

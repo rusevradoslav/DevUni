@@ -399,6 +399,7 @@ public class UserServiceImplTest {
         //Arrange
         user.setTeacherRequest(true);
         when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenReturn(user);
         //Act
         UserServiceModel userServiceModel = userService.sentTeacherRequest(testUserServiceModel);
 
@@ -410,12 +411,27 @@ public class UserServiceImplTest {
 
     }
 
+    @Test(expected = UserNotFoundException.class)
+    public void sentTeacherRequest_shouldThrowUseNotFoundException() {
+        //Arrange
+        user.setTeacherRequest(true);
+        when(userRepository.findById(VALID_ID)).thenReturn(Optional.empty());
+        when(userRepository.save(any(User.class))).thenReturn(user);
+        //Act
+        UserServiceModel userServiceModel = userService.sentTeacherRequest(testUserServiceModel);
+
+        //Assert
+
+
+    }
+
     @Test
     public void confirmTeacherRequest_shouldCallUserRepository() throws RoleNotFoundException {
         //Arrange
         Role role = new Role("ROLE_TEACHER");
         when(roleService.findAuthorityByName("ROLE_TEACHER")).thenReturn(role);
         when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenReturn(user);
         //Act
         UserServiceModel userServiceModel = userService.confirmTeacherRequest(testUserServiceModel);
 
@@ -432,6 +448,7 @@ public class UserServiceImplTest {
     public void cancelTeacherRequest_shouldCallUserRepository() {
         //Arrange
         when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenReturn(user);
         //Act
         UserServiceModel userServiceModel = userService.cancelTeacherRequest(testUserServiceModel);
 
@@ -518,15 +535,30 @@ public class UserServiceImplTest {
         String newEncodedPassword = bCryptPasswordEncoder.encode(VALID_NEW_PASSWORD);
         user.setPassword(newEncodedPassword);
         when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenReturn(user);
 
         //Act
         UserServiceModel userServiceModel = userService.changePassword(testUserServiceModel, VALID_NEW_PASSWORD);
 
         //Assert
-        String actual = newEncodedPassword;
+        String actual = user.getPassword();
         String expected = userServiceModel.getPassword();
 
         assertEquals(actual, expected);
+    }
+
+    @Test(expected = UserNotFoundException.class)
+    public void changePassword_shouldThrowUserNotFoundException() {
+        //Arrange
+        String newEncodedPassword = bCryptPasswordEncoder.encode(VALID_NEW_PASSWORD);
+        user.setPassword(newEncodedPassword);
+        when(userRepository.findById(VALID_ID)).thenReturn(Optional.empty());
+        when(userRepository.save(any(User.class))).thenReturn(user);
+
+        //Act
+        UserServiceModel userServiceModel = userService.changePassword(testUserServiceModel, VALID_NEW_PASSWORD);
+
+
     }
 
     @Test
@@ -534,6 +566,7 @@ public class UserServiceImplTest {
         //Arrange
         user.setEmail(VALID_NEW_EMAIL);
         when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenReturn(user);
         //Act
         UserServiceModel userServiceModel = userService.changeEmail(testUserServiceModel, VALID_NEW_EMAIL);
         //Assert
@@ -541,6 +574,17 @@ public class UserServiceImplTest {
         String expected = userServiceModel.getEmail();
 
         assertEquals(actual, expected);
+    }
+
+    @Test(expected = UserNotFoundException.class)
+    public void changeEmail_shouldThrowUserNotFoundException() {
+        //Arrange
+        user.setEmail(VALID_NEW_EMAIL);
+        when(userRepository.findById(VALID_ID)).thenReturn(Optional.empty());
+
+        //Act
+        UserServiceModel userServiceModel = userService.changeEmail(testUserServiceModel, VALID_NEW_EMAIL);
+
     }
 
     @Test(expected = UserAlreadyExistException.class)
@@ -674,6 +718,7 @@ public class UserServiceImplTest {
         //Arrange
         user.setStatus(false);
         when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenReturn(user);
         //Act
         UserServiceModel userServiceModel = userService.blockUser(testUserServiceModel);
 
@@ -686,11 +731,25 @@ public class UserServiceImplTest {
 
     }
 
+    @Test(expected = UserNotFoundException.class)
+    public void blockUser_shouldThrowUserNotFoundException() {
+        //Arrange
+        user.setStatus(false);
+        when(userRepository.findById(VALID_ID)).thenReturn(Optional.empty());
+        when(userRepository.save(any(User.class))).thenReturn(user);
+        //Act
+        UserServiceModel userServiceModel = userService.blockUser(testUserServiceModel);
+
+
+    }
+
     @Test
     public void activateUser_shouldCallUserRepository() {
         //Arrange
         user.setStatus(true);
         when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenReturn(user);
+
         //Act
         UserServiceModel userServiceModel = userService.activateUser(testUserServiceModel);
 
@@ -701,6 +760,43 @@ public class UserServiceImplTest {
         assertEquals(actual, expected);
     }
 
+    @Test(expected = UserNotFoundException.class)
+    public void activateUser_shouldThrowUserNotFoundException() {
+        //Arrange
+        user.setStatus(true);
+        when(userRepository.findById(VALID_ID)).thenReturn(Optional.empty());
+        when(userRepository.save(any(User.class))).thenReturn(user);
+
+        //Act
+        UserServiceModel userServiceModel = userService.activateUser(testUserServiceModel);
+
+
+    }
+
+    @Test
+    public void setAboutMeToTheTeacher_shouldReturnUserWithGivenAboutMe() {
+
+        when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenReturn(user);
+
+        UserServiceModel userServiceModel = this.userService.setAboutMeToTheTeacher(aboutMe, user);
+
+        String actual = VALID_ABOUT_ME_ID;
+        String expected = userServiceModel.getAboutMeServiceModel().getId();
+
+        assertEquals(actual, expected);
+
+    }
+
+    @Test(expected = UserNotFoundException.class)
+    public void setAboutMeToTheTeacher_shouldThrowUserNotFoundException() {
+
+        when(userRepository.findById(VALID_ID)).thenReturn(Optional.empty());
+
+        UserServiceModel userServiceModel = this.userService.setAboutMeToTheTeacher(aboutMe, user);
+
+
+    }
 
     @Test
     public void findTeacher_shouldReturnTeachersWithAboutMe() {

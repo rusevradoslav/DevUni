@@ -22,4 +22,8 @@ public interface AssignmentRepository extends JpaRepository<Assignment, String> 
             "join courses c on l.course_id = c.id\n" +
             "where c.id =:courseId and a.user_id = :userId and a.checked =true", nativeQuery = true)
     List<Assignment> findAllAssignmentsByUserIdAndCourseId(@Param("userId") String userId, @Param("courseId") String courseId);
+
+
+    @Query("select a from Assignment a where a.user.id=:userId and a.checked = true ")
+    List<Assignment> findAssignmentsByUserId(@Param("userId") String userId);
 }

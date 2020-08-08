@@ -59,7 +59,7 @@ public interface UserService {
 
     UserDetailsViewModel findTeacher(String teacherId);
 
-    void setAboutMeToTheTeacher(AboutMe aboutMe, User user);
+    UserServiceModel setAboutMeToTheTeacher(AboutMe aboutMe, User user);
 
 
     List<CourseServiceModel> findAllCoursesByUserId(String id);
@@ -67,4 +67,6 @@ public interface UserService {
     UserServiceModel updateUser(String id, Course completedCourses);
 
     List<CourseServiceModel> findAllCompletedCourses(String id);
+
+
 }

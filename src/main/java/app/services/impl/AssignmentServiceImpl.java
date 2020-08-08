@@ -41,7 +41,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         Assignment assignment = this.modelMapper.map(assignmentServiceModel, Assignment.class);
         assignment.setUser(user);
         assignment.setLecture(lecture);
-        assignment.setDescription(String.format("Description: %s %s", user.getUsername(), lecture.getTitle()));
+        assignment.setDescription(String.format("Description: %s %s $s", user.getUsername(), lecture.getTitle(),assignmentServiceModel.getFile().getName()));
         assignment.setChecked(false);
         Assignment assignmentByDescription = assignmentRepository.findFirstByDescription(assignment.getDescription()).orElse(null);
 
@@ -116,15 +116,21 @@ public class AssignmentServiceImpl implements AssignmentService {
         }
 
         double avgSum = sum / lecturesCountInCourse;
-        if (avgSum >= course.getPassPercentage()){
-            userService.updateUser(user.getId(),course);
+        if (avgSum >= course.getPassPercentage()) {
+            userService.updateUser(user.getId(), course);
 
         }
 
 
-
-
         return this.modelMapper.map(savedAssignment, AssignmentServiceModel.class);
+    }
+
+    @Override
+    public List<AssignmentServiceModel> getCheckedAssignmentsByUser(UserServiceModel userServiceModel) {
+        return this.assignmentRepository.findAssignmentsByUserId(userServiceModel.getId())
+                .stream()
+                .map(assignment -> this.modelMapper.map(assignment, AssignmentServiceModel.class))
+                .collect(Collectors.toList());
     }
 
 
