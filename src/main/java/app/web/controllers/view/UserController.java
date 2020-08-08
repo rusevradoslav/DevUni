@@ -1,7 +1,11 @@
 package app.web.controllers.view;
 
 import app.error.UserAlreadyExistException;
-import app.models.binding.*;
+import app.models.binding.about_me.AboutMeAddBindingModel;
+import app.models.binding.user.UserAddProfilePictureBindingModel;
+import app.models.binding.user.UserChangeEmailBindingModel;
+import app.models.binding.user.UserChangePasswordBindingModel;
+import app.models.binding.user.UserRegisterBindingModel;
 import app.models.service.AboutMeServiceModel;
 import app.models.service.UserServiceModel;
 import app.services.AboutMeService;

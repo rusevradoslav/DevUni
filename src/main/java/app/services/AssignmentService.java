@@ -12,7 +12,7 @@ public interface AssignmentService {
 
     List<AssignmentServiceModel> findAllSubmittedAssignments(LectureServiceModel lecture);
 
-    String findAssignmentById(String assignmentId);
+    String findFileForAssignmentById(String assignmentId);
 
     AssignmentServiceModel getAssignmentById(String assignmentId);
 

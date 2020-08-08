@@ -1,7 +1,7 @@
 package app.web.controllers.view;
 
 import app.error.FileStorageException;
-import app.models.binding.LectureAddBindingModel;
+import app.models.binding.lecture.LectureAddBindingModel;
 import app.models.service.CourseServiceModel;
 import app.models.service.LectureServiceModel;
 import app.services.CourseService;

@@ -341,6 +341,7 @@ public class CourseServiceImplTest {
         assertEquals(actual, expected);
 
     }
+
     @Test(expected = CourseNotFoundException.class)
     public void findAllLecturesForCourse_ShouldThrowExceptionIfCourseDoesNotExist() {
         //Arrange
@@ -363,6 +364,45 @@ public class CourseServiceImplTest {
         assertEquals(actual, expected);
 
     }
+
+    @Test
+    public void checkIfCourseContainStudent_ShouldReturnTrueIfUserExist() {
+
+        courseServiceModel.setEnrolledStudents(List.of(userServiceModel));
+        boolean checkIfCourseContainStudent = courseService.checkIfCourseContainStudent(courseServiceModel, userServiceModel);
+
+        assertEquals(true, checkIfCourseContainStudent);
+    }
+
+    @Test
+    public void checkIfCourseContainStudent_ShouldReturnFalseIfUserExist() {
+
+        courseServiceModel.setEnrolledStudents(new ArrayList<>());
+        boolean checkIfCourseContainStudent = courseService.checkIfCourseContainStudent(courseServiceModel, userServiceModel);
+
+        assertEquals(false, checkIfCourseContainStudent);
+    }
+
+    @Test
+    public void checkIfUserIsGraduated_ShouldReturnTrueIfUserExist() {
+
+        courseServiceModel.setGraduatedStudents(List.of(userServiceModel));
+        boolean checkIfCourseContainStudent = courseService.checkIfUserIsGraduated(courseServiceModel, userServiceModel);
+
+        assertEquals(true, checkIfCourseContainStudent);
+    }
+
+
+    @Test
+    public void checkIfUserIsGraduated_ShouldReturnFalseIfUserExist() {
+
+
+        courseServiceModel.setGraduatedStudents(new ArrayList<>());
+        boolean checkIfCourseContainStudent = courseService.checkIfUserIsGraduated(courseServiceModel, userServiceModel);
+
+        assertEquals(false, checkIfCourseContainStudent);
+    }
+
 
     private CourseServiceModel getCourseServiceModel(ModelMapper actualMapper) {
         CourseServiceModel courseServiceModel = actualMapper.map(course, CourseServiceModel.class);

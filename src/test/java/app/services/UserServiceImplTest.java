@@ -17,12 +17,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.management.relation.RoleNotFoundException;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -89,6 +92,7 @@ public class UserServiceImplTest {
     ModelMapper modelMapper;
     @Mock
     BCryptPasswordEncoder bCryptPasswordEncoder;
+    private Course course;
 
 
     @Before
@@ -140,6 +144,11 @@ public class UserServiceImplTest {
 
         testAboutMeServiceModel = modelMapper.map(aboutMe, AboutMeServiceModel.class);
 
+        aboutMe = new AboutMe();
+        aboutMe.setId(VALID_ABOUT_ME_ID);
+        aboutMe.setKnowledgeLevel(VALID_KNOWLEDGE_LEVEL);
+        aboutMe.setSelfDescription(VALID_SELF_DESCRIPTION);
+
 
         user = new User();
 
@@ -157,6 +166,7 @@ public class UserServiceImplTest {
         testUserServiceModel = modelMapper.map(user, UserServiceModel.class);
         testUserServiceModel.setAboutMeServiceModel(testAboutMeServiceModel);
 
+        course = getCourse();
 
     }
 
@@ -780,6 +790,62 @@ public class UserServiceImplTest {
 
 
     }
+
+    @Test
+    public void findAllCompletedCourses_shouldReturnAllCompletedCoursesByUser() {
+        //Arrange
+        user.setCompletedCourses(Set.of(course));
+        when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
+
+        //Act
+        List<CourseServiceModel> allCompletedCourses = userService.findAllCompletedCourses(VALID_ID);
+
+        //Assert
+        assertEquals(1, allCompletedCourses.size());
+
+    }
+
+    @Test(expected = UserNotFoundException.class)
+    public void findAllCompletedCourses_shouldThrowExceptionWhenUserDoesNotExist() {
+        //Arrange
+        user.setCompletedCourses(Set.of(course));
+        when(userRepository.findById(VALID_ID)).thenReturn(Optional.empty());
+
+        //Act
+        List<CourseServiceModel> allCompletedCourses = userService.findAllCompletedCourses(VALID_ID);
+
+
+    }
+
+    @Test
+    public void updateUser_shouldReturnAllCompletedCoursesByUser() {
+
+        //Arrange
+        user.setCompletedCourses(new HashSet<>());
+        user.setEnrolledCourses(new HashSet<>());
+        when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenReturn(user);
+
+        //Act
+        UserServiceModel userServiceModel = userService.updateUser(VALID_ID, course);
+
+        //Assert
+        assertEquals(1, userServiceModel.getCompletedCourses().size());
+        assertEquals(0, userServiceModel.getEnrolledCourses().size());
+
+    }
+
+    @Test
+    public void addProfilePicture_shouldUpdateDefaultProfilePicture() throws IOException {
+        MultipartFile multipartFile = Mockito.mock(MultipartFile.class);
+        when(userRepository.save(any(User.class))).thenReturn(user);
+
+        UserServiceModel userServiceModel = this.userService.addProfilePicture(testUserServiceModel, multipartFile);
+
+        String actual = VALID_USERNAME;
+        String expected = userServiceModel.getUsername();
+    }
+
     private Course getCourse() {
         Course course = new Course();
         course.setId(VALID_ID);

@@ -1,7 +1,7 @@
 package app.web.controllers.view;
 
-import app.models.binding.AssignmentSolutionAddBindingModel;
-import app.models.binding.CourseCreateBindingModel;
+import app.models.binding.assignment.AssignmentSolutionAddBindingModel;
+import app.models.binding.course.CourseCreateBindingModel;
 import app.models.service.CourseServiceModel;
 import app.models.service.RoleServiceModel;
 import app.models.service.UserServiceModel;

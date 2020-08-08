@@ -27,7 +27,7 @@ public interface UserService {
 
     UserServiceModel changeEmail(UserServiceModel user, String newEmail);
 
-    void addProfilePicture(UserServiceModel user, MultipartFile profilePicture) throws IOException;
+    UserServiceModel addProfilePicture(UserServiceModel user, MultipartFile profilePicture) throws IOException;
 
     List<UserDetailsViewModel> findAllAdmins();
 

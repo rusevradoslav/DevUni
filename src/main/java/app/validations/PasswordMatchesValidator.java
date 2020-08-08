@@ -1,6 +1,6 @@
 package app.validations;
 
-import app.models.binding.UserRegisterBindingModel;
+import app.models.binding.user.UserRegisterBindingModel;
 import app.validations.anotations.PasswordMatches;
 
 import javax.validation.ConstraintValidator;

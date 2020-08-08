@@ -1,8 +1,8 @@
 package app.web.controllers.view;
 
 import app.error.FileStorageException;
-import app.models.binding.AssignmentCheckBindingModel;
-import app.models.binding.AssignmentSolutionAddBindingModel;
+import app.models.binding.assignment.AssignmentCheckBindingModel;
+import app.models.binding.assignment.AssignmentSolutionAddBindingModel;
 import app.models.service.AssignmentServiceModel;
 import app.models.service.LectureServiceModel;
 import app.models.service.UserServiceModel;

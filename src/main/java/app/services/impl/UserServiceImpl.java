@@ -134,6 +134,7 @@ public class UserServiceImpl implements UserService {
         return this.modelMapper.map(user, UserServiceModel.class);
     }
 
+
     @Override
     public UserServiceModel cancelTeacherRequest(UserServiceModel userServiceModel) {
         this.userRepository.changeTeacherRequestToFalse(userServiceModel.getId());
@@ -167,13 +168,15 @@ public class UserServiceImpl implements UserService {
 
         User user = userRepository.findById(userServiceModel.getId()).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
         return this.modelMapper.map(user, UserServiceModel.class);
-
     }
 
     @Override
-    public void addProfilePicture(UserServiceModel user, MultipartFile profilePicture) throws IOException {
+    public UserServiceModel addProfilePicture(UserServiceModel userServiceModel, MultipartFile profilePicture) throws IOException {
+        User user = this.modelMapper.map(userServiceModel, User.class);
         String imageUrl = this.cloudinaryService.uploadImage(profilePicture);
-        this.userRepository.updatePhoto(user.getId(), imageUrl);
+        user.setProfilePicture(imageUrl);
+        User save = this.userRepository.save(user);
+        return this.modelMapper.map(save, UserServiceModel.class);
     }
 
     @Override
@@ -301,7 +304,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserServiceModel updateUser(String id, Course course) {
-        System.out.println();
+
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException());
 
         Set<Course> completedCourses = user.getCompletedCourses();
@@ -317,7 +320,7 @@ public class UserServiceImpl implements UserService {
 
         User updatedUser = userRepository.save(user);
 
-        return this.modelMapper.map(updatedUser,UserServiceModel.class);
+        return this.modelMapper.map(updatedUser, UserServiceModel.class);
 
     }
 

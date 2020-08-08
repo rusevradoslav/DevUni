@@ -1,7 +1,7 @@
 package app.web.controllers.view;
 
         import app.error.UserAlreadyExistException;
-        import app.models.binding.AdminCreateBindingModel;
+        import app.models.binding.user.AdminCreateBindingModel;
         import app.models.service.UserServiceModel;
         import app.models.view.UserDetailsViewModel;
         import app.services.CourseService;

@@ -162,7 +162,6 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public boolean checkIfCourseContainStudent(CourseServiceModel courseServiceModel, UserServiceModel user) {
-
         for (UserServiceModel enrolledStudent : courseServiceModel.getEnrolledStudents()) {
             if (enrolledStudent.getUsername().equals(user.getUsername())) {
                 return true;

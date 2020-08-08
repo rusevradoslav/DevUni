@@ -3,6 +3,7 @@ package app.services;
 import app.error.FileStorageException;
 import app.models.entity.*;
 import app.models.service.AssignmentServiceModel;
+import app.models.service.CourseServiceModel;
 import app.models.service.LectureServiceModel;
 import app.models.service.UserServiceModel;
 import app.repositories.AssignmentRepository;
@@ -18,6 +19,8 @@ import org.modelmapper.ModelMapper;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static app.models.entity.Difficulty.ADVANCE;
 import static org.junit.Assert.assertEquals;
@@ -50,6 +53,7 @@ public class AssignmentServiceImplTest {
     private static final String VALID_TOPIC_NAME = "Java";
 
     private static final String VALID_ASSIGNMENT_DESCRIPTION = "Description: radorusev Spring Security";
+    private static final String VALID_ASSIGNMENT_ID = "validId";
 
     private final String VALID_FILE_NAME = "validFileName.txt";
     private final String VALID_FILE_TYPE = "validFileType";
@@ -69,9 +73,12 @@ public class AssignmentServiceImplTest {
     private ModelMapper modelMapper;
     @Mock
     private CustomFileService customFileService;
+    @Mock
+    private UserService userService;
 
     @InjectMocks
     private AssignmentServiceImpl assignmentService;
+    private Course course;
 
 
     @Before
@@ -99,10 +106,12 @@ public class AssignmentServiceImplTest {
         user.setRegistrationDate(LocalDateTime.now());
 
         assignment = new Assignment();
+        assignment.setId(VALID_ASSIGNMENT_ID);
         assignment.setLecture(lecture);
         assignment.setUser(user);
         assignment.setFile(dbFile);
         assignment.setDescription(VALID_ASSIGNMENT_DESCRIPTION);
+
 
         when(modelMapper.map(any(AssignmentServiceModel.class), eq(Assignment.class)))
                 .thenAnswer(invocationOnMock ->
@@ -116,9 +125,6 @@ public class AssignmentServiceImplTest {
         when(modelMapper.map(any(LectureServiceModel.class), eq(Lecture.class)))
                 .thenAnswer(invocationOnMock ->
                         actualMapper.map(invocationOnMock.getArguments()[0], Lecture.class));
-        when(modelMapper.map(any(Lecture.class), eq(LectureServiceModel.class)))
-                .thenAnswer(invocationOnMock ->
-                        actualMapper.map(invocationOnMock.getArguments()[0], LectureServiceModel.class));
 
         when(modelMapper.map(any(UserServiceModel.class), eq(User.class)))
                 .thenAnswer(invocationOnMock ->
@@ -127,6 +133,15 @@ public class AssignmentServiceImplTest {
         when(modelMapper.map(any(User.class), eq(UserServiceModel.class)))
                 .thenAnswer(invocationOnMock ->
                         actualMapper.map(invocationOnMock.getArguments()[0], UserServiceModel.class));
+
+
+        when(modelMapper.map(any(Course.class), eq(CourseServiceModel.class)))
+                .thenAnswer(invocationOnMock ->
+                        actualMapper.map(invocationOnMock.getArguments()[0], CourseServiceModel.class));
+
+        when(modelMapper.map(any(CourseServiceModel.class), eq(Course.class)))
+                .thenAnswer(invocationOnMock ->
+                        actualMapper.map(invocationOnMock.getArguments()[0], Course.class));
 
         assignmentServiceModel = this.modelMapper.map(assignment, AssignmentServiceModel.class);
         userServiceModel = actualMapper.map(user, UserServiceModel.class);
@@ -154,9 +169,91 @@ public class AssignmentServiceImplTest {
 
     }
 
+    @Test
+    public void uploadUserAssignmentSolution_shouldUpdateNewAssigment() throws FileStorageException {
+        //Arrange
+        when(assignmentRepository.findFirstByDescription(VALID_ASSIGNMENT_DESCRIPTION)).thenReturn(Optional.of(assignment));
+        when(this.assignmentRepository.save(Mockito.any(Assignment.class)))
+                .thenReturn(assignment);
+
+        //Act
+
+        AssignmentServiceModel aServiceModel = assignmentService
+                .uploadUserAssignmentSolution(lectureServiceModel, userServiceModel, assignmentServiceModel);
+
+        String actual = VALID_ASSIGNMENT_DESCRIPTION;
+        String expected = aServiceModel.getDescription();
+
+        assertEquals(actual, expected);
+
+
+    }
+
+    @Test
+    public void findFileForAssignmentById_shouldReturnCorrectFileName() {
+        when(assignmentRepository.findById(VALID_ASSIGNMENT_ID)).thenReturn(Optional.of(assignment));
+
+        String fileForAssignmentById = assignmentService.findFileForAssignmentById(assignment.getId());
+
+        String actual = VALID_CUSTOM_FILE_ID;
+        String expected = fileForAssignmentById;
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    public void getAssignmentById_shouldReturnCorrectFileName() {
+        when(assignmentRepository.findById(VALID_ASSIGNMENT_ID)).thenReturn(Optional.of(assignment));
+
+        AssignmentServiceModel assignmentById = assignmentService.getAssignmentById(assignment.getId());
+
+        String actual = VALID_ASSIGNMENT_ID;
+        String expected = assignmentById.getId();
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    public void findAllSubmittedAssignments_shouldReturnCorrectFileName() {
+        when(assignmentRepository.findAllByLecture_Id(LECTURE_VALID_ID)).thenReturn(List.of(assignment));
+
+        List<AssignmentServiceModel> allSubmittedAssignments = assignmentService.findAllSubmittedAssignments(lectureServiceModel);
+
+        int actual = actual = 1;
+        int expected = allSubmittedAssignments.size();
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    public void checkAssignment_shouldCheckedAssignment() {
+
+        course.setLectures(List.of(lecture));
+        when(assignmentRepository.save(any(Assignment.class))).thenReturn(assignment);
+        when(userService.findById(user.getId())).thenReturn(userServiceModel);
+
+        AssignmentServiceModel assignment = assignmentService.checkAssignment(assignmentServiceModel);
+
+        String actual = VALID_ASSIGNMENT_DESCRIPTION;
+        String expected = assignment.getDescription();
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    public void checkAssignment_shouldCheckedAssignmentAndCallUpdateMethodInUserService() {
+
+        course.setLectures(List.of(lecture));
+        when(assignmentRepository.save(any(Assignment.class))).thenReturn(assignment);
+        when(assignmentRepository.findAllAssignmentsByUserIdAndCourseId(user.getId(),course.getId())).thenReturn(List.of(assignment));
+        when(userService.findById(user.getId())).thenReturn(userServiceModel);
+
+        AssignmentServiceModel assignment = assignmentService.checkAssignment(assignmentServiceModel);
+
+        String actual = VALID_ASSIGNMENT_DESCRIPTION;
+        String expected = assignment.getDescription();
+        assertEquals(actual, expected);
+    }
+
 
     private Course getCourse() {
-        Course course = new Course();
+        course = new Course();
         course.setId(VALID_COURSE_ID);
         course.setTitle(VALID_COURSE_TITLE);
         course.setShortDescription(VALID_SHORT_DESCRIPTION);

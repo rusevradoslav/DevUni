@@ -45,6 +45,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         assignment.setChecked(false);
         Assignment assignmentByDescription = assignmentRepository.findFirstByDescription(assignment.getDescription()).orElse(null);
 
+        System.out.println();
         if (assignmentByDescription != null) {
             String oldAssignmentSubmission = assignmentByDescription.getFile().getId();
 
@@ -79,7 +80,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
-    public String findAssignmentById(String assignmentId) {
+    public String findFileForAssignmentById(String assignmentId) {
         Assignment assignment = this.assignmentRepository.findById(assignmentId).orElseThrow(() -> new AssignmentNotFoundException("Assignment with given id was not found !"));
         return assignment.getFile().getId();
     }

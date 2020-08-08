@@ -1,4 +1,4 @@
-package app.models.binding;
+package app.models.binding.about_me;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

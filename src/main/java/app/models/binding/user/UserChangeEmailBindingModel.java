@@ -1,4 +1,4 @@
-package app.models.binding;
+package app.models.binding.user;
 
 import app.validations.anotations.FieldMatch;
 import app.validations.anotations.ValidEmail;

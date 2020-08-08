@@ -69,9 +69,6 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Query("update User  u set u.aboutMe.id = :aboutMeId where u.id = :userId")
     void updateTeacherAboutMe(String aboutMeId, String userId);
 
-    @Modifying
-    @Query("update User u set u.profilePicture = :imageUrl where u.id =:userId")
-    void updatePhoto(@Param("userId") String userId, @Param("imageUrl") String imageUrl);
 
     @Modifying
     @Query("update User u set u.status = false where u.id = :userId ")
