@@ -64,19 +64,20 @@
 
                 </div>
 
-              <!--  <div class="row mb-5">
+                <div class="row mb-5">
                     <div class="col-md-12 text-center">
                         <div class="block-27">
                             <ul>
-                                <li><a href="#">&lt;</a></li>
-                                <li class="active"><span>1</span></li>
-                                <li><a href="#">2</a></li>
-                                <li><a href="#">3</a></li>
-                                <li><a href="#">&gt;</a></li>
+                                <li class="col-lg-4 mt-auto"
+                                    th:unless="${allCourses.size() == 0}"
+                                    th:each="i:${#numbers.sequence(0,allCourses.size() - 1)}">
+                                    <a th:href="@{/allCourses(page=${i},size='3')}" th:text="${i+1}" class="nav-link"
+                                       th:classappend="${currentPage}==${i}?'active':''"></a>
+                                </li>
                             </ul>
                         </div>
                     </div>
-                </div>-->
+                </div>
             </div>
             <!-- END content -->
             <div class="col-md-6 col-lg-4 order-md-1">
@@ -99,6 +100,7 @@
                 <div class="block-25 mb-5">
                     <div class="heading">Recent Courses</div>
                     <div th:each="c : ${top3RecentCourses}" th:object="${c}">
+
                         <ul>
                             <li>
                                 <a th:href="@{/courses/courseDetails/{id}(id = *{id})}" class="d-flex">

@@ -4,63 +4,72 @@ import app.models.entity.Role;
 import app.models.entity.User;
 import app.repositories.RoleRepository;
 import app.repositories.UserRepository;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@RunWith(MockitoJUnitRunner.class)
-@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
+@ExtendWith(MockitoExtension.class)
 class AdminRestControllerTest {
     private static final String VALID_ID = "validId";
-    private static final String VALID_USERNAME = "rusevrado";
+    private static final String VALID_USERNAME = "validUsername";
     private static final String VALID_PASSWORD = "1234";
     private static final String VALID_FIRST_NAME = "Radoslav";
     private static final String VALID_LAST_NAME = "Rusev";
-    private static final String VALID_EMAIL = "radorusevcrypto@gmail.com";
+    private static final String VALID_EMAIL = "validEmail@gmail.com";
     private static final String VALID_IMAGE_URL = "[random_url]";
+
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    RoleRepository roleRepository;
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    UserRepository userRepository;
-
-    @MockBean
-    RoleRepository roleRepository;
-
     private User user;
+    private Role admin;
+    private Role student;
+    private Role teacher;
+    private Role root;
 
 
-    @Before
+    @BeforeEach
     public void setUp() {
 
+
+        this.userRepository.deleteAll();
+        this.roleRepository.deleteAll();
         user = new User();
-        Set<Role> authorities = new HashSet<>();
-        authorities.add(new Role("ROLE_ADMIN"));
-     /*   authorities.add(new Role("STUDENT"));
-        authorities.add(new Role("TEACHER"));*/
+
+        root = new Role("ROLE_ROOT_ADMIN");
+        admin = new Role("ROLE_ADMIN");
+        student = new Role("ROLE_STUDENT");
+        teacher = new Role("ROLE_TEACHER");
+        Set<Role> authorities = Set.of(root, admin, student, teacher);
+        roleRepository.saveAndFlush(root);
+        roleRepository.saveAndFlush(admin);
+        roleRepository.saveAndFlush(student);
+        roleRepository.saveAndFlush(teacher);
+
 
         user.setId(VALID_ID);
         user.setFirstName(VALID_FIRST_NAME);
@@ -69,48 +78,56 @@ class AdminRestControllerTest {
         user.setEmail(VALID_EMAIL);
         user.setPassword(VALID_PASSWORD);
         user.setAuthorities(authorities);
+        user.setTeacherRequest(true);
         user.setRegistrationDate(LocalDateTime.now());
         user.setProfilePicture(VALID_IMAGE_URL);
 
-        userRepository.save(user);
-        when(userRepository.findAllAdmins()).thenReturn(List.of(user));
+        userRepository.saveAndFlush(user);
 
+    }
 
+    @AfterEach
+    void after() {
+        this.userRepository.deleteAll();
+        this.roleRepository.deleteAll();
     }
 
     @Test
     @WithMockUser(username = "user", password = "pass", roles = "ROOT_ADMIN")
     public void getAllAdminsShouldReturnAllAdmins() throws Exception {
-        this.userRepository.saveAndFlush(user);
+
         this.mockMvc.perform(get("/admins/all-admins-rest"))
                 .andExpect(status().isOk()).
-                andExpect(jsonPath("$", hasSize(0)));
+                andExpect(jsonPath("$", hasSize(1)));
 
-    }    @Test
+    }
+
+    @Test
     @WithMockUser(username = "user", password = "pass", roles = "ROOT_ADMIN")
     public void getAllAdminsShouldReturnAllTeachers() throws Exception {
-        this.userRepository.saveAndFlush(user);
+
         this.mockMvc.perform(get("/admins/all-teachers-rest"))
                 .andExpect(status().isOk()).
-                andExpect(jsonPath("$", hasSize(0)));
+                andExpect(jsonPath("$", hasSize(1)));
 
-    }    @Test
+    }
+
+    @Test
     @WithMockUser(username = "user", password = "pass", roles = "ROOT_ADMIN")
     public void getAllAdminsShouldReturnAllStudents() throws Exception {
-        this.userRepository.saveAndFlush(user);
+
         this.mockMvc.perform(get("/admins/all-students-rest"))
                 .andExpect(status().isOk()).
-                andExpect(jsonPath("$", hasSize(0)));
+                andExpect(jsonPath("$", hasSize(1)));
 
     }
 
     @Test
     @WithMockUser(username = "user", password = "pass", roles = "ROOT_ADMIN")
     public void getAllAdminsShouldReturnAllStudentsWithTeacherRequests() throws Exception {
-        this.userRepository.saveAndFlush(user);
         this.mockMvc.perform(get("/admins/all-students-rest"))
                 .andExpect(status().isOk()).
-                andExpect(jsonPath("$", hasSize(0)));
+                andExpect(jsonPath("$", hasSize(1)));
 
     }
 

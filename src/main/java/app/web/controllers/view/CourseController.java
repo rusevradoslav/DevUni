@@ -2,6 +2,7 @@ package app.web.controllers.view;
 
 import app.models.binding.assignment.AssignmentSolutionAddBindingModel;
 import app.models.binding.course.CourseCreateBindingModel;
+import app.models.entity.Course;
 import app.models.service.CourseServiceModel;
 import app.models.service.RoleServiceModel;
 import app.models.service.UserServiceModel;
@@ -10,6 +11,9 @@ import app.validations.anotations.PageTitle;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -125,7 +129,6 @@ public class CourseController {
         List<CourseServiceModel> allCompletedCoursesByUserId = userService.findAllCompletedCourses(userServiceModel.getId());
 
 
-
         model.addAttribute("allCompletedCoursesByUserId", allCompletedCoursesByUserId);
 
         return "courses/student-completed-courses";
@@ -133,8 +136,11 @@ public class CourseController {
 
     @GetMapping("/allCourses")
     @PageTitle("All Courses")
-    public String allCourses(Model model) {
+    public String allCourses(Model model, @PageableDefault( size = 3) Pageable pageable) {
 
+        Page<Course> courses = this.courseService.findCourses(pageable);
+        model.addAttribute("allCourses",courses);
+        model.addAttribute("currentPage", pageable.getPageNumber());
         model.addAttribute("allCourses", courseService.findAllCoursesWithStatusTrue());
         model.addAttribute("allTopics", topicService.findAllTopics());
         model.addAttribute("top3RecentCourses", courseService.findRecentCourses());
@@ -171,7 +177,7 @@ public class CourseController {
                 model.addAttribute("solutionAddBindingModel", new AssignmentSolutionAddBindingModel());
             }
             model.addAttribute("author", isAuthor);
-            model.addAttribute("graduated", graduated );
+            model.addAttribute("graduated", graduated);
             model.addAttribute("containStudent", contains);
 
         }

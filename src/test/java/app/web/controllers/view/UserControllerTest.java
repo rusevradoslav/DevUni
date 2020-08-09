@@ -4,32 +4,32 @@ import app.models.entity.*;
 import app.repositories.CourseRepository;
 import app.repositories.RoleRepository;
 import app.repositories.UserRepository;
-import org.junit.Before;
+import app.services.AboutMeService;
+import app.services.AssignmentService;
+import app.services.UserService;
 import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 
 import static app.models.entity.Difficulty.ADVANCE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@RunWith(MockitoJUnitRunner.class)
-@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
+@ExtendWith(MockitoExtension.class)
 public class UserControllerTest {
     private static final String VALID_COURSE_ID = "validId";
     private static final String VALID_NEW_ID = "validId";
@@ -66,32 +66,49 @@ public class UserControllerTest {
     private AboutMe aboutMe;
     private Course course;
 
+    private Role admin;
+    private Role student;
+    private Role teacher;
+    private Role root;
+
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @Autowired
     private UserRepository userRepository;
-    @MockBean
+    @Autowired
     private RoleRepository roleRepository;
-    @MockBean
+    @Autowired
     private CourseRepository courseRepository;
 
-    @Before
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private AboutMeService aboutMeService;
+    @Autowired
+    private AssignmentService assignmentService;
+
+    private final ModelMapper modelMapper = new ModelMapper();
+
+
+    @BeforeEach
     public void setUp() {
-/*
-        roleRepository.saveAndFlush(new Role("ROLE_STUDENT"));
-        roleRepository.saveAndFlush(new Role("ROLE_ADMIN"));
-        roleRepository.saveAndFlush(new Role("ROLE_TEACHER"));
-        roleRepository.saveAndFlush(new Role("ROLE_STUDENT"));
-        List<Role> authorities = roleRepository.findAll();
-        Set<Role> roles = authorities.stream().collect(Collectors.toSet());
+        System.out.println();
+        this.userRepository.deleteAll();
+        this.roleRepository.deleteAll();
 
-        aboutMe = new AboutMe();
-        aboutMe.setId(VALID_ABOUT_ME_ID);
-        aboutMe.setKnowledgeLevel(VALID_KNOWLEDGE_LEVEL);
-        aboutMe.setSelfDescription(VALID_SELF_DESCRIPTION);
 
-        User user = new User();
+        root = new Role("ROLE_ROOT_ADMIN");
+        admin = new Role("ROLE_ADMIN");
+        student = new Role("ROLE_STUDENT");
+        teacher = new Role("ROLE_TEACHER");
+        Set<Role> authorities = Set.of(root, admin, student, teacher);
+        roleRepository.saveAndFlush(root);
+        roleRepository.saveAndFlush(admin);
+        roleRepository.saveAndFlush(student);
+        roleRepository.saveAndFlush(teacher);
+
+        user = new User();
 
         user.setId(VALID_ID);
         user.setFirstName(VALID_FIRST_NAME);
@@ -99,41 +116,46 @@ public class UserControllerTest {
         user.setUsername(VALID_USERNAME);
         user.setEmail(VALID_EMAIL);
         user.setPassword(VALID_PASSWORD);
-        user.setAuthorities(roles);
-        user.setAboutMe(aboutMe);
-        user.setRegistrationDate(LocalDateTime.now());
+        user.setAuthorities(authorities);
+        user.setTeacherRequest(true);
+        user.setRegistrationDate(java.time.LocalDateTime.now());
         user.setProfilePicture(VALID_IMAGE_URL);
 
-        user = userRepository.saveAndFlush(this.user);
+        userRepository.saveAndFlush(user);
+
+        aboutMe = new AboutMe();
+        aboutMe.setId(VALID_ABOUT_ME_ID);
+        aboutMe.setKnowledgeLevel(VALID_KNOWLEDGE_LEVEL);
+        aboutMe.setSelfDescription(VALID_SELF_DESCRIPTION);
+
 
         Course course1 = getCourse();
 
-        course = courseRepository.saveAndFlush(course1);*/
+        course = courseRepository.saveAndFlush(course1);
     }
 
     @AfterEach
     public void tearDown() {
-       /* this.userRepository.deleteAll();
+        this.userRepository.deleteAll();
         this.roleRepository.deleteAll();
-        this.courseRepository.deleteAll();*/
+        this.courseRepository.deleteAll();
     }
 
     @Test
     public void loginReturnsCorrectView() throws Exception {
-        this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/users/login")
-                        .param("title", "Login"))
+
+        this.mockMvc.perform(get("/users/login"))
                 .andExpect(view().name("login"));
-        //TODO java.lang.NullPointerException
+
     }
 
     @Test
     public void registerReturnsCorrectView() throws Exception {
 
-        this.mockMvc.perform(
-                get("/users/register"))
-                .andExpect(status().isOk());
-        //TODO java.lang.NullPointerException
+        this.mockMvc.perform(get("/users/register")
+                .flashAttr("attr" ,"test")
+        ).andExpect(status().isOk());
+
     }
 
     private Course getCourse() {
