@@ -93,7 +93,6 @@ public class UserControllerTest {
 
     @BeforeEach
     public void setUp() {
-        System.out.println();
         this.userRepository.deleteAll();
         this.roleRepository.deleteAll();
 

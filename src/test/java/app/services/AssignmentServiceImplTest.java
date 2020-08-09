@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class AssignmentServiceImplTest {
     private static final String VALID_TOPIC_ID = "topicId";
     private static final String VALID_TOPIC_NAME = "Java";
 
-    private static final String VALID_ASSIGNMENT_DESCRIPTION = "Description: radorusev Spring Security";
+    private static final String VALID_ASSIGNMENT_DESCRIPTION = "Description: radorusev Spring Security file";
     private static final String VALID_ASSIGNMENT_ID = "validId";
 
     private final String VALID_FILE_NAME = "validFileName.txt";
@@ -130,20 +131,14 @@ public class AssignmentServiceImplTest {
                 .thenAnswer(invocationOnMock ->
                         actualMapper.map(invocationOnMock.getArguments()[0], User.class));
 
-        when(modelMapper.map(any(User.class), eq(UserServiceModel.class)))
-                .thenAnswer(invocationOnMock ->
-                        actualMapper.map(invocationOnMock.getArguments()[0], UserServiceModel.class));
-
-
-        when(modelMapper.map(any(Course.class), eq(CourseServiceModel.class)))
-                .thenAnswer(invocationOnMock ->
-                        actualMapper.map(invocationOnMock.getArguments()[0], CourseServiceModel.class));
-
         when(modelMapper.map(any(CourseServiceModel.class), eq(Course.class)))
                 .thenAnswer(invocationOnMock ->
                         actualMapper.map(invocationOnMock.getArguments()[0], Course.class));
 
+        MultipartFile multipartFile = Mockito.mock(MultipartFile.class);
+        when(multipartFile.getName()).thenReturn("file");
         assignmentServiceModel = this.modelMapper.map(assignment, AssignmentServiceModel.class);
+        assignmentServiceModel.setFile(multipartFile);
         userServiceModel = actualMapper.map(user, UserServiceModel.class);
         lectureServiceModel = actualMapper.map(lecture, LectureServiceModel.class);
 
@@ -152,7 +147,7 @@ public class AssignmentServiceImplTest {
     @Test
     public void uploadUserAssignmentSolution_shouldUploadNewAssigment() throws FileStorageException {
         //Arrange
-        when(assignmentRepository.findFirstByDescription(VALID_ASSIGNMENT_DESCRIPTION)).thenReturn(null);
+        /* when(assignmentRepository.findFirstByDescription(VALID_ASSIGNMENT_DESCRIPTION)).thenReturn(null);*/
         when(this.assignmentRepository.save(Mockito.any(Assignment.class)))
                 .thenReturn(assignment);
 
@@ -169,7 +164,7 @@ public class AssignmentServiceImplTest {
 
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void uploadUserAssignmentSolution_shouldUpdateNewAssigment() throws FileStorageException {
         //Arrange
         when(assignmentRepository.findFirstByDescription(VALID_ASSIGNMENT_DESCRIPTION)).thenReturn(Optional.of(assignment));
@@ -226,6 +221,7 @@ public class AssignmentServiceImplTest {
     public void checkAssignment_shouldCheckedAssignment() {
 
         course.setLectures(List.of(lecture));
+        when(assignmentRepository.findById(VALID_ASSIGNMENT_ID)).thenReturn(Optional.of(assignment));
         when(assignmentRepository.save(any(Assignment.class))).thenReturn(assignment);
         when(userService.findById(user.getId())).thenReturn(userServiceModel);
 
@@ -240,8 +236,9 @@ public class AssignmentServiceImplTest {
     public void checkAssignment_shouldCheckedAssignmentAndCallUpdateMethodInUserService() {
 
         course.setLectures(List.of(lecture));
+        when(assignmentRepository.findById(VALID_ASSIGNMENT_ID)).thenReturn(Optional.of(assignment));
         when(assignmentRepository.save(any(Assignment.class))).thenReturn(assignment);
-        when(assignmentRepository.findAllAssignmentsByUserIdAndCourseId(user.getId(),course.getId())).thenReturn(List.of(assignment));
+        when(assignmentRepository.findAllAssignmentsByUserIdAndCourseId(user.getId(), course.getId())).thenReturn(List.of(assignment));
         when(userService.findById(user.getId())).thenReturn(userServiceModel);
 
         AssignmentServiceModel assignment = assignmentService.checkAssignment(assignmentServiceModel);

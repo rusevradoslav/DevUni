@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -98,7 +99,9 @@ class AdminRestControllerTest {
 
         this.mockMvc.perform(get("/admins/all-admins-rest"))
                 .andExpect(status().isOk()).
-                andExpect(jsonPath("$", hasSize(1)));
+                andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$.[0].username", is(VALID_USERNAME)))
+                .andExpect(jsonPath("$.[0].email", is(VALID_EMAIL)));
 
     }
 
@@ -108,7 +111,9 @@ class AdminRestControllerTest {
 
         this.mockMvc.perform(get("/admins/all-teachers-rest"))
                 .andExpect(status().isOk()).
-                andExpect(jsonPath("$", hasSize(1)));
+                andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$.[0].username", is(VALID_USERNAME)))
+                .andExpect(jsonPath("$.[0].email", is(VALID_EMAIL)));
 
     }
 
@@ -118,7 +123,10 @@ class AdminRestControllerTest {
 
         this.mockMvc.perform(get("/admins/all-students-rest"))
                 .andExpect(status().isOk()).
-                andExpect(jsonPath("$", hasSize(1)));
+                andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$.[0].username", is(VALID_USERNAME)))
+                .andExpect(jsonPath("$.[0].email", is(VALID_EMAIL)));
+
 
     }
 
@@ -127,7 +135,10 @@ class AdminRestControllerTest {
     public void getAllAdminsShouldReturnAllStudentsWithTeacherRequests() throws Exception {
         this.mockMvc.perform(get("/admins/all-students-rest"))
                 .andExpect(status().isOk()).
-                andExpect(jsonPath("$", hasSize(1)));
+                andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$.[0].username", is(VALID_USERNAME)))
+                .andExpect(jsonPath("$.[0].email", is(VALID_EMAIL)));
+
 
     }
 

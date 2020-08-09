@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,17 +36,17 @@ public class AssignmentServiceImpl implements AssignmentService {
     public AssignmentServiceModel uploadUserAssignmentSolution(LectureServiceModel lectureServiceModel,
                                                                UserServiceModel userServiceModel,
                                                                AssignmentServiceModel assignmentServiceModel) throws FileStorageException {
-
+        System.out.println();
         Lecture lecture = this.modelMapper.map(lectureServiceModel, Lecture.class);
         User user = this.modelMapper.map(userServiceModel, User.class);
         Assignment assignment = this.modelMapper.map(assignmentServiceModel, Assignment.class);
         assignment.setUser(user);
         assignment.setLecture(lecture);
-        assignment.setDescription(String.format("Description: %s %s $s", user.getUsername(), lecture.getTitle(),assignmentServiceModel.getFile().getName()));
+        assignment.setDescription(String.format("Description: %s %s %s", user.getUsername(), lecture.getTitle(), assignmentServiceModel.getFile().getName()));
         assignment.setChecked(false);
         Assignment assignmentByDescription = assignmentRepository.findFirstByDescription(assignment.getDescription()).orElse(null);
 
-        System.out.println();
+
         if (assignmentByDescription != null) {
             String oldAssignmentSubmission = assignmentByDescription.getFile().getId();
 
@@ -82,7 +83,9 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Override
     public String findFileForAssignmentById(String assignmentId) {
         Assignment assignment = this.assignmentRepository.findById(assignmentId).orElseThrow(() -> new AssignmentNotFoundException("Assignment with given id was not found !"));
-        return assignment.getFile().getId();
+
+        String id = assignment.getFile().getId();
+        return id;
     }
 
     @Override
@@ -104,8 +107,12 @@ public class AssignmentServiceImpl implements AssignmentService {
 
         User user = this.modelMapper.map(userServiceModel, User.class);
 
-        Assignment assignment = this.modelMapper.map(assignmentServiceModel, Assignment.class);
+
+        Assignment assignment = this.assignmentRepository.findById(assignmentServiceModel.getId()).orElseThrow(() -> new AssignmentNotFoundException("Assignment with given id was not found !"));
         assignment.setChecked(true);
+        assignment.setCheckedOn(LocalDateTime.now());
+        assignment.setGradePercentage(assignmentServiceModel.getGradePercentage());
+
         Assignment savedAssignment = this.assignmentRepository.save(assignment);
 
 

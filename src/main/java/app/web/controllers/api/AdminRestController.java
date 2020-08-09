@@ -24,7 +24,6 @@ public class AdminRestController {
     @PreAuthorize("hasAnyRole('ROLE_ROOT_ADMIN','ROLE_ADMIN')")
     @PageTitle("All Admins")
     public List<UserDetailsViewModel> allAdmins() {
-
         List<UserDetailsViewModel> allAdmins = userService.findAllAdmins();
         return allAdmins; }
 

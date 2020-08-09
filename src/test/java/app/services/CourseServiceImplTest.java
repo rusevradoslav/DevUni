@@ -101,6 +101,25 @@ public class CourseServiceImplTest {
         courseServiceModel2 = getCourseServiceModel(actualMapper);
     }
 
+    @Test(expected = CourseNotFoundException.class)
+    public void getById_shouldThrowLectureNotFoundException() {
+        when(this.courseRepository.findById(VALID_ID)).thenReturn(Optional.empty());
+
+        this.courseService.findById(VALID_ID);
+    }
+
+    @Test
+    public void getById_shouldReturnCorrectLecture() {
+        when(this.courseRepository.findById(VALID_ID)).thenReturn(Optional.of(course));
+
+        Course course = this.courseService.findById(VALID_ID);
+
+        String actual = VALID_ID;
+        String expected = course.getId();
+
+        assertEquals(actual, expected);
+    }
+
     @Test
     public void createCourse() throws IOException {
 

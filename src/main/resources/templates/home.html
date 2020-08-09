@@ -22,34 +22,34 @@
 
                 <div class="mb-5 element-animate">
                     <div class="block-17">
-                        <h2 class="heading text-center mb-4">Find Oneline Courses That Suits You</h2>
-                        <form action="" method="post" class="d-block d-lg-flex mb-4">
-                            <div class="fields d-block d-lg-flex">
-                                <div class="textfield-search one-third"><input type="text" class="form-control"
-                                                                               placeholder="Keyword search..."></div>
-                                <div class="select-wrap one-third">
-                                    <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                                    <select name="topic" id="topic" class="form-control">
-                                        <option value="" selected>Topic Name</option>
-                                        <th:block th:each="t : ${#session.getAttribute('allTopics')}" th:object="${t}">
-                                            <option th:text="${t.name}" th:value="${t.name}" value=""></option>
-                                        </th:block>
-                                    </select>
-                                </div>
-                                <div class="select-wrap one-third">
-                                    <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                                    <select name="difficulty" id="difficulty" class="form-control">
-                                        <option value="" selected>Difficulty</option>
-                                        <th:block>
-                                            <option value="BEGINNER">BEGINNER</option>
-                                            <option value="INTERMEDIATE">INTERMEDIATE</option>
-                                            <option value="ADVANCE">ADVANCE</option>
-                                        </th:block>
-                                    </select>
-                                </div>
+                        <h1 class="mb-2 text-center">Hello, <span th:text="*{#session.getAttribute('fullName')}"></span></h1>
+                 <!--       <form action="" method="post" class="d-block d-lg-flex mb-4">
+
+                            <input type="submit" class="search-submit btn btn-primary" value="Search">   <div class="fields d-block d-lg-flex">
+                            <div class="textfield-search one-third"><input type="text" class="form-control"
+                                                                           placeholder="Keyword search..."></div>
+                            <div class="select-wrap one-third">
+                                <div class="icon"><span class="ion-ios-arrow-down"></span></div>
+                                <select name="topic" id="topic" class="form-control">
+                                    <option value="" selected>Topic Name</option>
+                                    <th:block th:each="t : ${#session.getAttribute('allTopics')}" th:object="${t}">
+                                        <option th:text="${t.name}" th:value="${t.name}" value=""></option>
+                                    </th:block>
+                                </select>
                             </div>
-                            <input type="submit" class="search-submit btn btn-primary" value="Search">
-                        </form>
+                            <div class="select-wrap one-third">
+                                <div class="icon"><span class="ion-ios-arrow-down"></span></div>
+                                <select name="difficulty" id="difficulty" class="form-control">
+                                    <option value="" selected>Difficulty</option>
+                                    <th:block>
+                                        <option value="BEGINNER">BEGINNER</option>
+                                        <option value="INTERMEDIATE">INTERMEDIATE</option>
+                                        <option value="ADVANCE">ADVANCE</option>
+                                    </th:block>
+                                </select>
+                            </div>
+                        </div>
+                        </form>-->
                     </div>
                 </div>
 

@@ -60,7 +60,6 @@ public class AssigmentController {
         if (!model.containsAttribute("assignmentCheckBindingModel")) {
             model.addAttribute("assignmentCheckBindingModel", new AssignmentCheckBindingModel());
         }
-        System.out.println();
         LectureServiceModel lecture = lectureService.findLectureById(lectureId);
         List<AssignmentServiceModel> allSubmittedAssignments = this.assignmentService.findAllSubmittedAssignments(lecture);
         model.addAttribute("allSubmittedAssignments", allSubmittedAssignments);
@@ -74,7 +73,6 @@ public class AssigmentController {
         String courseId = assignmentServiceModel.getLecture().getCourse().getId();
         assignmentServiceModel.setGradePercentage(assignmentCheckBindingModel.getGradePercentage());
         assignmentService.checkAssignment(assignmentServiceModel);
-        System.out.println();
         return "redirect:/lectures/course-check-lectures/"+courseId;
     }
 

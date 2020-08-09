@@ -26,7 +26,6 @@ public class UserSchedulerTest {
 
     @Test
     public void findAllStudentsWithRequest_shouldReturnCorrectMethod() {
-        System.out.println();
         this.userScheduler.cancelTeacherRequest();
 
         verify(this.userService, times(1)).findAllStudentsWithRequests();

@@ -36,6 +36,7 @@ public class CustomFileController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN,ROLE_TEACHER,ROLE_STUDENT')")
     public void downloadSubmission(@PathVariable("id") String assignmentId, HttpServletResponse httpServletResponse) {
         String resourceId = assignmentService.findFileForAssignmentById(assignmentId);
+
         downloadFileByFileId(resourceId, httpServletResponse);
     }
 

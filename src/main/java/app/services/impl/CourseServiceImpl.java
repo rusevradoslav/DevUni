@@ -14,8 +14,6 @@ import app.services.*;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -201,10 +199,10 @@ public class CourseServiceImpl implements CourseService {
         return this.courseRepository.findById(id).orElseThrow(()-> new CourseNotFoundException());
     }
 
-    @Override
+/*    @Override
     public Page<Course> findCourses(Pageable pageable) {
         return courseRepository.findAll(pageable);
-    }
+    }*/
 
 
 }

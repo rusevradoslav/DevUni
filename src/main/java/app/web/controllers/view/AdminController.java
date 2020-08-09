@@ -196,7 +196,6 @@ public class AdminController {
                                      BindingResult bindingResult,
                                      RedirectAttributes redirectAttributes
     ) {
-        System.out.println();
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("adminCreateBindingModel", adminCreateBindingModel);
             redirectAttributes.addFlashAttribute(String.format(BINDING_RESULT + "adminCreateBindingModel"), bindingResult);

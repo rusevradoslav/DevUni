@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -29,5 +30,8 @@ public class Assignment extends BaseEntity {
     private Lecture lecture;
 
     @Column
-    boolean checked;
+    private boolean checked;
+
+    @Column
+    private LocalDateTime checkedOn;
 }

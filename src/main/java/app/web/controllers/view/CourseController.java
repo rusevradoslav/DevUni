@@ -2,16 +2,17 @@ package app.web.controllers.view;
 
 import app.models.binding.assignment.AssignmentSolutionAddBindingModel;
 import app.models.binding.course.CourseCreateBindingModel;
-import app.models.entity.Course;
 import app.models.service.CourseServiceModel;
 import app.models.service.RoleServiceModel;
 import app.models.service.UserServiceModel;
-import app.services.*;
+import app.services.CloudinaryService;
+import app.services.CourseService;
+import app.services.TopicService;
+import app.services.UserService;
 import app.validations.anotations.PageTitle;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -138,9 +139,9 @@ public class CourseController {
     @PageTitle("All Courses")
     public String allCourses(Model model, @PageableDefault( size = 3) Pageable pageable) {
 
-        Page<Course> courses = this.courseService.findCourses(pageable);
+       /* Page<Course> courses = this.courseService.findCourses(pageable);
         model.addAttribute("allCourses",courses);
-        model.addAttribute("currentPage", pageable.getPageNumber());
+        model.addAttribute("currentPage", pageable.getPageNumber());*/
         model.addAttribute("allCourses", courseService.findAllCoursesWithStatusTrue());
         model.addAttribute("allTopics", topicService.findAllTopics());
         model.addAttribute("top3RecentCourses", courseService.findRecentCourses());

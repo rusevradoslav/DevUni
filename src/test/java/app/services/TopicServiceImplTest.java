@@ -82,7 +82,6 @@ public class TopicServiceImplTest {
     @Test
     public void seedTopicsInDB_shouldSeedTopicsInDb_whenTopicRepositoryIsEmpty() {
         //Arrange
-        System.out.println();
         when(topicRepository.count()).thenReturn(0L);
 
         //Act

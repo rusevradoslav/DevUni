@@ -49,7 +49,6 @@ public class UserController {
     public String login(@RequestParam(value = "error", required = false) String error,
                         Model model,
                         HttpServletRequest httpServletRequest) {
-        System.out.println();
         if (!SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
             return "redirect:/home";
         }

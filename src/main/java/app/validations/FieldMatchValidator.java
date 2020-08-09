@@ -21,7 +21,6 @@ public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Obje
 
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        System.out.println();
         boolean isValid = true;
         try
         {

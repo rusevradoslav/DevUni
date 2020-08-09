@@ -55,6 +55,7 @@
             <th scope="col">Courses</th>
             <th scope="col">Lectures</th>
             <th scope="col">Submission Author</th>
+            <th scope="col">Assignments Submission</th>
             <th scope="col">Grade</th>
         </tr>
         </thead>
@@ -65,6 +66,7 @@
             <td th:text="*{lecture.course.title}"></td>
             <td th:text="*{lecture.title}"></td>
             <td th:text="*{user.username}"></td>
+            <td><a th:href="@{/files/submission/{id}(id=*{id})}">Download Submission</a></span></td>
             <td th:text="*{gradePercentage}">/100</td>
         </tr>
         </tbody>
