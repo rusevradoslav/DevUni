@@ -21,4 +21,9 @@ public abstract class BaseEntity {
     @GenericGenerator(name = "uuid-string", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id", nullable = false, unique = true, updatable = false)
     private String id;
+
+    public String getId() {
+        return id;
+    }
 }
+

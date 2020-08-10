@@ -15,7 +15,6 @@ public class DataInit implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         roleService.seedRolesInDb();
-        roleService.seedRolesInDb();
         topicService.seedTopicsInDb();
     }
 }

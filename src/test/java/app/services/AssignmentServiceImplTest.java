@@ -1,5 +1,6 @@
 package app.services;
 
+import app.error.AssignmentNotFoundException;
 import app.error.FileStorageException;
 import app.models.entity.*;
 import app.models.service.AssignmentServiceModel;
@@ -164,7 +165,7 @@ public class AssignmentServiceImplTest {
 
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = AssignmentNotFoundException.class)
     public void uploadUserAssignmentSolution_shouldUpdateNewAssigment() throws FileStorageException {
         //Arrange
         when(assignmentRepository.findFirstByDescription(VALID_ASSIGNMENT_DESCRIPTION)).thenReturn(Optional.of(assignment));

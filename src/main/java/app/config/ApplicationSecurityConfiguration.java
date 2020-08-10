@@ -43,7 +43,17 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
                 .and()
                 .authorizeRequests()
                 .antMatchers("/css/**", "/images/**", "/fonts/**", "/js/**", "/scss/**").permitAll()
-                .antMatchers("/", "/error","/about","/courses/allCourses", "/courses/courseDetails/**","/courses/allCoursesInTopic/**", "/users/register", "/users/login", "/v2/api-docs", "/admins/all-admins","/swagger-ui.html").permitAll()
+                .antMatchers("/",
+                        "/error",
+                        "/about",
+                        "/courses/allCourses/**",
+                        "/courses/courseDetails/**",
+                        "/courses/allCoursesInTopic/**",
+                        "/users/register",
+                        "/users/login",
+                        "/v2/api-docs",
+                        "/admins/all-admins",
+                        "/swagger-ui.html").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -68,7 +78,6 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
                 .logoutSuccessUrl("/");
 
     }
-
 
 
 }

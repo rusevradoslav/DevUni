@@ -2,6 +2,7 @@ package app.web.controllers.view;
 
 import app.models.binding.assignment.AssignmentSolutionAddBindingModel;
 import app.models.binding.course.CourseCreateBindingModel;
+import app.models.entity.Course;
 import app.models.service.CourseServiceModel;
 import app.models.service.RoleServiceModel;
 import app.models.service.UserServiceModel;
@@ -13,6 +14,7 @@ import app.validations.anotations.PageTitle;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,6 +29,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static app.constants.GlobalConstants.BINDING_RESULT;
 
@@ -137,12 +140,20 @@ public class CourseController {
 
     @GetMapping("/allCourses")
     @PageTitle("All Courses")
-    public String allCourses(Model model, @PageableDefault( size = 3) Pageable pageable) {
+    public String allCourses(Model model, @PageableDefault(size = 4) Pageable pageable) {
+        System.out.println();
+        Page<Course> page = courseService.findAllCourses(pageable);
 
-       /* Page<Course> courses = this.courseService.findCourses(pageable);
-        model.addAttribute("allCourses",courses);
-        model.addAttribute("currentPage", pageable.getPageNumber());*/
-        model.addAttribute("allCourses", courseService.findAllCoursesWithStatusTrue());
+        List<Course> allCourses = page.getContent()
+                .stream()
+                .filter(course -> !course.getStartedOn().isBefore(LocalDateTime.now()))
+                .collect(Collectors.toList());
+
+        model.addAttribute("currentPage", page.getNumber());
+        model.addAttribute("allCourses", allCourses);
+        model.addAttribute("totalPages", page.getTotalPages());
+
+
         model.addAttribute("allTopics", topicService.findAllTopics());
         model.addAttribute("top3RecentCourses", courseService.findRecentCourses());
         return "courses/all-courses";
@@ -150,9 +161,21 @@ public class CourseController {
 
     @GetMapping("/allCoursesInTopic/{id}")
     @PageTitle("All Courses In Topic")
-    public String allCoursesInTopic(@PathVariable("id") String id, Model model) {
+    public String allCoursesInTopic(@PathVariable("id") String id, Model model, @PageableDefault(size = 4) Pageable pageable) {
 
-        model.addAttribute("allCourses", courseService.findAllCoursesInTopic(id));
+        System.out.println();
+
+        Page<Course> page = courseService.findAllCourses(pageable);
+
+        List<Course> allCourses =
+                page.getContent()
+                .stream()
+                .filter(course -> course.getTopic().getId().equals(id))
+                .collect(Collectors.toList());
+
+        model.addAttribute("currentPage", page.getNumber());
+        model.addAttribute("allCourses", allCourses);
+        model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("allTopics", topicService.findAllTopics());
         model.addAttribute("top3RecentCourses", courseService.findRecentCourses());
 

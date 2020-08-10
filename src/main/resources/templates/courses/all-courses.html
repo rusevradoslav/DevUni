@@ -63,21 +63,56 @@
                     </div>
 
                 </div>
-<!--
                 <div class="row mb-5">
                     <div class="col-md-12 text-center">
                         <div class="block-27">
                             <ul>
-                                <li class="col-lg-4 mt-auto"
-                                    th:unless="${allCourses.size() == 0}"
-                                    th:each="i:${#numbers.sequence(0,allCourses.size() - 1)}">
-                                    <a th:href="@{/allCourses(page=${i},size='3')}" th:text="${i+1}" class="nav-link"
-                                       th:classappend="${currentPage}==${i}?'active':''"></a>
+                                <li>
+                                    <a th:if="${currentPage > 0}"
+                                       th:href="@{/courses/allCourses/(page=${currentPage - 1},size='4')}"> <
+                                    </a>
+                                    <span th:unless="${currentPage > 0}"><</span>
                                 </li>
+
+
+                                <li th:each="i : ${#numbers.sequence(1,totalPages)}"
+                                    class="" th:classappend="${currentPage+1 == i } ? active : danger ">
+
+
+                                    <a
+                                       th:href="@{/courses/allCourses/(page=${i - 1},size='4')}"
+                                       th:text="${i}">
+                                    </a>
+
+                                </li>
+
+
+                                <li>
+                                    <a th th:if="${currentPage < totalPages - 1}"
+                                       th:href="@{/courses/allCourses/(page=${currentPage+1},size='4')}">>
+                                    </a>
+                                    <span th:unless="${currentPage < totalPages - 1}"> > </span>
+                                </li>
+
                             </ul>
                         </div>
                     </div>
-                </div>-->
+                </div>
+                <!--
+                                <div class="row mb-5">
+                                    <div class="col-md-12 text-center">
+                                        <div class="block-27">
+                                            <ul>
+                                                <li class="col-lg-4 mt-auto"
+                                                    th:unless="${allCourses.size() == 0}"
+                                                    th:each="i:${#numbers.sequence(0,allCourses.size() - 1)}">
+                                                    <a th:href="@{/allCourses(page=${i},size='3')}" th:text="${i+1}" class="nav-link"
+                                                       th:classappend="${currentPage}==${i}?'active':''"></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>-->
             </div>
             <!-- END content -->
             <div class="col-md-6 col-lg-4 order-md-1">

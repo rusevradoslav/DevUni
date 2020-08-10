@@ -416,7 +416,6 @@ public class UserServiceImplTest {
         //Arrange
         user.setTeacherRequest(true);
         when(userRepository.findById(VALID_ID)).thenReturn(Optional.empty());
-        when(userRepository.save(any(User.class))).thenReturn(user);
         //Act
         UserServiceModel userServiceModel = userService.sentTeacherRequest(testUserServiceModel);
 
@@ -552,7 +551,7 @@ public class UserServiceImplTest {
         String newEncodedPassword = bCryptPasswordEncoder.encode(VALID_NEW_PASSWORD);
         user.setPassword(newEncodedPassword);
         when(userRepository.findById(VALID_ID)).thenReturn(Optional.empty());
-        when(userRepository.save(any(User.class))).thenReturn(user);
+
 
         //Act
         UserServiceModel userServiceModel = userService.changePassword(testUserServiceModel, VALID_NEW_PASSWORD);
@@ -735,7 +734,7 @@ public class UserServiceImplTest {
         //Arrange
         user.setStatus(false);
         when(userRepository.findById(VALID_ID)).thenReturn(Optional.empty());
-        when(userRepository.save(any(User.class))).thenReturn(user);
+
         //Act
         UserServiceModel userServiceModel = userService.blockUser(testUserServiceModel);
 
@@ -764,7 +763,7 @@ public class UserServiceImplTest {
         //Arrange
         user.setStatus(true);
         when(userRepository.findById(VALID_ID)).thenReturn(Optional.empty());
-        when(userRepository.save(any(User.class))).thenReturn(user);
+
 
         //Act
         UserServiceModel userServiceModel = userService.activateUser(testUserServiceModel);
