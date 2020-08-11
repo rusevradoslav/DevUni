@@ -246,7 +246,7 @@ public class CourseServiceImplTest {
         course.setStartedOn(LocalDateTime.now().plus(VALID_DURATION_WEEKS * 7, ChronoUnit.DAYS));
         when(courseRepository.findAllCoursesInTopic(VALID_TOPIC_ID)).thenReturn(Arrays.asList(course));
         //Act
-        List<CourseServiceModel> allCourses = this.courseService.findAllCoursesInTopic(VALID_TOPIC_ID);
+        List<CourseServiceModel> allCourses = this.courseService.findAllCoursesInTopicPage(VALID_TOPIC_ID);
 
         String actual = VALID_TITLE;
         String expected = allCourses.get(0).getTitle();

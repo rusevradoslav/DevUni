@@ -39,4 +39,7 @@ public interface CourseRepository extends JpaRepository<Course, String> {
 
     @Query("select c from Course as c  where c.status = true order by c.startedOn desc")
     Page<Course> findAllCoursesPage(Pageable pageable);
+
+    @Query("select c from Course as c where c.author.id =:authorId order by c.status asc  ")
+    Page<Course> findCoursesByAuthorIdPage(@Param("authorId") String authorId, Pageable pageable);
 }

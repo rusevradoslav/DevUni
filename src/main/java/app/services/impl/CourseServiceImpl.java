@@ -125,19 +125,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Page<Course> findAllCourses(Pageable pageable) {
-        Page<Course> courses = this.courseRepository.findAllCoursesPage(pageable);
-        return courses;
-    }
-
-    @Override
-    public Page<Course> findAllCoursesInTopic(String topicId, Pageable pageable) {
-        Page<Course> allCourseByTopic = this.courseRepository.findAllCourseByTopic(topicId, pageable);
-        return allCourseByTopic;
-    }
-
-    @Override
-    public List<CourseServiceModel> findAllCoursesInTopic(String id) {
+    public List<CourseServiceModel> findAllCoursesInTopicPage(String id) {
         return this.courseRepository.findAllCoursesInTopic(id)
                 .stream()
                 .filter(course -> !course.getStartedOn().isBefore(LocalDateTime.now()))
@@ -211,6 +199,24 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Course findById(String id) {
         return this.courseRepository.findById(id).orElseThrow(() -> new CourseNotFoundException());
+    }
+
+    @Override
+    public Page<Course> findAllCoursesPage(Pageable pageable) {
+        Page<Course> courses = this.courseRepository.findAllCoursesPage(pageable);
+        return courses;
+    }
+
+    @Override
+    public Page<Course> findAllCoursesInTopicPage(String topicId, Pageable pageable) {
+        Page<Course> allCourseByTopic = this.courseRepository.findAllCourseByTopic(topicId, pageable);
+        return allCourseByTopic;
+    }
+
+    @Override
+    public Page<Course> findCoursesByAuthorIdPage(String id, Pageable pageable) {
+        Page<Course> coursesByAuthorIdPage = this.courseRepository.findCoursesByAuthorIdPage(id, pageable);
+        return coursesByAuthorIdPage;
     }
 
 

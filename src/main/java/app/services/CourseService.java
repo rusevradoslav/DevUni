@@ -26,12 +26,7 @@ public interface CourseService {
     List<CourseServiceModel> findAllCoursesWithStatusTrue();
 
 
-    Page<Course> findAllCourses(Pageable pageable);
-
-
-    Page<Course> findAllCoursesInTopic(String topicId, Pageable pageable);
-
-    List<CourseServiceModel> findAllCoursesInTopic(String id);
+    List<CourseServiceModel> findAllCoursesInTopicPage(String id);
 
     CourseServiceModel findCourseById(String id);
 
@@ -47,5 +42,11 @@ public interface CourseService {
     Course findById(String id);
 
 
+    Page<Course> findAllCoursesPage(Pageable pageable);
 
+
+    Page<Course> findAllCoursesInTopicPage(String topicId, Pageable pageable);
+
+
+    Page<Course> findCoursesByAuthorIdPage(String authorId, Pageable pageable);
 }

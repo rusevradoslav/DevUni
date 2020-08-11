@@ -43,14 +43,15 @@
                     <div th:each="c : ${allCoursesByAuthorId}" th:object="${c}" class="col-md-6 col-lg-6 mb-5">
                         <div class="block-19">
                             <figure>
-                                <a  th:href="@{/courses/courseDetails/{id}(id = *{id})}"><img th:src="*{coursePhoto}"
-                                                                                           alt="Image"
-                                                                                           class="img-fluid"></a>
+                                <a th:href="@{/courses/courseDetails/{id}(id = *{id})}"><img th:src="*{coursePhoto}"
+                                                                                             alt="Image"
+                                                                                             class="img-fluid"></a>
                             </figure>
                             <div class="text">
                                 <h2 class="heading"><a th:href="@{/courses/courseDetails/{id}(id = *{id})}"
                                                        th:text="*{title}"></a></h2>
-                                <p class="md-4" th:text="|Teacher: *{author.getFirstName()} *{author.getLastName()}|"></p>
+                                <p class="md-4"
+                                   th:text="|Teacher: *{author.getFirstName()} *{author.getLastName()}|"></p>
                                 <p class="mb-4" th:text="*{shortDescription}"></p>
                                 <div class="meta d-flex align-items-center">
                                     <div class="number" style="margin-right: 64px;">
@@ -68,9 +69,44 @@
                     </div>
 
                 </div>
+                <div class="row mb-5">
+                    <div class="col-md-12 text-center">
+                        <div class="block-27">
+                            <ul>
+                                <li>
+                                    <a th:if="${currentPage > 0}"
+                                       th:href="@{/courses/teacher-courses/(page=${currentPage - 1},size='4')}"> <
+                                    </a>
+                                    <span th:unless="${currentPage > 0}"><</span>
+                                </li>
 
 
+                                <li th:each="i : ${#numbers.sequence(1,totalPages)}"
+                                    class="" th:classappend="${currentPage+1 == i } ? active : danger ">
+
+
+                                    <a
+                                            th:href="@{/courses/teacher-courses/(page=${i - 1},size='4')}"
+                                            th:text="${i}">
+                                    </a>
+
+                                </li>
+
+
+                                <li>
+                                    <a th th:if="${currentPage < totalPages - 1}"
+                                       th:href="@{/courses/teacher-courses/(page=${currentPage+1},size='4')}">>
+                                    </a>
+                                    <span th:unless="${currentPage < totalPages - 1}"> > </span>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+
             <!-- END content -->
             <div class="col-md-6 col-lg-4 order-md-1">
 
@@ -79,7 +115,7 @@
                     <ul th:each="t : ${#session.getAttribute('allTopics')}" th:object="${t}">
                         <li>
                             <a th:text="${t.name}" th:href="@{/courses/allCoursesInTopic/{id}(id = ${t.id})}">
-                        </a>
+                            </a>
                         </li>
 
                     </ul>
@@ -108,6 +144,7 @@
             </div>
             <!-- END Sidebar -->
         </div>
+
     </div>
 </div>
 

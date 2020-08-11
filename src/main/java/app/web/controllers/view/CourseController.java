@@ -88,10 +88,15 @@ public class CourseController {
     @GetMapping("/teacher-courses")
     @PreAuthorize("hasRole('ROLE_TEACHER')")
     @PageTitle("Teacher Courses")
-    public String teacherCourses(Model model, Principal principal) {
+    public String teacherCourses(Model model, Principal principal,@PageableDefault(size = 4) Pageable pageable) {
+
         UserServiceModel userServiceModel = this.userService.findByName(principal.getName());
-        List<CourseServiceModel> allCoursesByAuthorId = courseService.findAllCoursesByAuthorId(userServiceModel.getId());
-        model.addAttribute("allCoursesByAuthorId", allCoursesByAuthorId);
+        Page<Course> page = this.courseService.findCoursesByAuthorIdPage(userServiceModel.getId(), pageable);
+        List<Course> allCourses = page.getContent();
+
+        model.addAttribute("currentPage", page.getNumber());
+        model.addAttribute("allCoursesByAuthorId", allCourses);
+        model.addAttribute("totalPages", page.getTotalPages());
         return "courses/teacher-courses";
     }
 
@@ -141,7 +146,7 @@ public class CourseController {
     @GetMapping("/allCourses")
     @PageTitle("All Courses")
     public String allCourses(Model model, @PageableDefault(size = 4) Pageable pageable) {
-        Page<Course> page = courseService.findAllCourses(pageable);
+        Page<Course> page = courseService.findAllCoursesPage(pageable);
 
         List<Course> allCourses = page.getContent()
                 .stream()
@@ -163,7 +168,7 @@ public class CourseController {
     public String allCoursesInTopic(@PathVariable("id") String topicId, Model model, @PageableDefault(size = 4) Pageable pageable) {
 
 
-        Page<Course> page = courseService.findAllCoursesInTopic(topicId, pageable);
+        Page<Course> page = courseService.findAllCoursesInTopicPage(topicId, pageable);
 
         List<Course> allCourses = page.getContent();
 
