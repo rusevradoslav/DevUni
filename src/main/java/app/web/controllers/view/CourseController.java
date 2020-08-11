@@ -133,14 +133,16 @@ public class CourseController {
     @GetMapping("/completedCourses")
     @PreAuthorize("hasAnyRole('ROLE_STUDENT','ROLE_ADMIN')")
     @PageTitle("Completed Courses")
-    public String completedCourses(Model model, Principal principal) {
+    public String completedCourses(Model model, Principal principal, @PageableDefault(size = 4) Pageable pageable) {
 
 
         UserServiceModel userServiceModel = this.userService.findByName(principal.getName());
-        List<CourseServiceModel> allCompletedCoursesByUserId = userService.findAllCompletedCourses(userServiceModel.getId());
+        Page<Course> page = courseService.findAllCompletedCourses(userServiceModel.getId(), pageable);
+        List<Course> allCourses = page.getContent();
 
-
-        model.addAttribute("allCompletedCoursesByUserId", allCompletedCoursesByUserId);
+        model.addAttribute("currentPage", page.getNumber());
+        model.addAttribute("allCompletedCoursesByUserId", allCourses);
+        model.addAttribute("totalPages", page.getTotalPages());
 
         return "courses/student-completed-courses";
     }

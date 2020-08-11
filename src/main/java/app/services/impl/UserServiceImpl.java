@@ -343,17 +343,6 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Override
-    public List<CourseServiceModel> findAllCompletedCourses(String id) {
-
-        User user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with given id was not found !"));
-
-        return user.getCompletedCourses()
-                .stream()
-                .map(course -> this.modelMapper.map(course, CourseServiceModel.class))
-                .collect(Collectors.toList());
-    }
-
 
 
     private UserServiceModel registerNewUser(UserServiceModel userServiceModel) {

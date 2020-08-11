@@ -44,17 +44,11 @@ public interface CourseRepository extends JpaRepository<Course, String> {
     @Query("select c from Course as c where c.author.id =:authorId order by c.status asc  ")
     Page<Course> findCoursesByAuthorIdPage(@Param("authorId") String authorId, Pageable pageable);
 
-
-/*
-    @Query(value = "select * from courses\n" +
-            "join courses_enrolled_students ces on courses.id = ces.enrolled_courses_id\n" +
-            "where courses.id =:studentId", nativeQuery = true)
-    Page<Course> findAllEnrolledCoursesPage(@Param("studentId") String studentId, Pageable pageable);
-*/
-
-
     @Query("select c from User as u join u.enrolledCourses as c where u.id = :studentId")
     Page<Course> findAllEnrolledCoursesPage(@Param("studentId") String studentId, Pageable pageable);
+
+    @Query("select c from User as u join u.completedCourses as c where u.id = :studentId")
+    Page<Course> findAllCompletedCoursesPage(@Param("studentId") String studenId, Pageable pageable);
 
     @Query("select c from Course  as c order by c.status asc ")
     List<Course> findAllCourses();

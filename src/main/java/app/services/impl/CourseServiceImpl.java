@@ -225,5 +225,10 @@ public class CourseServiceImpl implements CourseService {
         return allEnrolledCoursesPage;
     }
 
+    @Override
+    public Page<Course> findAllCompletedCourses(String id, Pageable pageable) {
+        Page<Course> allEnrolledCoursesPage = this.courseRepository.findAllCompletedCoursesPage(id, pageable);
+        return allEnrolledCoursesPage;
+    }
 
 }

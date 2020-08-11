@@ -886,32 +886,6 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void findAllCompletedCourses_shouldReturnAllCompletedCoursesByUser() {
-        //Arrange
-        user.setCompletedCourses(Set.of(course));
-        when(userRepository.findById(VALID_ID)).thenReturn(Optional.of(user));
-
-        //Act
-        List<CourseServiceModel> allCompletedCourses = userService.findAllCompletedCourses(VALID_ID);
-
-        //Assert
-        assertEquals(1, allCompletedCourses.size());
-
-    }
-
-    @Test(expected = UserNotFoundException.class)
-    public void findAllCompletedCourses_shouldThrowExceptionWhenUserDoesNotExist() {
-        //Arrange
-        user.setCompletedCourses(Set.of(course));
-        when(userRepository.findById(VALID_ID)).thenReturn(Optional.empty());
-
-        //Act
-        List<CourseServiceModel> allCompletedCourses = userService.findAllCompletedCourses(VALID_ID);
-
-
-    }
-
-    @Test
     public void updateUser_shouldReturnAllCompletedCoursesByUser() {
 
         //Arrange

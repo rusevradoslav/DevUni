@@ -66,7 +66,6 @@ public interface UserService {
 
     List<CourseServiceModel> findAllCoursesByUserId(String id);
 
-    List<CourseServiceModel> findAllCompletedCourses(String id);
 
 
 }
