@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static app.constants.GlobalConstants.BINDING_RESULT;
 
@@ -88,7 +87,7 @@ public class CourseController {
     @GetMapping("/teacher-courses")
     @PreAuthorize("hasRole('ROLE_TEACHER')")
     @PageTitle("Teacher Courses")
-    public String teacherCourses(Model model, Principal principal,@PageableDefault(size = 4) Pageable pageable) {
+    public String teacherCourses(Model model, Principal principal, @PageableDefault(size = 4) Pageable pageable) {
 
         UserServiceModel userServiceModel = this.userService.findByName(principal.getName());
         Page<Course> page = this.courseService.findCoursesByAuthorIdPage(userServiceModel.getId(), pageable);
@@ -110,20 +109,23 @@ public class CourseController {
         model.addAttribute("allCoursesByAuthorId", allCoursesByAuthorId);
 
         return "courses/teacher-all-courses-table";
+
     }
 
 
     @GetMapping("/enrolledCourses")
     @PreAuthorize("hasAnyRole('ROLE_STUDENT','ROLE_ADMIN')")
     @PageTitle("Student Courses")
-    public String studentCourses(Model model, Principal principal) {
+    public String studentCourses(Model model, Principal principal, @PageableDefault(size = 4) Pageable pageable) {
 
 
         UserServiceModel userServiceModel = this.userService.findByName(principal.getName());
-        List<CourseServiceModel> allCoursesByUserId = userService.findAllCoursesByUserId(userServiceModel.getId());
+        Page<Course> page = courseService.findAllEnrolledCoursesPage(userServiceModel.getId(), pageable);
+        List<Course> allCourses = page.getContent();
 
-
-        model.addAttribute("allCoursesByUserId", allCoursesByUserId);
+        model.addAttribute("currentPage", page.getNumber());
+        model.addAttribute("allCoursesByUserId", allCourses);
+        model.addAttribute("totalPages", page.getTotalPages());
 
         return "courses/student-enrolled-courses";
     }
@@ -148,11 +150,7 @@ public class CourseController {
     public String allCourses(Model model, @PageableDefault(size = 4) Pageable pageable) {
         Page<Course> page = courseService.findAllCoursesPage(pageable);
 
-        List<Course> allCourses = page.getContent()
-                .stream()
-                .filter(course -> !course.getStartedOn().isBefore(LocalDateTime.now()))
-                .collect(Collectors.toList());
-
+        List<Course> allCourses = page.getContent();
         model.addAttribute("currentPage", page.getNumber());
         model.addAttribute("allCourses", allCourses);
         model.addAttribute("totalPages", page.getTotalPages());
@@ -176,6 +174,7 @@ public class CourseController {
         model.addAttribute("topic", topicId);
         model.addAttribute("currentPage", page.getNumber());
         model.addAttribute("allCourses", allCourses);
+
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("allTopics", topicService.findAllTopics());
         model.addAttribute("top3RecentCourses", courseService.findRecentCourses());

@@ -85,4 +85,6 @@ public class LectureController {
         model.addAttribute("allLectures", allLecturesForCourse);
         return "courses/course-all-lectures-table";
     }
+
+
 }

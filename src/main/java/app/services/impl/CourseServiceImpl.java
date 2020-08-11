@@ -90,7 +90,7 @@ public class CourseServiceImpl implements CourseService {
     public List<CourseServiceModel> getAllCourses() {
 
         return this.courseRepository
-                .findAll()
+                .findAllCourses()
                 .stream()
                 .map(course -> {
                     UserServiceModel userServiceModel = this.modelMapper.map(course.getAuthor(), UserServiceModel.class);
@@ -203,13 +203,13 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Page<Course> findAllCoursesPage(Pageable pageable) {
-        Page<Course> courses = this.courseRepository.findAllCoursesPage(pageable);
+        Page<Course> courses = this.courseRepository.findAllCoursesPage(pageable, LocalDateTime.now());
         return courses;
     }
 
     @Override
     public Page<Course> findAllCoursesInTopicPage(String topicId, Pageable pageable) {
-        Page<Course> allCourseByTopic = this.courseRepository.findAllCourseByTopic(topicId, pageable);
+        Page<Course> allCourseByTopic = this.courseRepository.findAllCourseByTopic(LocalDateTime.now(),topicId, pageable);
         return allCourseByTopic;
     }
 
@@ -217,6 +217,12 @@ public class CourseServiceImpl implements CourseService {
     public Page<Course> findCoursesByAuthorIdPage(String id, Pageable pageable) {
         Page<Course> coursesByAuthorIdPage = this.courseRepository.findCoursesByAuthorIdPage(id, pageable);
         return coursesByAuthorIdPage;
+    }
+
+    @Override
+    public Page<Course> findAllEnrolledCoursesPage(String id, Pageable pageable) {
+        Page<Course> allEnrolledCoursesPage = this.courseRepository.findAllEnrolledCoursesPage(id, pageable);
+        return allEnrolledCoursesPage;
     }
 
 

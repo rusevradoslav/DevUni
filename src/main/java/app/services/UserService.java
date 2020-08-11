@@ -62,9 +62,9 @@ public interface UserService {
     UserServiceModel setAboutMeToTheTeacher(AboutMe aboutMe, User user);
 
 
-    List<CourseServiceModel> findAllCoursesByUserId(String id);
-
     UserServiceModel updateUser(String id, Course completedCourses);
+
+    List<CourseServiceModel> findAllCoursesByUserId(String id);
 
     List<CourseServiceModel> findAllCompletedCourses(String id);
 
