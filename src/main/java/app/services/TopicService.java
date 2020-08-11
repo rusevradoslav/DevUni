@@ -16,4 +16,6 @@ public interface TopicService {
     List<String> getAllTopicNames();
 
     List<TopicServiceModel> findAllTopics();
+
+    TopicServiceModel findById(String topicId);
 }

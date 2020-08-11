@@ -1,6 +1,8 @@
 package app.repositories;
 
 import app.models.entity.Course;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -31,4 +33,10 @@ public interface CourseRepository extends JpaRepository<Course, String> {
 
     @Query("select c from Course as c where c.status = true and c.topic.id = :topicId  order by c.startedOn desc")
     List<Course> findAllCoursesInTopic(@Param("topicId") String topicId);
+
+    @Query("select c from Course as c where c.topic.id =:topicId and c.status = true order by c.startedOn desc ")
+    Page<Course> findAllCourseByTopic(@Param("topicId") String topicId, Pageable pageable);
+
+    @Query("select c from Course as c  where c.status = true order by c.startedOn desc")
+    Page<Course> findAllCoursesPage(Pageable pageable);
 }

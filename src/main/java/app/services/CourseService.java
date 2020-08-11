@@ -28,6 +28,9 @@ public interface CourseService {
 
     Page<Course> findAllCourses(Pageable pageable);
 
+
+    Page<Course> findAllCoursesInTopic(String topicId, Pageable pageable);
+
     List<CourseServiceModel> findAllCoursesInTopic(String id);
 
     CourseServiceModel findCourseById(String id);

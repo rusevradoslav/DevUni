@@ -1,4 +1,5 @@
 package app.services.impl;
+
 import app.error.TopicNotFoundException;
 import app.models.entity.Topic;
 import app.models.service.TopicServiceModel;
@@ -51,7 +52,13 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public List<TopicServiceModel> findAllTopics() {
-        return this.topicRepository.findAll().stream().map(topic -> this.modelMapper.map(topic,TopicServiceModel.class)).collect(Collectors.toList());
+        return this.topicRepository.findAll().stream().map(topic -> this.modelMapper.map(topic, TopicServiceModel.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public TopicServiceModel findById(String topicId) {
+        Topic topic = topicRepository.findById(topicId).orElseThrow(() -> new TopicNotFoundException());
+        return this.modelMapper.map(topic, TopicServiceModel.class);
     }
 
 

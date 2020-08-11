@@ -126,8 +126,14 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Page<Course> findAllCourses(Pageable pageable) {
-        Page<Course> courses = this.courseRepository.findAll(pageable);
+        Page<Course> courses = this.courseRepository.findAllCoursesPage(pageable);
         return courses;
+    }
+
+    @Override
+    public Page<Course> findAllCoursesInTopic(String topicId, Pageable pageable) {
+        Page<Course> allCourseByTopic = this.courseRepository.findAllCourseByTopic(topicId, pageable);
+        return allCourseByTopic;
     }
 
     @Override

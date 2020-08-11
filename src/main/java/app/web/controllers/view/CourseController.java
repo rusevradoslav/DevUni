@@ -141,7 +141,6 @@ public class CourseController {
     @GetMapping("/allCourses")
     @PageTitle("All Courses")
     public String allCourses(Model model, @PageableDefault(size = 4) Pageable pageable) {
-        System.out.println();
         Page<Course> page = courseService.findAllCourses(pageable);
 
         List<Course> allCourses = page.getContent()
@@ -161,25 +160,22 @@ public class CourseController {
 
     @GetMapping("/allCoursesInTopic/{id}")
     @PageTitle("All Courses In Topic")
-    public String allCoursesInTopic(@PathVariable("id") String id, Model model, @PageableDefault(size = 4) Pageable pageable) {
+    public String allCoursesInTopic(@PathVariable("id") String topicId, Model model, @PageableDefault(size = 4) Pageable pageable) {
 
-        System.out.println();
 
-        Page<Course> page = courseService.findAllCourses(pageable);
+        Page<Course> page = courseService.findAllCoursesInTopic(topicId, pageable);
 
-        List<Course> allCourses =
-                page.getContent()
-                .stream()
-                .filter(course -> course.getTopic().getId().equals(id))
-                .collect(Collectors.toList());
+        List<Course> allCourses = page.getContent();
 
+
+        model.addAttribute("topic", topicId);
         model.addAttribute("currentPage", page.getNumber());
         model.addAttribute("allCourses", allCourses);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("allTopics", topicService.findAllTopics());
         model.addAttribute("top3RecentCourses", courseService.findRecentCourses());
 
-        return "courses/all-courses";
+        return "courses/all-courses-by-topic";
     }
 
 
