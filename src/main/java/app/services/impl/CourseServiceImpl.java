@@ -228,14 +228,15 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Page<Course> findAllBySearch(String search, Pageable pageable) {
-        Page<Course> specificationCourses = this.courseRepository.findAll(CourseSpecification.textInAllColumns(search), pageable);
         System.out.println();
+        Page<Course> specificationCourses = this.courseRepository.findAll(CourseSpecification.textInAllColumns(search), pageable);
         return specificationCourses;
     }
 
     @Override
     public Page<Course> findAllCoursesPage(Pageable pageable) {
         Page<Course> courses = this.courseRepository.findAll(CourseSpecification.filterEnabled(), pageable);
+        System.out.println();
 
         return courses;
     }

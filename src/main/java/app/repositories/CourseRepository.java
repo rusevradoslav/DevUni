@@ -53,9 +53,10 @@ public interface CourseRepository extends JpaRepository<Course, String>, JpaSpec
     @Query("select c from User as u join u.completedCourses as c where u.id = :studentId")
     Page<Course> findAllCompletedCoursesPage(@Param("studentId") String studenId, Pageable pageable);
 
+
     @NotNull
     @Override
-    Page<Course> findAll(Specification<Course> specification, Pageable pageable);
+    Page<Course> findAll(Specification<Course> specification, @NotNull Pageable pageable);
 
 
 

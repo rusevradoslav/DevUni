@@ -41,8 +41,8 @@ public class CourseSpecification {
 
 
     public static Specification<Course> filterEnabled(){
-        System.out.println();
-        return  (Specification<Course>) (root, query, builder) -> {
+        Specification<Course> status = (root, query, builder) -> {
+
             CriteriaQuery<Course> criteriaQuery = builder.createQuery(Course.class);
             List<Predicate> predicates = new ArrayList<>();
             predicates.add(builder.equal(root.get("status"), true));
@@ -51,5 +51,6 @@ public class CourseSpecification {
 
             return builder.and(predicates.toArray(new Predicate[0]));
         };
+        return status;
     }
 }

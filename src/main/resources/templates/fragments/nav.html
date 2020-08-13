@@ -104,6 +104,16 @@
                         </a>
                     </li>
                 </th:block>
+                <li style="padding-top: 3%;padding-right: 4%;">
+                    <form th:action="@{/courses/allCourses}">
+                        <div class="search">
+                            <input name="search" id="search"  type="search" class="searchTerm" placeholder="What are you looking for?">
+                            <button type="submit" class="searchButton">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </li>
                 <li>
                     <a th:href="@{/users/user-details}">
                         <img id="profilePicture" name="profilePicture" th:src="*{#session.getAttribute('avatarImg')}"

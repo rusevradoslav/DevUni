@@ -153,13 +153,12 @@ public class CourseController {
     public String allCourses(
             @RequestParam(value = "search", required = false) String search,
             @PageableDefault(size = 4) Pageable pageable,
-            Model model
-    ) {
+            Model model) {
 
         System.out.println();
-
         Page<Course> page;
         if (search != null && !search.isEmpty()) {
+            model.addAttribute("searchParam",search);
             page = courseService.findAllBySearch(search, pageable);
         } else {
             page = courseService.findAllCoursesPage(pageable);
