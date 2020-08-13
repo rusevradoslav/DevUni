@@ -47,6 +47,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
                         "/error",
                         "/about",
                         "/courses/allCourses/**",
+                        "/courses/allCourses",
                         "/courses/courseDetails/**",
                         "/courses/allCoursesInTopic/**",
                         "/users/register",

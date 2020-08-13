@@ -11,6 +11,7 @@ import app.models.service.TopicServiceModel;
 import app.models.service.UserServiceModel;
 import app.repositories.CourseRepository;
 import app.services.*;
+import app.web.specifications.CourseSpecification;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -202,12 +203,6 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Page<Course> findAllCoursesPage(Pageable pageable) {
-        Page<Course> courses = this.courseRepository.findAllCoursesPage(pageable, LocalDateTime.now());
-        return courses;
-    }
-
-    @Override
     public Page<Course> findAllCoursesInTopicPage(String topicId, Pageable pageable) {
         Page<Course> allCourseByTopic = this.courseRepository.findAllCourseByTopic(LocalDateTime.now(),topicId, pageable);
         return allCourseByTopic;
@@ -231,4 +226,17 @@ public class CourseServiceImpl implements CourseService {
         return allEnrolledCoursesPage;
     }
 
+    @Override
+    public Page<Course> findAllBySearch(String search, Pageable pageable) {
+        Page<Course> specificationCourses = this.courseRepository.findAll(CourseSpecification.textInAllColumns(search), pageable);
+        System.out.println();
+        return specificationCourses;
+    }
+
+    @Override
+    public Page<Course> findAllCoursesPage(Pageable pageable) {
+        Page<Course> courses = this.courseRepository.findAll(CourseSpecification.filterEnabled(), pageable);
+
+        return courses;
+    }
 }

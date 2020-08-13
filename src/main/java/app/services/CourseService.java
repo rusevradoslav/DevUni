@@ -44,9 +44,9 @@ public interface CourseService {
 
     Page<Course> findAllCoursesPage(Pageable pageable);
 
+    Page<Course> findAllBySearch(String search, Pageable pageable);
 
     Page<Course> findAllCoursesInTopicPage(String topicId, Pageable pageable);
-
 
     Page<Course> findCoursesByAuthorIdPage(String authorId, Pageable pageable);
 

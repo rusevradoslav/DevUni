@@ -22,33 +22,16 @@
 
                 <div class="mb-5 element-animate">
                     <div class="block-17">
-                        <h1 class="heading text-center mb-4">Welcome to DEVUNI </h1>
-                        <form action="" method="post" class="d-block d-lg-flex mb-4">
+                        <h1 class="heading text-center mb-4">Find Online Courses That Suits You </h1>
+                        <form th:action="@{/courses/allCourses}"
+                              class="d-block d-lg-flex mb-4"
+                              style="width: 500px;margin: auto">
                             <div class="fields d-block d-lg-flex">
-                                <div class="textfield-search one-third"><input type="text" class="form-control"
-                                                                               placeholder="Keyword search..."></div>
-                                <div class="select-wrap one-third">
-                                    <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                                    <select name="topic" id="topic" class="form-control">
-                                        <option value="" selected>Topic Name</option>
-                                        <th:block th:each="t : ${topicNames}" th:object="${t}">
-                                            <option th:text="*{name}" th:value="*{name}" value=""></option>
-                                        </th:block>
-                                    </select>
-                                </div>
-                                <div class="select-wrap one-third">
-                                    <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                                    <select name="difficulty" id="difficulty" class="form-control">
-                                        <option value="" selected>Difficulty</option>
-                                        <th:block>
-                                            <option value="BEGINNER">BEGINNER</option>
-                                            <option value="INTERMEDIATE">INTERMEDIATE</option>
-                                            <option value="ADVANCE">ADVANCE</option>
-                                        </th:block>
-                                    </select>
+                                <div class="textfield-search ">
+                                    <input name="search" id="search" type="search" class="form-control" placeholder="Keyword search...">
                                 </div>
                             </div>
-                            <input type="submit" class="search-submit btn btn-primary" value="Search">
+                            <input type="submit" class="search-submit btn btn-primary">
                         </form>
                         <p class="text-center"><a th:href="@{/users/register}" class="btn py-3 px-5">Register Now</a>
                         </p>

@@ -63,13 +63,13 @@
                     </div>
 
                 </div>
-                <div th:if="${allCourses.size()>0}"  class="row mb-5">
+                <div  class="row mb-5">
                     <div class="col-md-12 text-center">
                         <div class="block-27">
                             <ul>
                                 <li>
                                     <a th:if="${currentPage > 0}"
-                                       th:href="@{/courses/allCourses/(page=${currentPage - 1},size='4')}"> <
+                                       th:href="@{/courses/allCourses(page=${currentPage - 1},size='4')}"> <
                                     </a>
                                     <span th:unless="${currentPage > 0}"><</span>
                                 </li>
@@ -80,7 +80,7 @@
 
 
                                     <a
-                                       th:href="@{/courses/allCourses/(page=${i - 1},size='4')}"
+                                       th:href="@{/courses/allCourses(page=${i - 1},size='4')}"
                                        th:text="${i}">
                                     </a>
 
@@ -89,7 +89,7 @@
 
                                 <li>
                                     <a th th:if="${currentPage < totalPages - 1}"
-                                       th:href="@{/courses/allCourses/(page=${currentPage+1},size='4')}">>
+                                       th:href="@{/courses/allCourses(page=${currentPage+1},size='4')}">>
                                     </a>
                                     <span th:unless="${currentPage < totalPages - 1}"> > </span>
                                 </li>

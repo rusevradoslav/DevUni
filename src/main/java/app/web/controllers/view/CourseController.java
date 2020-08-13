@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static app.constants.GlobalConstants.BINDING_RESULT;
 
@@ -149,10 +150,26 @@ public class CourseController {
 
     @GetMapping("/allCourses")
     @PageTitle("All Courses")
-    public String allCourses(Model model, @PageableDefault(size = 4) Pageable pageable) {
-        Page<Course> page = courseService.findAllCoursesPage(pageable);
+    public String allCourses(
+            @RequestParam(value = "search", required = false) String search,
+            @PageableDefault(size = 4) Pageable pageable,
+            Model model
+    ) {
 
-        List<Course> allCourses = page.getContent();
+        System.out.println();
+
+        Page<Course> page;
+        if (search != null && !search.isEmpty()) {
+            page = courseService.findAllBySearch(search, pageable);
+        } else {
+            page = courseService.findAllCoursesPage(pageable);
+
+        }
+        List<Course> allCourses = page.getContent()
+                .stream()
+                .filter(course -> course.getStartedOn().isAfter(LocalDateTime.now()) && course.isStatus())
+                .collect(Collectors.toList());
+
         model.addAttribute("currentPage", page.getNumber());
         model.addAttribute("allCourses", allCourses);
         model.addAttribute("totalPages", page.getTotalPages());
