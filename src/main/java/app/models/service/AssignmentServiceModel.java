@@ -1,7 +1,6 @@
 package app.models.service;
 
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,5 +20,7 @@ public class AssignmentServiceModel extends BaseServiceModel {
     private UserServiceModel user;
 
     private LectureServiceModel lecture;
+
+    private boolean checked;
 
 }

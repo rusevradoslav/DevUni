@@ -10,14 +10,12 @@ import java.util.List;
 
 public class CourseSpecification {
     public static Specification<Course> textInAllColumns(String text) {
-        System.out.println();
         if (!text.contains("%")) {
             text = "%" + text + "%";
         }
         final String finalText = text;
 
         Specification<Course> courseSpecification = (root, cq, builder) -> {
-            System.out.println();
             CriteriaQuery<Course> criteriaQuery = builder.createQuery(Course.class);
             List<Predicate> predicates = new ArrayList<>();
             Predicate prTopic = builder.like(builder.lower(root.get("topic").get("name")),

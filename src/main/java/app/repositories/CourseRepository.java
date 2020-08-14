@@ -12,7 +12,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -41,8 +40,8 @@ public interface CourseRepository extends JpaRepository<Course, String>, JpaSpec
     @Query("select c from Course  as c order by c.status asc ")
     List<Course> findAllCourses();
 
-    @Query("select c from Course as c where c.topic.id =:topicId and c.status = true and c.startedOn >:now order by c.startedOn desc ")
-    Page<Course> findAllCourseByTopic(@Param("now") LocalDateTime localDateTime, @Param("topicId") String topicId, Pageable pageable);
+    @Query("select c from Course as c where c.topic.id =:topicId and c.status = true  order by c.startedOn desc ")
+    Page<Course> findAllCourseByTopic(@Param("topicId") String topicId, Pageable pageable);
 
     @Query("select c from Course as c where c.author.id =:authorId order by c.status asc  ")
     Page<Course> findCoursesByAuthorIdPage(@Param("authorId") String authorId, Pageable pageable);
@@ -57,8 +56,6 @@ public interface CourseRepository extends JpaRepository<Course, String>, JpaSpec
     @NotNull
     @Override
     Page<Course> findAll(Specification<Course> specification, @NotNull Pageable pageable);
-
-
 
 
 }

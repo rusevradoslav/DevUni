@@ -1,6 +1,5 @@
 package app.services;
 
-import app.error.AssignmentNotFoundException;
 import app.error.FileStorageException;
 import app.models.entity.*;
 import app.models.service.AssignmentServiceModel;
@@ -113,7 +112,7 @@ public class AssignmentServiceImplTest {
         assignment.setUser(user);
         assignment.setFile(dbFile);
         assignment.setDescription(VALID_ASSIGNMENT_DESCRIPTION);
-
+        assignment.setChecked(true);
 
         when(modelMapper.map(any(AssignmentServiceModel.class), eq(Assignment.class)))
                 .thenAnswer(invocationOnMock ->
@@ -140,6 +139,7 @@ public class AssignmentServiceImplTest {
         when(multipartFile.getName()).thenReturn("file");
         assignmentServiceModel = this.modelMapper.map(assignment, AssignmentServiceModel.class);
         assignmentServiceModel.setFile(multipartFile);
+        assignmentServiceModel.setChecked(true);
         userServiceModel = actualMapper.map(user, UserServiceModel.class);
         lectureServiceModel = actualMapper.map(lecture, LectureServiceModel.class);
 
@@ -149,26 +149,6 @@ public class AssignmentServiceImplTest {
     public void uploadUserAssignmentSolution_shouldUploadNewAssigment() throws FileStorageException {
         //Arrange
         /* when(assignmentRepository.findFirstByDescription(VALID_ASSIGNMENT_DESCRIPTION)).thenReturn(null);*/
-        when(this.assignmentRepository.save(Mockito.any(Assignment.class)))
-                .thenReturn(assignment);
-
-        //Act
-
-        AssignmentServiceModel aServiceModel = assignmentService
-                .uploadUserAssignmentSolution(lectureServiceModel, userServiceModel, assignmentServiceModel);
-
-        String actual = VALID_ASSIGNMENT_DESCRIPTION;
-        String expected = aServiceModel.getDescription();
-
-        assertEquals(actual, expected);
-
-
-    }
-
-    @Test(expected = AssignmentNotFoundException.class)
-    public void uploadUserAssignmentSolution_shouldUpdateNewAssigment() throws FileStorageException {
-        //Arrange
-        when(assignmentRepository.findFirstByDescription(VALID_ASSIGNMENT_DESCRIPTION)).thenReturn(Optional.of(assignment));
         when(this.assignmentRepository.save(Mockito.any(Assignment.class)))
                 .thenReturn(assignment);
 
@@ -246,6 +226,20 @@ public class AssignmentServiceImplTest {
 
         String actual = VALID_ASSIGNMENT_DESCRIPTION;
         String expected = assignment.getDescription();
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    public void getCheckedAssignmentsByUser_shouldReturnAllCheckedAssignments() {
+        //Arrange
+        when(assignmentRepository.findAssignmentsByUserId(userServiceModel.getId())).thenReturn(List.of(assignment));
+        //Act
+        List<AssignmentServiceModel> checkedAssignmentsByUser = this.assignmentService.getCheckedAssignmentsByUser(userServiceModel);
+
+        //Assert
+        String actual = VALID_ASSIGNMENT_DESCRIPTION;
+        String expected = checkedAssignmentsByUser.stream().findFirst().get().getDescription();
+
         assertEquals(actual, expected);
     }
 

@@ -124,6 +124,7 @@ public class CourseController {
         Page<Course> page = courseService.findAllEnrolledCoursesPage(userServiceModel.getId(), pageable);
         List<Course> allCourses = page.getContent();
 
+        System.out.println();
         model.addAttribute("currentPage", page.getNumber());
         model.addAttribute("allCoursesByUserId", allCourses);
         model.addAttribute("totalPages", page.getTotalPages());
@@ -155,7 +156,7 @@ public class CourseController {
             @PageableDefault(size = 4) Pageable pageable,
             Model model) {
 
-        System.out.println();
+
         Page<Course> page;
         if (search != null && !search.isEmpty()) {
             model.addAttribute("searchParam",search);
@@ -186,7 +187,10 @@ public class CourseController {
 
         Page<Course> page = courseService.findAllCoursesInTopicPage(topicId, pageable);
 
-        List<Course> allCourses = page.getContent();
+        List<Course> allCourses = page.getContent()
+                .stream()
+                .filter(course -> course.getStartedOn().isAfter(LocalDateTime.now()) && course.isStatus())
+                .collect(Collectors.toList());;
 
 
         model.addAttribute("topic", topicId);

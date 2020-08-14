@@ -8,7 +8,6 @@ import app.models.service.LectureServiceModel;
 import app.models.service.UserServiceModel;
 import app.repositories.AssignmentRepository;
 import app.services.AssignmentService;
-import app.services.CourseService;
 import app.services.CustomFileService;
 import app.services.UserService;
 import lombok.AllArgsConstructor;
@@ -29,14 +28,12 @@ public class AssignmentServiceImpl implements AssignmentService {
     private final AssignmentRepository assignmentRepository;
     private final ModelMapper modelMapper;
     private final CustomFileService customFileService;
-    private final CourseService courseService;
     private final UserService userService;
 
     @Override
     public AssignmentServiceModel uploadUserAssignmentSolution(LectureServiceModel lectureServiceModel,
                                                                UserServiceModel userServiceModel,
                                                                AssignmentServiceModel assignmentServiceModel) throws FileStorageException {
-        System.out.println();
         Lecture lecture = this.modelMapper.map(lectureServiceModel, Lecture.class);
         User user = this.modelMapper.map(userServiceModel, User.class);
         Assignment assignment = this.modelMapper.map(assignmentServiceModel, Assignment.class);

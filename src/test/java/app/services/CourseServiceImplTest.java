@@ -15,6 +15,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -171,7 +175,7 @@ public class CourseServiceImplTest {
     public void getAllCourses_ShouldReturnAllCourses() {
         //Arrange
         course2.setStartedOn(LocalDateTime.now().plus(VALID_DURATION_WEEKS * 7, ChronoUnit.DAYS));
-        when(courseRepository.findAll()).thenReturn(Arrays.asList(course, course2));
+        when(courseRepository.findAllCourses()).thenReturn(Arrays.asList(course, course2));
         //Act
         List<CourseServiceModel> allCourses = this.courseService.getAllCourses();
         //Assert
@@ -422,6 +426,46 @@ public class CourseServiceImplTest {
         assertEquals(false, checkIfCourseContainStudent);
     }
 
+    @Test
+    public void findAllCoursesInTopicPage_shouldReturnAllCoursesByTopicId() {
+        Pageable pageable = PageRequest.of(0, 4);
+        Page<Course> page = new PageImpl<>(List.of(course), pageable, 4);
+        when(this.courseRepository.findAllCourseByTopic(VALID_TOPIC_ID, pageable)).thenReturn(page);
+
+        Page<Course> allCoursesInTopicPage = this.courseService.findAllCoursesInTopicPage(VALID_TOPIC_ID, pageable);
+
+        String actualCourseTitle = course.getTitle();
+        String expectedCourseTitle = allCoursesInTopicPage.getContent().stream().findFirst().get().getTitle();
+        int actualTotalPages = page.getTotalPages();
+        int expectedTotalPages = allCoursesInTopicPage.getTotalPages();
+        int actualPageSize = page.getSize();
+        int expectedPageSize = allCoursesInTopicPage.getSize();
+
+        assertEquals(actualCourseTitle, expectedCourseTitle);
+        assertEquals(actualTotalPages, expectedTotalPages);
+        assertEquals(actualPageSize, expectedPageSize);
+
+    }
+  @Test
+    public void findAllCoursesInTopicPage_shouldReturnAll() {
+        Pageable pageable = PageRequest.of(0, 4);
+        Page<Course> page = new PageImpl<>(List.of(course), pageable, 4);
+        when(this.courseRepository.findAllCourseByTopic(VALID_TOPIC_ID, pageable)).thenReturn(page);
+
+        Page<Course> allCoursesInTopicPage = this.courseService.findAllCoursesInTopicPage(VALID_TOPIC_ID, pageable);
+
+        String actualCourseTitle = course.getTitle();
+        String expectedCourseTitle = allCoursesInTopicPage.getContent().stream().findFirst().get().getTitle();
+        int actualTotalPages = page.getTotalPages();
+        int expectedTotalPages = allCoursesInTopicPage.getTotalPages();
+        int actualPageSize = page.getSize();
+        int expectedPageSize = allCoursesInTopicPage.getSize();
+
+        assertEquals(actualCourseTitle, expectedCourseTitle);
+        assertEquals(actualTotalPages, expectedTotalPages);
+        assertEquals(actualPageSize, expectedPageSize);
+
+    }
 
     private CourseServiceModel getCourseServiceModel(ModelMapper actualMapper) {
         CourseServiceModel courseServiceModel = actualMapper.map(course, CourseServiceModel.class);

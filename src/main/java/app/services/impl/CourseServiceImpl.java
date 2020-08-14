@@ -204,40 +204,32 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Page<Course> findAllCoursesInTopicPage(String topicId, Pageable pageable) {
-        Page<Course> allCourseByTopic = this.courseRepository.findAllCourseByTopic(LocalDateTime.now(),topicId, pageable);
-        return allCourseByTopic;
+        return this.courseRepository.findAllCourseByTopic(topicId, pageable);
     }
 
     @Override
     public Page<Course> findCoursesByAuthorIdPage(String id, Pageable pageable) {
-        Page<Course> coursesByAuthorIdPage = this.courseRepository.findCoursesByAuthorIdPage(id, pageable);
-        return coursesByAuthorIdPage;
+        return this.courseRepository.findCoursesByAuthorIdPage(id, pageable);
     }
 
     @Override
     public Page<Course> findAllEnrolledCoursesPage(String id, Pageable pageable) {
-        Page<Course> allEnrolledCoursesPage = this.courseRepository.findAllEnrolledCoursesPage(id, pageable);
-        return allEnrolledCoursesPage;
+        return this.courseRepository.findAllEnrolledCoursesPage(id, pageable);
     }
 
     @Override
     public Page<Course> findAllCompletedCourses(String id, Pageable pageable) {
-        Page<Course> allEnrolledCoursesPage = this.courseRepository.findAllCompletedCoursesPage(id, pageable);
-        return allEnrolledCoursesPage;
+        return this.courseRepository.findAllCompletedCoursesPage(id, pageable);
     }
 
     @Override
     public Page<Course> findAllBySearch(String search, Pageable pageable) {
-        System.out.println();
-        Page<Course> specificationCourses = this.courseRepository.findAll(CourseSpecification.textInAllColumns(search), pageable);
-        return specificationCourses;
+        return this.courseRepository.findAll(CourseSpecification.textInAllColumns(search), pageable);
     }
 
     @Override
     public Page<Course> findAllCoursesPage(Pageable pageable) {
-        Page<Course> courses = this.courseRepository.findAll(CourseSpecification.filterEnabled(), pageable);
-        System.out.println();
 
-        return courses;
+        return this.courseRepository.findAll(CourseSpecification.filterEnabled(), pageable);
     }
 }
