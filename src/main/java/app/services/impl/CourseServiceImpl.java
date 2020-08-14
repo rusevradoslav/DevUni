@@ -229,7 +229,6 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Page<Course> findAllCoursesPage(Pageable pageable) {
-
         return this.courseRepository.findAll(CourseSpecification.filterEnabled(), pageable);
     }
 }

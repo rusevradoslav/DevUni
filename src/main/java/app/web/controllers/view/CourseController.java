@@ -124,7 +124,6 @@ public class CourseController {
         Page<Course> page = courseService.findAllEnrolledCoursesPage(userServiceModel.getId(), pageable);
         List<Course> allCourses = page.getContent();
 
-        System.out.println();
         model.addAttribute("currentPage", page.getNumber());
         model.addAttribute("allCoursesByUserId", allCourses);
         model.addAttribute("totalPages", page.getTotalPages());

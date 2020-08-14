@@ -49,6 +49,15 @@ public class CourseServiceImplTest {
     private static final String VALID_TOPIC_ID = "topicId";
     private static final String VALID_TOPIC_NAME = "Java";
 
+    private static final String VALID_USER_ID = "validId";
+    private static final String VALID_USERNAME = "rusevrado";
+    private static final String VALID_PASSWORD = "1234";
+    private static final String VALID_NEW_PASSWORD = "12345";
+    private static final String VALID_FIRST_NAME = "Radoslav";
+    private static final String VALID_LAST_NAME = "Rusev";
+    private static final String VALID_EMAIL = "radorusevcrypto@gmail.com";
+    private static final String VALID_IMAGE_URL = "[random_url]";
+
     private Course course;
     private CourseServiceModel courseServiceModel;
     private User author;
@@ -72,6 +81,7 @@ public class CourseServiceImplTest {
 
     @InjectMocks
     private CourseServiceImpl courseService;
+    private User user;
 
 
     @Before
@@ -99,10 +109,16 @@ public class CourseServiceImplTest {
                 .thenAnswer(invocationOnMock ->
                         actualMapper.map(invocationOnMock.getArguments()[0], Course.class));
 
+        user = getUser();
+
         course = getCourse1();
         course2 = getCourse2();
         courseServiceModel = getCourseServiceModel(actualMapper);
         courseServiceModel2 = getCourseServiceModel(actualMapper);
+
+        course.setEnrolledStudents(List.of(user));
+        user.setCompletedCourses(Set.of(course));
+
     }
 
     @Test(expected = CourseNotFoundException.class)
@@ -428,12 +444,15 @@ public class CourseServiceImplTest {
 
     @Test
     public void findAllCoursesInTopicPage_shouldReturnAllCoursesByTopicId() {
+        //Arrange
         Pageable pageable = PageRequest.of(0, 4);
         Page<Course> page = new PageImpl<>(List.of(course), pageable, 4);
         when(this.courseRepository.findAllCourseByTopic(VALID_TOPIC_ID, pageable)).thenReturn(page);
 
+        //Act
         Page<Course> allCoursesInTopicPage = this.courseService.findAllCoursesInTopicPage(VALID_TOPIC_ID, pageable);
 
+        //Assert
         String actualCourseTitle = course.getTitle();
         String expectedCourseTitle = allCoursesInTopicPage.getContent().stream().findFirst().get().getTitle();
         int actualTotalPages = page.getTotalPages();
@@ -446,14 +465,16 @@ public class CourseServiceImplTest {
         assertEquals(actualPageSize, expectedPageSize);
 
     }
-  @Test
-    public void findAllCoursesInTopicPage_shouldReturnAll() {
+
+    @Test
+    public void findAllCoursesByAuthorId_shouldReturnAllCoursesPageByAuthorId() {
+        //Arrange
         Pageable pageable = PageRequest.of(0, 4);
         Page<Course> page = new PageImpl<>(List.of(course), pageable, 4);
-        when(this.courseRepository.findAllCourseByTopic(VALID_TOPIC_ID, pageable)).thenReturn(page);
-
-        Page<Course> allCoursesInTopicPage = this.courseService.findAllCoursesInTopicPage(VALID_TOPIC_ID, pageable);
-
+        when(this.courseRepository.findCoursesByAuthorIdPage(VALID_AUTHOR_ID, pageable)).thenReturn(page);
+        //Act
+        Page<Course> allCoursesInTopicPage = this.courseService.findCoursesByAuthorIdPage(VALID_AUTHOR_ID, pageable);
+        //Assert
         String actualCourseTitle = course.getTitle();
         String expectedCourseTitle = allCoursesInTopicPage.getContent().stream().findFirst().get().getTitle();
         int actualTotalPages = page.getTotalPages();
@@ -466,6 +487,56 @@ public class CourseServiceImplTest {
         assertEquals(actualPageSize, expectedPageSize);
 
     }
+
+    @Test
+    public void findAllEnrolledCoursesPage_shouldReturnAllEnrolledCoursesPageByUserId() {
+        //Arrange
+        Pageable pageable = PageRequest.of(0, 4);
+        Page<Course> page = new PageImpl<>(List.of(course), pageable, 4);
+        when(this.courseRepository.findAllEnrolledCoursesPage(VALID_USER_ID, pageable)).thenReturn(page);
+
+        //Act
+        Page<Course> allCoursesInTopicPage = this.courseService.findAllEnrolledCoursesPage(VALID_USER_ID, pageable);
+
+        //Assert
+        String actualCourseTitle = course.getTitle();
+        String expectedCourseTitle = allCoursesInTopicPage.getContent().stream().findFirst().get().getTitle();
+        int actualTotalPages = page.getTotalPages();
+        int expectedTotalPages = allCoursesInTopicPage.getTotalPages();
+        int actualPageSize = page.getSize();
+        int expectedPageSize = allCoursesInTopicPage.getSize();
+
+        assertEquals(actualCourseTitle, expectedCourseTitle);
+        assertEquals(actualTotalPages, expectedTotalPages);
+        assertEquals(actualPageSize, expectedPageSize);
+
+    }
+
+    @Test
+    public void findAllCompletedCoursesPage_shouldReturnAllCompletedCoursesPageByUserId() {
+        //Arrange
+        Pageable pageable = PageRequest.of(0, 4);
+        Page<Course> page = new PageImpl<>(List.of(course), pageable, 4);
+        when(this.courseRepository.findAllCompletedCoursesPage(VALID_USER_ID, pageable)).thenReturn(page);
+
+        //Act
+        Page<Course> allCoursesInTopicPage = this.courseService.findAllCompletedCourses(VALID_USER_ID, pageable);
+
+        //Assert
+        String actualCourseTitle = course.getTitle();
+        String expectedCourseTitle = allCoursesInTopicPage.getContent().stream().findFirst().get().getTitle();
+        int actualTotalPages = page.getTotalPages();
+        int expectedTotalPages = allCoursesInTopicPage.getTotalPages();
+        int actualPageSize = page.getSize();
+        int expectedPageSize = allCoursesInTopicPage.getSize();
+
+        assertEquals(actualCourseTitle, expectedCourseTitle);
+        assertEquals(actualTotalPages, expectedTotalPages);
+        assertEquals(actualPageSize, expectedPageSize);
+
+    }
+
+
 
     private CourseServiceModel getCourseServiceModel(ModelMapper actualMapper) {
         CourseServiceModel courseServiceModel = actualMapper.map(course, CourseServiceModel.class);
@@ -537,6 +608,24 @@ public class CourseServiceImplTest {
         topic.setCourses(new ArrayList<>());
         course2.setTopic(topic);
         return course2;
+    }
+
+    private User getUser() {
+        User user = new User();
+
+        user.setId(VALID_USER_ID);
+        user.setFirstName(VALID_FIRST_NAME);
+        user.setLastName(VALID_LAST_NAME);
+        user.setUsername(VALID_USERNAME);
+        user.setEmail(VALID_EMAIL);
+        user.setPassword(VALID_PASSWORD);
+        Set<Role> roles = new HashSet<>();
+        Role role = new Role("ROLE_ADMIN");
+        roles.add(role);
+        user.setAuthorities(roles);
+        user.setRegistrationDate(LocalDateTime.now());
+        user.setProfilePicture(VALID_IMAGE_URL);
+        return user;
     }
 }
 
