@@ -157,7 +157,7 @@ URLs | Description
  
   
  - Course Details Page 
- ![coursedetailspage](/src/main/resources/static/screenshots/course_single.jpg)
+ ![coursedetailspage](/src/main/resources/static/screenshots/course_details.jpg)
  
   
  - All Courses In Topic page 
@@ -167,6 +167,22 @@ URLs | Description
  - Home Page 
  ![homepage](/src/main/resources/static/screenshots/home.jpg)
  
+ - Student Profile Page 
+  ![studentprofilepage](/src/main/resources/static/screenshots/student_profile.jpg) 
+  
+ - Enrolled Courses Page 
+  ![enrolledcoursespage](/src/main/resources/static/screenshots/enrolled_courses.jpg)  
+  
+  
+ - Lecture Page 
+  ![courselecturespage](/src/main/resources/static/screenshots/course_single.jpg)
  
+ - Completed Courses Page 
+  ![completedcoursespage](/src/main/resources/static/screenshots/completed_courses.jpg) 
+  
+ - Checked Assignments page
+  ![checkedassignmentspage](/src/main/resources/static/screenshots/check_assignments.jpg)
  
+  - Teacher Profile Page 
+   ![teacherprofilepage](/src/main/resources/static/screenshots/teacher_profile.jpg) 
 
