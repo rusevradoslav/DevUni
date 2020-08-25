@@ -89,8 +89,9 @@ The root admin has the same privileges as admin but the difference is that that 
     SET GLOBAL max_allowed_packet=268435456; 
    ```
  4. Maven Configuration 
-   ```mvn clean install
-      mvn spring-boot:run
+   ```
+    mvn clean install
+    mvn spring-boot:run
    ```
 
 ### Routes
