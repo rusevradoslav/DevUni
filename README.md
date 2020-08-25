@@ -70,27 +70,28 @@ The root admin has the same privileges as admin but the difference is that that 
 **Before build the project you need follow a few steps:**
 
  1. Clone GitHub Repository using the following command:
-    ```
+ 
+   ```
     $ git clone https://github.com/rusevradoslav/DevUni.git
-    ```
+   ```
  2. In application properties file you need to enter your personal database username and password:
    ```
    spring.datasource.username=[DB USERNAME]
    spring.datasource.password=[DB PASSWORD]
    ```
-  ```
+   ```
   Application properties file is in `src/main/resources/application.properties`
-  ```
- 
+   ```
+   
  3. Run this Query in your MySql console to allow the maximum size of communication buffer:
- 
-    ``` 
+   
+   ``` 
     SET GLOBAL max_allowed_packet=268435456; 
-    ```
+   ```
  4. Maven Configuration 
-    ```mvn clean install
+   ```mvn clean install
        mvn spring-boot:run
-    ```
+   ```
 
 ### Routes
 
