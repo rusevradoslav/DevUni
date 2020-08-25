@@ -46,7 +46,7 @@ The root admin has the same privileges as admin but the difference is that that 
 
 **DevUni run requirements:**
 
-**Java (JRE) 1.8+**
+**Java (JRE) 14**
 
 * <b>Windows</b> and <b>MacOS X</b> installers include JRE so just use them and don't think about internals.
 * On <b>Linux</b> you may need to install Java manually (usually by running `sudo apt-get install openjdk-14-jdk` or something similar).
