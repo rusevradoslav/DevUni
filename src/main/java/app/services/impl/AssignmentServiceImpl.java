@@ -34,12 +34,14 @@ public class AssignmentServiceImpl implements AssignmentService {
     public AssignmentServiceModel uploadUserAssignmentSolution(LectureServiceModel lectureServiceModel,
                                                                UserServiceModel userServiceModel,
                                                                AssignmentServiceModel assignmentServiceModel) throws FileStorageException {
+
         Lecture lecture = this.modelMapper.map(lectureServiceModel, Lecture.class);
+        System.out.println();
         User user = this.modelMapper.map(userServiceModel, User.class);
         Assignment assignment = this.modelMapper.map(assignmentServiceModel, Assignment.class);
         assignment.setUser(user);
         assignment.setLecture(lecture);
-        assignment.setDescription(String.format("Description: %s %s %s", user.getUsername(), lecture.getTitle(), assignmentServiceModel.getFile().getName()));
+        assignment.setDescription(String.format("Description:%s %s %s %s", user.getUsername(), lecture.getTitle(), assignmentServiceModel.getFile().getName(),lecture.getCourse().getTitle()));
         assignment.setChecked(false);
         Assignment assignmentByDescription = assignmentRepository.findFirstByDescription(assignment.getDescription()).orElse(null);
 

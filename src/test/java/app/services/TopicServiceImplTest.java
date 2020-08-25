@@ -64,6 +64,7 @@ public class TopicServiceImplTest {
 
         cSharp = new Topic(TOPIC_C_SHARP);
         java = new Topic(TOPIC_JAVA);
+        java.setId("JAVA_ID");
         javaScript = new Topic(TOPIC_JAVASCRIPT);
         python = new Topic(TOPIC_PYTHON);
         php = new Topic(TOPIC_PHP);
@@ -193,6 +194,7 @@ public class TopicServiceImplTest {
 
         assertEquals(actual, expected);
     }
+
     @Test
     public void findAllTopicNames_shouldReturnAllTopics() {
         //Arrange
@@ -210,5 +212,31 @@ public class TopicServiceImplTest {
         assertEquals(TOPIC_CPP, allTopics.get(5));
     }
 
+    @Test
+    public void findTopicById_shouldReturnReturnTopicIfExist() {
+        //Arrange
+        when(topicRepository.findById("JAVA_ID")).thenReturn(Optional.of(java));
+
+        //Act
+
+        TopicServiceModel java = this.topicService.findById("JAVA_ID");
+
+        //Assert
+        String actual = "JAVA_ID";
+        String expected = java.getId();
+
+        assertEquals(actual, expected);
+    }
+
+    @Test(expected = TopicNotFoundException.class)
+    public void findTopicById_shouldThrowException() {
+        //Arrange
+        when(topicRepository.findById("JAVA_ID")).thenReturn(Optional.empty());
+
+        //Act
+
+        TopicServiceModel java = this.topicService.findById("JAVA_ID");
+
+    }
 
 }

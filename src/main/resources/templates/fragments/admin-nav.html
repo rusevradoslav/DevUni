@@ -23,7 +23,7 @@
                         <a class="dropdown-item" th:href="@{/courses/allCourses}">All Courses</a>
                         <a class="dropdown-item" th:href="@{/courses/enrolledCourses}"
                            sec:authorize="hasRole('ROLE_ADMIN')">My Courses</a>
-
+                        <a class="dropdown-item" th:href="@{/courses/completedCourses}">Completed Courses</a>
                         <a class="dropdown-item" th:href="@{/admins/all-courses-details}">Approve Courses</a>
                     </div>
                 </li>
