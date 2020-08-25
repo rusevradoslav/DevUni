@@ -270,7 +270,7 @@ public class UserController {
     }
 
     @GetMapping("/userCheckedAssignments")
-    @PageTitle("Cheked Assignments")
+    @PageTitle("Checked Assignments")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_STUDENT')")
     public String getUserCheckedAssignments(Model model, Principal principal) {
         UserServiceModel userServiceModel = userService.findByName(principal.getName());

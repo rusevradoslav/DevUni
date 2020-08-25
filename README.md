@@ -41,3 +41,42 @@ The root admin has the same privileges as admin but the difference is that that 
 *   Hibernate
 *   JPA
 *   Cloudinary 
+
+
+### Routes
+
+URLs | Description
+---------|---------
+ */* | Index page - page where guest user can see all courses and teachers in DevUni.
+ */home* | Home page - page where authorized user can see all courses and teachers in DevUni.
+ */users/register* | Register page - page where user can register.
+ */users/login* | Login page - page where user can login.
+ */about* | About page - page where user read more about DevUni.
+ */courses/allCourses* | All Courses page - page where user can see all courses.
+ */courses/courseDetails/{id}* | Course Details page - page where user can read more about each course.
+ */courses/allCoursesInTopic/{id}* | All Courses In Topic page - page where user can see all courses filtered by topic name.
+ */courses/enrolledCourses* | All Enrolled Courses From Students/Admins page - page where student/admin can see his all enrolled courses.
+ */courses/completedCourses* | All Completed Courses From Students/Admins page - page where student/admin can see his all completed courses.
+ */courses/create* | Create Course page - page where teacher can create course.
+ */courses/teacher-courses* | All Courses Created From Teacher page - page where teacher can see all courses which he created.
+ */courses/teacher-check-courses* | All Teacher Courses Table - page where teacher can see his all created courses.
+ */courses/teacher-check-lecture* | All Lectures In One Course Table - page where teacher can see his all created lectures in single course.
+ */assignments/check-assignments* | All Teacher Submitted Assignments In One Lectures  - page where teacher can see all submitted assignments.
+ */users/user-details* | User Details page - page where user can see user profile details.
+ */users/user-details* | About Me page - page where teacher can create About Me file.
+ */users/change-email* | Change Email page - page where user can change his email.
+ */users/change-password* | Change Password page - page where user can change his password.
+ */users/userCheckedAssignments* | Checked Assignments page - page where student/admin can see all checked assignments from teacher. 
+ */admins/admins/home-page* | Admin Home Page - page where root admin/admin can see all admins in DevUni.
+ */admins/all-courses-details* | All Courses Details Page - page where root admin/admin approve course requests.
+ */admins/create-admin* | Create Admin  Page - page where root admin can create new admin.
+ */admins/all-admins* | All Admins  Page - page where root admin can demote admin to teacher or student and enable or disable user account.
+ */admins/all-teachers* | All Teachers Page - page where root admin/admin can demote teacher to student  or promote teacher to admin and enable or disable user account.
+ */admins/all-students* | All Teachers Page - page where root admin/admin can promote student to teacher or admin and enable or disable user account.
+ */admins/all-teacher-requests* | All Teacher Requests Page - page where root admin/admin can approve all teacher requests.
+
+ 
+ 
+ 
+ 
+
