@@ -133,4 +133,40 @@ URLs | Description
  ![database](/src/main/resources/static/screenshots/db_diagram.png)
  
  
+ Website Screenshots
+ ---
+ 
+ - Index Page 
+ ![indexpage](/src/main/resources/static/screenshots/index.jpeg) 
+ 
+ - Register Page 
+ ![registerpage](/src/main/resources/static/screenshots/register.jpeg) 
+ 
+ - Login Page 
+  ![login](/src/main/resources/static/screenshots/login.jpeg) 
+ 
+ - Home Page 
+ ![homepage](/src/main/resources/static/screenshots/home.jpeg)
+ 
+ - About Page 
+ ![aboutpage](/src/main/resources/static/screenshots/about_us.jpeg)
+ 
+  
+ - All Courses Page 
+ ![allcoursespage](/src/main/resources/static/screenshots/all_courses_in_devuni.jpeg)
+ 
+  
+ - Course Details Page 
+ ![coursedetailspage](/src/main/resources/static/screenshots/course_single.jpg)
+ 
+  
+ - All Courses In Topic page 
+ ![coursesintopicpage](/src/main/resources/static/screenshots/all_courses_in_topic.jpg)
+ 
+  
+ - Home Page 
+ ![homepage](/src/main/resources/static/screenshots/home.jpeg)
+ 
+ 
+ 
 
