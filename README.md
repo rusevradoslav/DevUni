@@ -93,9 +93,10 @@ The root admin has the same privileges as admin but the difference is that that 
     mvn clean install
     mvn spring-boot:run
    ```
- 4. Run MySql Script 
+ 5. Run MySql Script 
+   ```
     If you want to create database with valid data click right button on devuni_script.sql and select command `Run devuni_script.sql ``
-
+   ```
 ### Routes
 
 URLs | Description
