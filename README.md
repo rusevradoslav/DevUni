@@ -7,7 +7,7 @@
 
 *  Radoslav Rusev
 
-**Problem:**
+**Description:**
 
 DevUni is an online platform for tutoring.
 It enables everyone who decide to engage in programming to enroll in courses in one of the leading programming languages. 
@@ -42,6 +42,55 @@ The root admin has the same privileges as admin but the difference is that that 
 *   JPA
 *   Cloudinary 
 
+## Running
+
+**DevUni run requirements:**
+
+**Java (JRE) 1.8+**
+
+* <b>Windows</b> and <b>MacOS X</b> installers include JRE so just use them and don't think about internals.
+* On <b>Linux</b> you may need to install Java manually (usually by running `sudo apt-get install openjdk-14-jdk` or something similar).
+* If you don't use installer (on Windows or Mac OS X) you may need to download Java (JDK) from <a href="https://www.oracle.com/java/technologies/javase/jdk14-archive-downloads.html">Oracle website</a>.
+
+**MySQL Workbench 8.0.21**
+
+* You can download MySQL Workbench from official <a href="https://dev.mysql.com/downloads/workbench/"> MySQL Workbench website.
+
+## Building
+
+#### Prerequisites:
+
+ 1. Java (JDK) 14 
+ 2. Apache Maven 3+
+ 3. MySQL Dialect 8
+ 4. Internet access
+ 5. Git client
+
+#### Build
+**Before build the project you need follow a few steps:**
+
+ 1. Clone GitHub Repository using the following command:
+    ```
+    $ git clone https://github.com/rusevradoslav/DevUni.git
+    ```
+ 2. In application properties file you need to enter your personal database username and password:
+   ```
+   spring.datasource.username=[DB USERNAME]
+   spring.datasource.password=[DB PASSWORD]
+   ```
+  ```
+  Application properties file is in `src/main/resources/application.properties`
+  ```
+ 
+ 3. Run this Query in your MySql console to allow the maximum size of communication buffer:
+ 
+    ``` 
+    SET GLOBAL max_allowed_packet=268435456; 
+    ```
+ 4. Maven Configuration 
+    ```mvn clean install
+       mvn spring-boot:run
+    ```
 
 ### Routes
 
@@ -75,7 +124,6 @@ URLs | Description
  */admins/all-students* | All Teachers Page - page where root admin/admin can promote student to teacher or admin and enable or disable user account.
  */admins/all-teacher-requests* | All Teacher Requests Page - page where root admin/admin can approve all teacher requests.
 
- 
  
  
  
