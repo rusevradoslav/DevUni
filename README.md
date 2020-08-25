@@ -90,7 +90,7 @@ The root admin has the same privileges as admin but the difference is that that 
    ```
  4. Maven Configuration 
    ```mvn clean install
-       mvn spring-boot:run
+      mvn spring-boot:run
    ```
 
 ### Routes
