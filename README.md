@@ -168,7 +168,7 @@ URLs | Description
  ![homepage](/src/main/resources/static/screenshots/home.jpg)
  
  - Student Profile Page 
-  ![studentprofilepage](/src/main/resources/static/screenshots/student_profile.jpg) 
+  ![studentprofilepage](/src/main/resources/static/screenshots/student_profile.png) 
   
  - Enrolled Courses Page 
   ![enrolledcoursespage](/src/main/resources/static/screenshots/enrolled_courses.jpg)  
@@ -181,8 +181,8 @@ URLs | Description
   ![completedcoursespage](/src/main/resources/static/screenshots/completed_courses.jpg) 
   
  - Checked Assignments page
-  ![checkedassignmentspage](/src/main/resources/static/screenshots/check_assignments.jpg)
+  ![checkedassignmentspage](/src/main/resources/static/screenshots/all_checked_assignments.jpg)
  
   - Teacher Profile Page 
-   ![teacherprofilepage](/src/main/resources/static/screenshots/teacher_profile.jpg) 
+   ![teacherprofilepage](/src/main/resources/static/screenshots/teacher_profile.png) 
 
