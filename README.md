@@ -140,20 +140,20 @@ URLs | Description
  ![indexpage](/src/main/resources/static/screenshots/index.jpeg) 
  
  - Register Page 
- ![registerpage](/src/main/resources/static/screenshots/register.jpeg) 
+ ![registerpage](/src/main/resources/static/screenshots/register.jpg) 
  
  - Login Page 
-  ![login](/src/main/resources/static/screenshots/login.jpeg) 
+  ![login](/src/main/resources/static/screenshots/login.jpg) 
  
  - Home Page 
- ![homepage](/src/main/resources/static/screenshots/home.jpeg)
+ ![homepage](/src/main/resources/static/screenshots/home.jpg)
  
  - About Page 
- ![aboutpage](/src/main/resources/static/screenshots/about_us.jpeg)
+ ![aboutpage](/src/main/resources/static/screenshots/about_us.jpg)
  
   
  - All Courses Page 
- ![allcoursespage](/src/main/resources/static/screenshots/all_courses_in_devuni.jpeg)
+ ![allcoursespage](/src/main/resources/static/screenshots/all_courses_in_devuni.jpg)
  
   
  - Course Details Page 
@@ -165,7 +165,7 @@ URLs | Description
  
   
  - Home Page 
- ![homepage](/src/main/resources/static/screenshots/home.jpeg)
+ ![homepage](/src/main/resources/static/screenshots/home.jpg)
  
  
  
