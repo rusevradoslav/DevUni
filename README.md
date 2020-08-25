@@ -127,6 +127,10 @@ URLs | Description
  */admins/all-teacher-requests* | All Teacher Requests Page - page where root admin/admin can approve all teacher requests.
 
  
+ Database Diagram Screenshot
+ ---
+ 
+ ![database](/src/main/resources/static/screenshots/db_diagram.png)
  
  
 
