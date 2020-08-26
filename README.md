@@ -89,6 +89,8 @@ The root admin has the same privileges as admin but the difference is that that 
    ```
  4. Maven Configuration 
    ```
+    cd devuni
+    mvn package
     mvn clean install
     mvn spring-boot:run
    ```
