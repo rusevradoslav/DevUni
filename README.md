@@ -83,19 +83,19 @@ The root admin has the same privileges as admin but the difference is that that 
   Application properties file is in `src/main/resources/application.properties`
    ```
    
- 3. Run this Query in your MySql console to allow the maximum size of communication buffer:
-   
-   ``` 
-    SET GLOBAL max_allowed_packet=268435456; 
+ 3. Run MySql Script 
+   ```
+    If you want to create database with valid data click right button on devuni_script.sql and select command `Run devuni_script.sql ``
    ```
  4. Maven Configuration 
    ```
     mvn clean install
     mvn spring-boot:run
    ```
- 5. Run MySql Script 
-   ```
-    If you want to create database with valid data click right button on devuni_script.sql and select command `Run devuni_script.sql ``
+ 5. Run this Query in your MySql console to allow the maximum size of communication buffer:
+   
+   ``` 
+    SET GLOBAL max_allowed_packet=268435456; 
    ```
 ### Routes
 
