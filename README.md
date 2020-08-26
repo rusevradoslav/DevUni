@@ -201,13 +201,13 @@ URLs | Description
    ![teachercoursespage](/src/main/resources/static/screenshots/teacher_courses.jpg)  
       
   - Create Courses Page
-   ![createcoursespage](/src/main/resources/static/screenshots/create_courses.jpg) 
+   ![createcoursespage](/src/main/resources/static/screenshots/create_course.jpg) 
    
   - Teacher Courses Table Page
-   ![teachercoursestablepage](/src/main/resources/static/screenshots/check_assignments_courses.jpg)    
+   ![teachercoursestablepage](/src/main/resources/static/screenshots/checked_assignments_courses.jpg)    
    
   - Teacher Lectures In Single Course Table Page
-   ![teacherlecturesinsinglecoursetablepage](/src/main/resources/static/screenshots/check_assignments_lecture.jpg)
+   ![teacherlecturesinsinglecoursetablepage](/src/main/resources/static/screenshots/checked_assignments_lecture.jpg)
       
   - Check Assignments Page
    ![checkassignmentspage](/src/main/resources/static/screenshots/check_assignments.jpg)  
@@ -231,4 +231,4 @@ URLs | Description
    ![adminallteacherrequestsspage](/src/main/resources/static/screenshots/admin_all_teacher_requests.jpg) 
   
   - Admin All Students Page
-   ![adminallstudentspage](/src/main/resources/static/screenshots/admin_all_teacher_students.jpg) 
+   ![adminallstudentspage](/src/main/resources/static/screenshots/admin_all_students.jpg) 
