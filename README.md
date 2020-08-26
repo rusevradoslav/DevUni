@@ -99,7 +99,7 @@ The root admin has the same privileges as admin but the difference is that that 
    ``` 
     SET GLOBAL max_allowed_packet=268435456; 
    ```
- 5. Valid Profiles:
+ **Valid Profiles:**
    
    ``` 
     Root Admin : email -> root_admin@gmail.com ; password -> 1234   
