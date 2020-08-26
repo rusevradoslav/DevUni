@@ -178,7 +178,10 @@ URLs | Description
   
   
  - Lecture Page 
-  ![courselecturespage](/src/main/resources/static/screenshots/course_single.jpg)
+  ![courselecturespage](/src/main/resources/static/screenshots/course_single.jpg) 
+ 
+ - Video Lecture Page 
+  ![videolecturespage](/src/main/resources/static/screenshots/lecture.png)
  
  - Completed Courses Page 
   ![completedcoursespage](/src/main/resources/static/screenshots/completed_courses.jpg) 
@@ -187,5 +190,43 @@ URLs | Description
   ![checkedassignmentspage](/src/main/resources/static/screenshots/all_checked_assignments.jpg)
  
   - Teacher Profile Page 
-   ![teacherprofilepage](/src/main/resources/static/screenshots/teacher_profile.png) 
+   ![teacherprofilepage](/src/main/resources/static/screenshots/teacher_profile.png)
+      
+  - Create About Me Page 
+   ![createaboutmepage](/src/main/resources/static/screenshots/abour_me.jpg) 
+     
+  - Teacher Courses Page
+   ![teachercoursespage](/src/main/resources/static/screenshots/teacher_courses.jpg)  
+      
+  - Create Courses Page
+   ![createcoursespage](/src/main/resources/static/screenshots/create_courses.jpg) 
+   
+  - Teacher Courses Table Page
+   ![teachercoursestablepage](/src/main/resources/static/screenshots/check_assignments_courses.jpg)    
+   
+  - Teacher Lectures In Single Course Table Page
+   ![teacherlecturesinsinglecoursetablepage](/src/main/resources/static/screenshots/check_assignments_lecture.jpg)
+      
+  - Check Assignments Page
+   ![checkassignmentspage](/src/main/resources/static/screenshots/check_assignments.jpg)  
+    
+  - Admin Home Page
+   ![adminhomepage](/src/main/resources/static/screenshots/admin_home_page.jpg) 
 
+  - Admin All Courses Page
+   ![adminallcoursespage](/src/main/resources/static/screenshots/admin_all_courses.jpg)    
+   
+  - Root Admin All Admins Page
+   ![adminalladminspage](/src/main/resources/static/screenshots/root_admin_all_admins.jpg) 
+   
+  - Root Admin Create Admin Page
+   ![rootadmincreateadminpage](/src/main/resources/static/screenshots/create_admin.jpg) 
+
+  - Admin All Teachers Page
+   ![adminallteacherspage](/src/main/resources/static/screenshots/admin_all_teachers.jpg) 
+   
+  - Admin All Teacher Requests aPage
+   ![adminallteacherrequestsspage](/src/main/resources/static/screenshots/admin_all_teacher_requests.jpg) 
+  
+  - Admin All Students Page
+   ![adminallstudentspage](/src/main/resources/static/screenshots/admin_all_teacher_students.jpg) 
