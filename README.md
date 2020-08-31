@@ -79,14 +79,14 @@ The root admin has the same privileges as admin but the difference is that that 
    spring.datasource.username=[DB USERNAME]
    spring.datasource.password=[DB PASSWORD]
    ```
-   ```
+
   Application properties file is in `src/main/resources/application.properties`
-   ```
+
    
  3. Run MySql Script 
-   ```
+
     If you want to create database with valid data click right button on devuni_script.sql and select command `Run devuni_script.sql ``
-   ```
+
  4. Maven Configuration 
    ```
     cd  [PROJECT ROOT DIRECTORY]
