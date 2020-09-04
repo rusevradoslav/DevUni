@@ -3,6 +3,8 @@
 
 # DevUni
 
+![Build](https://github.com/rusevradoslav/DevUni/workflows/Build/badge.svg?branch=master)
+
 **Contributor:**
 
 *  Radoslav Rusev
