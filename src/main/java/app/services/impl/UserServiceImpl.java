@@ -92,6 +92,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserServiceModel findByName(String username) {
+        System.out.println();
         User user = this.userRepository.findFirstByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User with given username does not exist! "));
 
 

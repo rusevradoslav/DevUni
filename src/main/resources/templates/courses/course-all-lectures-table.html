@@ -60,10 +60,10 @@
         <tbody class="myTable">
         <tr th:each="l: ${allLectures}" th:object="${l}">
             <th scope="row" th:text="${lStat.index+1}"></th>
-            <td><a th:text="*{course.title}"></a></td>
+            <td><a th:text="*{getCourse().getTitle()}"></a></td>
             <td><a th:href="@{/assignments/check-assignment/{id}(id =*{id})}" th:text="*{title}"></a></td>
-            <td th:text="*{studentsAssignmentSolutions.size()}"></td>
-            <td th:text="*{course.enrolledStudents.size()}"></td>
+            <td th:text="*{getStudentsAssignmentSolutions().size()}"></td>
+            <td th:text="*{getCourse().getEnrolledStudents().size()}"></td>
             <td>
                 <a th:href="@{/assignments/check-assignment/{id}(id =*{id})}">Check Assignment</a>
             </td>

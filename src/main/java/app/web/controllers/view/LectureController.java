@@ -6,7 +6,6 @@ import app.models.service.CourseServiceModel;
 import app.models.service.LectureServiceModel;
 import app.services.CourseService;
 import app.services.LectureService;
-import app.services.UserService;
 import app.validations.anotations.PageTitle;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -29,7 +28,6 @@ import static app.constants.GlobalConstants.BINDING_RESULT;
 public class LectureController {
     private CourseService courseService;
     private LectureService lectureService;
-    private UserService userService;
     private ModelMapper modelMapper;
 
     @GetMapping("/createLecture/{courseId}")
@@ -70,9 +68,11 @@ public class LectureController {
     @PreAuthorize("isAuthenticated()")
     @PageTitle("Lecture Video")
     public String watchLectureVideo(@PathVariable("id") String lectureId, Model model) {
-
+        System.out.println();
         LectureServiceModel lecture = lectureService.findLectureById(lectureId);
         model.addAttribute("lecture", lecture);
+        System.out.println();
+
         return "lectures/lecture-video";
     }
 
@@ -80,7 +80,7 @@ public class LectureController {
     @PreAuthorize("hasRole('ROLE_TEACHER')")
     @PageTitle("Course Lectures")
     public String teacherCheckAssignmentCourses(@PathVariable("id") String courseId, Model model) {
-
+        System.out.println();
         List<LectureServiceModel> allLecturesForCourse = courseService.findAllLecturesForCourse(courseId);
         model.addAttribute("allLectures", allLecturesForCourse);
         return "courses/course-all-lectures-table";

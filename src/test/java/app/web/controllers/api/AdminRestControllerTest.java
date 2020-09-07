@@ -133,6 +133,7 @@ class AdminRestControllerTest {
     @Test
     @WithMockUser(username = "user", password = "pass", roles = "ROOT_ADMIN")
     public void getAllAdminsShouldReturnAllStudentsWithTeacherRequests() throws Exception {
+        System.out.println();
         this.mockMvc.perform(get("/admins/all-students-rest"))
                 .andExpect(status().isOk()).
                 andExpect(jsonPath("$", hasSize(1)))
