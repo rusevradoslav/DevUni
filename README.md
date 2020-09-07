@@ -3,6 +3,10 @@
 
 # DevUni
 
+![Build](https://github.com/rusevradoslav/DevUni/workflows/Build/badge.svg?branch=master) 
+[![codecov](https://codecov.io/gh/rusevradoslav/DevUni/branch/master/graph/badge.svg)](https://codecov.io/gh/rusevradoslav/DevUni)
+
+
 **Contributor:**
 
 *  Radoslav Rusev
@@ -79,14 +83,14 @@ The root admin has the same privileges as admin but the difference is that that 
    spring.datasource.username=[DB USERNAME]
    spring.datasource.password=[DB PASSWORD]
    ```
-   ```
+
   Application properties file is in `src/main/resources/application.properties`
-   ```
+
    
  3. Run MySql Script 
-   ```
+
     If you want to create database with valid data click right button on devuni_script.sql and select command `Run devuni_script.sql ``
-   ```
+
  4. Maven Configuration 
    ```
     cd  [PROJECT ROOT DIRECTORY]
@@ -101,12 +105,11 @@ The root admin has the same privileges as admin but the difference is that that 
    ```
  **Valid Profile Accounts:**
    
-   ``` 
     Root Admin : email -> root_admin@gmail.com ; password -> 1234   
     Admin : email -> radorusevcrypto@gmail.com ; password -> 1234  
     Teacher : email -> mitkorusev@gmail.com ; password -> 1234 
     Student : email -> mruseva72@abv.bg ; password -> 1234 
-   ```
+
 ### Routes
 
 URLs | Description
