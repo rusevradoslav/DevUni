@@ -25,12 +25,12 @@ public class TopicServiceImpl implements TopicService {
     @Override
     public void seedTopicsInDb() {
         if (this.topicRepository.count() == 0) {
-            this.topicRepository.saveAndFlush(new Topic("C#"));
-            this.topicRepository.saveAndFlush(new Topic("Java"));
-            this.topicRepository.saveAndFlush(new Topic("JavaScript"));
-            this.topicRepository.saveAndFlush(new Topic("Python"));
-            this.topicRepository.saveAndFlush(new Topic("Php"));
-            this.topicRepository.saveAndFlush(new Topic("C++"));
+            this.topicRepository.save(new Topic("C#"));
+            this.topicRepository.save(new Topic("Java"));
+            this.topicRepository.save(new Topic("JavaScript"));
+            this.topicRepository.save(new Topic("Python"));
+            this.topicRepository.save(new Topic("Php"));
+            this.topicRepository.save(new Topic("C++"));
         }
     }
 

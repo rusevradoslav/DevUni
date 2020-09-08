@@ -46,6 +46,7 @@ public class LectureController {
                                        @Valid @ModelAttribute("lectureAddBindingModel") LectureAddBindingModel lectureAddBindingModel,
                                        BindingResult bindingResult,
                                        RedirectAttributes redirectAttributes) {
+
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("lectureAddBindingModel", lectureAddBindingModel);
             redirectAttributes.addFlashAttribute(String.format(BINDING_RESULT + "lectureAddBindingModel"), bindingResult);
@@ -68,10 +69,10 @@ public class LectureController {
     @PreAuthorize("isAuthenticated()")
     @PageTitle("Lecture Video")
     public String watchLectureVideo(@PathVariable("id") String lectureId, Model model) {
-        System.out.println();
+
         LectureServiceModel lecture = lectureService.findLectureById(lectureId);
         model.addAttribute("lecture", lecture);
-        System.out.println();
+
 
         return "lectures/lecture-video";
     }

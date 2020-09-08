@@ -31,7 +31,6 @@ package app.web.controllers.view;
 public class AdminController {
     private final UserService userService;
     private final CourseService courseService;
-
     private final ModelMapper modelMapper;
 
 
@@ -39,8 +38,7 @@ public class AdminController {
     @PreAuthorize("hasAnyRole('ROLE_ROOT_ADMIN','ROLE_ADMIN')")
     @PageTitle("Admin Home Page")
     public String adminHomePage(Model model, HttpSession httpSession, Principal principal) {
-
-
+        System.out.println();
         UserServiceModel loggedUser = this.userService.findByName(principal.getName());
         httpSession.setAttribute("avatarImg", loggedUser.getProfilePicture());
         List<UserDetailsViewModel> allAdmins = this.userService.findAllAdmins();

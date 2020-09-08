@@ -2,10 +2,14 @@ package app.web.controllers.view;
 
 import app.models.entity.*;
 import app.models.service.*;
+import app.models.view.AboutMeViewModel;
+import app.models.view.UserDetailsViewModel;
 import app.repositories.*;
 import app.services.impl.CourseServiceImpl;
-import app.services.impl.LectureServiceImpl;
-import org.junit.After;
+import app.services.impl.RoleServiceImpl;
+import app.services.impl.TopicServiceImpl;
+import app.services.impl.UserServiceImpl;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -19,9 +23,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -36,15 +37,15 @@ import static app.models.entity.Difficulty.ADVANCE;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
 
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-public class LectureControllerTest {
+class AdminControllerTest {
     private static String VALID_KNOWLEDGE_LEVEL = "Java Master";
     private static String VALID_ABOUT_ME_DESCRIPTION = "Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
             " Donec id arcu eu lacus semper gravida vulputate ut " +
@@ -64,7 +65,6 @@ public class LectureControllerTest {
     private static final Difficulty VALID_COURSE_DIFFICULTY = ADVANCE;
     private static final String VALID_AUTHOR_ID = "validUserId";
     private static final String VALID_AUTHOR_USERNAME = "rusevrado";
-    private static final String VALID_TOPIC_ID = "topicId";
     private static final String VALID_TOPIC_NAME = "Java";
 
     private String VALID_ID;
@@ -72,27 +72,27 @@ public class LectureControllerTest {
     private static final String VALID_DESCRIPTION = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis et ullamcorper massa. Morbi accumsan quis lacus eu bibendum. Donec elementum erat curae.";
     private static final String VALID_VIDEO_URL = "https://www.youtube.com/watch?v=xRE12Y-PFQs";
 
-    private static final String VALID_USER_ID = "validId";
     private static final String VALID_USERNAME = "rusevrado";
     private static final String VALID_PASSWORD = "1234";
-    private static final String VALID_NEW_PASSWORD = "12345";
     private static final String VALID_FIRST_NAME = "Radoslav";
     private static final String VALID_LAST_NAME = "Rusev";
     private static final String VALID_EMAIL = "radorusevcrypto@gmail.com";
     private static final String VALID_IMAGE_URL = "[random_url]";
-
+    private Role admin;
+    private Role teacher;
+    private AboutMe aboutMe;
+    private CustomFile dbFile;
+    private CustomFile customFile;
+    private Lecture lecture;
+    private Course course;
+    private User user;
     private User author;
     private Topic topic;
-    private Lecture lecture;
-    private CustomFile customFile;
-    private Course course;
-    private LectureServiceModel lectureServiceModel;
-    private AboutMeServiceModel aboutMeServiceModel;
     private UserServiceModel userServiceModel;
     private CourseServiceModel courseServiceModel;
-    private ModelMapper modelMapper;
-    private CustomFile dbFile;
-
+    private LectureServiceModel lectureServiceModel;
+    private AboutMeServiceModel aboutMeServiceModel;
+    private RoleServiceModel roleServiceModel;
     @Autowired
     private WebApplicationContext context;
     @Autowired
@@ -105,27 +105,33 @@ public class LectureControllerTest {
     private CustomFileRepository customFileRepository;
     @Autowired
     private AboutMeRepository aboutMeRepository;
+    @Autowired
+    private TopicRepository topicRepository;
+    @Autowired
+    private RoleRepository roleRepository;
 
+    @MockBean
+    private UserServiceImpl userService;
+    @MockBean
+    private CourseServiceImpl courseService;
+    @MockBean
+    private TopicServiceImpl topicService;
+    @MockBean
+    private RoleServiceImpl roleService;
+
+    private ModelMapper modelMapper;
 
     private MockMvc mockMvc;
 
-    @MockBean
-    private LectureServiceImpl lectureService;
-    @MockBean
-    private CourseServiceImpl courseService;
-
-
-
-
     @BeforeEach
-    public void setUp() {
-
+    void setUp() {
+       admin = roleRepository.save(new Role("ROLE_ADMIN"));
+       teacher = roleRepository.save(new Role("ROLE_TEACHER"));
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .apply(springSecurity())
                 .build();
         modelMapper = new ModelMapper();
-
 
 
         dbFile = new CustomFile();
@@ -145,15 +151,14 @@ public class LectureControllerTest {
         lecture = lectureRepository.save(lecture);
         VALID_ID = lecture.getId();
 
-        User user = getUser();
-        User newUser = userRepository.save(user);
-        userServiceModel = modelMapper.map(newUser, UserServiceModel.class);
+
+        user = userRepository.save(getUser());
+        userServiceModel = modelMapper.map(user, UserServiceModel.class);
         course = getCourse();
         course.setEnrolledStudents(List.of(user));
+        course = courseRepository.save(course);
 
-        Course newCourse = courseRepository.save(course);
-
-        courseServiceModel = modelMapper.map(newCourse, CourseServiceModel.class);
+        courseServiceModel = modelMapper.map(course, CourseServiceModel.class);
         courseServiceModel.setEnrolledStudents(List.of(userServiceModel));
 
         VALID_COURSE_ID = this.course.getId();
@@ -165,128 +170,145 @@ public class LectureControllerTest {
         lectureServiceModel.setStudentsAssignmentSolutions(List.of(assignmentServiceModel));
 
 
-        AboutMe aboutMe = new AboutMe();
+        aboutMe = new AboutMe();
         aboutMe.setSelfDescription(VALID_ABOUT_ME_DESCRIPTION);
         aboutMe.setKnowledgeLevel(VALID_KNOWLEDGE_LEVEL);
-        AboutMe save = aboutMeRepository.save(aboutMe);
-        aboutMeServiceModel = modelMapper.map(save, AboutMeServiceModel.class);
+        aboutMe = aboutMeRepository.save(aboutMe);
+        aboutMeServiceModel = modelMapper.map(aboutMe, AboutMeServiceModel.class);
         author.setAboutMe(aboutMe);
 
-        this.userServiceModel = modelMapper.map(author, UserServiceModel.class);
+        roleServiceModel = this.modelMapper.map(admin, RoleServiceModel.class);
+        this.userServiceModel = modelMapper.map(user, UserServiceModel.class);
         this.userServiceModel.setAboutMeServiceModel(aboutMeServiceModel);
-
+        this.userServiceModel.setAuthorities(Set.of(roleServiceModel));
 
     }
 
-    @After
-    public void tearDown() {
-        this.courseRepository.deleteAll();
+    @AfterEach
+    void tearDown() {
         this.lectureRepository.deleteAll();
+        this.courseRepository.deleteAll();
+        this.userRepository.deleteAll();
+        this.customFileRepository.deleteAll();
+        this.aboutMeRepository.deleteAll();
+        this.topicRepository.deleteAll();
     }
 
     @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "TEACHER")
-    public void createLecture() throws Exception {
-
+    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
+    public void adminHomePage() throws Exception {
+        System.out.println();
         MockHttpSession session = new MockHttpSession();
         session.setAttribute("user", userServiceModel);
-        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get("/lectures/createLecture/{courseId}", VALID_COURSE_ID)
-                .session(session);
-        this.mockMvc.perform(builder
-                .with(csrf()))
-                .andExpect(MockMvcResultMatchers.status()
-                        .isOk())
-                .andExpect(view().name("lectures/create-lecture"));
+        UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(userServiceModel, UserDetailsViewModel.class);
+        AboutMeViewModel aboutMeViewModel = this.modelMapper.map(aboutMe, AboutMeViewModel.class);
+        userDetailsViewModel.setAboutMeViewModel(aboutMeViewModel);
+        when(this.userService.findByName(VALID_USERNAME)).thenReturn(userServiceModel);
+        when(this.userService.findAllAdmins()).thenReturn(List.of(userDetailsViewModel));
 
-    }
-
-    @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "TEACHER")
-    public void createLectureConfirm() throws Exception {
-
-        MockHttpSession session = new MockHttpSession();
-        session.setAttribute("user", userServiceModel);
-
-        when(courseService.findCourseById(VALID_COURSE_ID)).thenReturn(courseServiceModel);
-        when(lectureService.addLecture(courseServiceModel, lectureServiceModel)).thenReturn(lectureServiceModel);
-
-
-        this.mockMvc.perform(post("/lectures/createLecture/{courseId}", VALID_COURSE_ID)
-                .requestAttr("resources", customFile)
-                .param("title", VALID_TITLE)
-                .param("description", VALID_DESCRIPTION)
-                .param("lectureVideoUrl", VALID_VIDEO_URL)
+        this.mockMvc.perform(get("/admins/home-page")
                 .session(session)
                 .with(csrf()))
-                .andExpect(view().name("redirect:/courses/courseDetails/" + VALID_COURSE_ID));
+                .andExpect(status().isOk())
+                .andExpect(view().name("admins/admin-home"));
+    }
 
+  /*  @Test
+    void allAdmins() {
     }
 
     @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "TEACHER")
-    public void createLectureShouldThrowException() throws Exception {
-        MockHttpSession session = new MockHttpSession();
-        session.setAttribute("user", userServiceModel);
-
-        when(courseService.findCourseById(VALID_COURSE_ID)).thenReturn(courseServiceModel);
-        when(lectureService.addLecture(courseServiceModel, lectureServiceModel)).thenReturn(lectureServiceModel);
-
-
-        this.mockMvc.perform(post("/lectures/createLecture/{courseId}", VALID_COURSE_ID)
-                .requestAttr("resources", customFile)
-                .param("title", VALID_COURSE_DESCRIPTION)
-                .param("description", VALID_DESCRIPTION)
-                .param("lectureVideoUrl", VALID_VIDEO_URL)
-                .session(session)
-                .with(csrf()))
-                .andExpect(view().name("redirect:/lectures/createLecture/" + VALID_COURSE_ID));
-
+    void blockAdminProfile() {
     }
 
     @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "TEACHER")
-    public void watchLectureVideo() throws Exception {
-
-        MockHttpSession session = new MockHttpSession();
-        when(lectureService.findLectureById(VALID_ID)).thenReturn(lectureServiceModel);
-
-        session.setAttribute("user", userServiceModel);
-
-        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get("/lectures/lectureVideo/{id}", VALID_ID)
-                .session(session);
-
-        this.mockMvc.perform(builder
-                .with(csrf()))
-                .andExpect(MockMvcResultMatchers.status()
-                        .isOk())
-                .andExpect(view().name("lectures/lecture-video"));
-
+    void activateAdminProfile() {
     }
 
     @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "TEACHER")
-    public void teacherCheckAssignmentCourses() throws Exception {
-
-        MockHttpSession session = new MockHttpSession();
-        when(courseService.findAllLecturesForCourse(VALID_COURSE_ID)).thenReturn(List.of(lectureServiceModel));
-
-        session.setAttribute("user", userServiceModel);
-
-        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get("/lectures/course-check-lectures/{id}", VALID_COURSE_ID)
-                .session(session);
-
-        this.mockMvc.perform(builder
-                .with(csrf()))
-                .andExpect(MockMvcResultMatchers.status()
-                        .isOk())
-                .andExpect(view().name("courses/course-all-lectures-table"));
-
+    void demoteAdminToStudent() {
     }
+
+    @Test
+    void demoteAdminToTeacher() {
+    }
+
+    @Test
+    void allStudents() {
+    }
+
+    @Test
+    void blockStudentProfile() {
+    }
+
+    @Test
+    void activateStudentProfile() {
+    }
+
+    @Test
+    void promoteStudentToTeacher() {
+    }
+
+    @Test
+    void promoteStudentToAdmin() {
+    }
+
+    @Test
+    void allTeachers() {
+    }
+
+    @Test
+    void blockTeacherProfile() {
+    }
+
+    @Test
+    void activateTeacherProfile() {
+    }
+
+    @Test
+    void demoteTeacherToStudent() {
+    }
+
+    @Test
+    void promoteTeacherToAdmin() {
+    }
+
+    @Test
+    void allTeacherRequests() {
+    }
+
+    @Test
+    void confirmTeacherRequest() {
+    }
+
+    @Test
+    void cancelTeacherRequest() {
+    }
+
+    @Test
+    void createAdmin() {
+    }
+
+    @Test
+    void createAdminConfirm() {
+    }
+
+    @Test
+    void allCourses() {
+    }
+
+    @Test
+    void enableCourse() {
+    }
+
+    @Test
+    void disableCourse() {
+    }*/
 
     private Course getCourse() {
         Course course = new Course();
         course.setTitle(VALID_COURSE_TITLE);
-        course.setShortDescription(VALID_SHORT_DESCRIPTION);
+        course.setShortDescription(VALID_DESCRIPTION);
         course.setDescription(VALID_COURSE_DESCRIPTION);
         course.setCoursePhoto(VALID_COURSE_PHOTO);
         course.setPassPercentage(VALID_PASS_PERCENTAGE);
@@ -297,20 +319,15 @@ public class LectureControllerTest {
         course.setStartedOn(LocalDateTime.now().plusDays(6));
         course.setEndedON(LocalDateTime.now().plusDays(12));
         course.setLectures(new ArrayList<>());
-        author = getUser();
-        userRepository.save(author);
+        author = userRepository.save(getAuthor());
         author.setCreatedCourses(new HashSet<>());
         course.setEnrolledStudents(new ArrayList<>());
-        Role role = new Role("ROLE_TEACHER");
+        Role role = admin;
         Set<Role> roles = new HashSet<>();
         roles.add(role);
         author.setAuthorities(roles);
         course.setAuthor(author);
-        topic = new Topic();
-        topic.setId(VALID_TOPIC_ID);
-        topic.setName(VALID_TOPIC_NAME);
-        topic.setCourses(new ArrayList<>());
-        course.setTopic(topic);
+        topic = topicRepository.findFirstByName(VALID_TOPIC_NAME).orElse(null);
         return course;
     }
 
@@ -322,7 +339,7 @@ public class LectureControllerTest {
         user.setEmail(VALID_EMAIL);
         user.setPassword(VALID_PASSWORD);
         Set<Role> roles = new HashSet<>();
-        Role role = new Role("ROLE_ADMIN");
+        Role role = admin;
         roles.add(role);
         user.setAuthorities(roles);
         user.setRegistrationDate(LocalDateTime.now());
@@ -330,4 +347,19 @@ public class LectureControllerTest {
         return user;
     }
 
+    private User getAuthor() {
+        User user = new User();
+        user.setFirstName(VALID_FIRST_NAME);
+        user.setLastName(VALID_LAST_NAME);
+        user.setUsername("validAuthor");
+        user.setEmail("validauthoremail@gmail.com");
+        user.setPassword(VALID_PASSWORD);
+        Set<Role> roles = new HashSet<>();
+        Role role = teacher;
+        roles.add(role);
+        user.setAuthorities(roles);
+        user.setRegistrationDate(LocalDateTime.now());
+        user.setProfilePicture(VALID_IMAGE_URL);
+        return user;
+    }
 }
