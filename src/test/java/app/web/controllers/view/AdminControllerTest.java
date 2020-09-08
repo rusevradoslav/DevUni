@@ -72,6 +72,7 @@ class AdminControllerTest {
     private static final String VALID_DESCRIPTION = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis et ullamcorper massa. Morbi accumsan quis lacus eu bibendum. Donec elementum erat curae.";
     private static final String VALID_VIDEO_URL = "https://www.youtube.com/watch?v=xRE12Y-PFQs";
 
+    private String VALID_USER_ID;
     private static final String VALID_USERNAME = "rusevrado";
     private static final String VALID_PASSWORD = "1234";
     private static final String VALID_FIRST_NAME = "Radoslav";
@@ -80,6 +81,8 @@ class AdminControllerTest {
     private static final String VALID_IMAGE_URL = "[random_url]";
     private Role admin;
     private Role teacher;
+    private Role student;
+    private Role root_admin;
     private AboutMe aboutMe;
     private CustomFile dbFile;
     private CustomFile customFile;
@@ -125,8 +128,10 @@ class AdminControllerTest {
 
     @BeforeEach
     void setUp() {
-       admin = roleRepository.save(new Role("ROLE_ADMIN"));
-       teacher = roleRepository.save(new Role("ROLE_TEACHER"));
+        admin = roleRepository.save(new Role("ROLE_ADMIN"));
+        teacher = roleRepository.save(new Role("ROLE_TEACHER"));
+        student = roleRepository.save(new Role("ROLE_STUDENT"));
+        root_admin = roleRepository.save(new Role("ROLE_ROOT_ADMIN"));
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .apply(springSecurity())
@@ -153,6 +158,7 @@ class AdminControllerTest {
 
 
         user = userRepository.save(getUser());
+        VALID_USER_ID = user.getId();
         userServiceModel = modelMapper.map(user, UserServiceModel.class);
         course = getCourse();
         course.setEnrolledStudents(List.of(user));
@@ -197,7 +203,6 @@ class AdminControllerTest {
     @Test
     @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
     public void adminHomePage() throws Exception {
-        System.out.println();
         MockHttpSession session = new MockHttpSession();
         session.setAttribute("user", userServiceModel);
         UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(userServiceModel, UserDetailsViewModel.class);
@@ -213,28 +218,88 @@ class AdminControllerTest {
                 .andExpect(view().name("admins/admin-home"));
     }
 
-  /*  @Test
-    void allAdmins() {
+    @Test
+    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
+    public void allAdmins() throws Exception {
+        this.mockMvc.perform(get("/admins/all-admins")
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admins/root-all-admins"));
     }
 
     @Test
-    void blockAdminProfile() {
+    @WithMockUser(username = "rusevrado", password = "1234", roles = "ROOT_ADMIN")
+    public void blockAdminProfile() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("user", userServiceModel);
+
+        when(this.userService.findById(VALID_USER_ID)).thenReturn(userServiceModel);
+        userServiceModel.setStatus(false);
+        when(this.userService.blockUser(userServiceModel)).thenReturn(userServiceModel);
+
+        this.mockMvc.perform(get("/admins/block-admin/{id}", VALID_USER_ID)
+                .session(session)
+                .with(csrf()))
+                .andExpect(view().name("redirect:/admins/all-admins"));
     }
 
     @Test
-    void activateAdminProfile() {
+    @WithMockUser(username = "rusevrado", password = "1234", roles = "ROOT_ADMIN")
+    public void activateAdminProfile() throws Exception {
+
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("user", userServiceModel);
+
+        when(this.userService.findById(VALID_USER_ID)).thenReturn(userServiceModel);
+
+        when(this.userService.activateUser(userServiceModel)).thenReturn(userServiceModel);
+
+        this.mockMvc.perform(get("/admins/activate-admin/{id}", VALID_USER_ID)
+                .session(session)
+                .with(csrf()))
+                .andExpect(view().name("redirect:/admins/all-admins"));
     }
 
-    @Test
-    void demoteAdminToStudent() {
-    }
 
     @Test
-    void demoteAdminToTeacher() {
+    @WithMockUser(username = "rusevrado", password = "1234", roles = "ROOT_ADMIN")
+    public void demoteAdminToStudent() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("user", userServiceModel);
+
+        when(this.userService.findById(VALID_USER_ID)).thenReturn(userServiceModel);
+
+        RoleServiceModel roleServiceModel = this.modelMapper.map(root_admin, RoleServiceModel.class);
+        this.userServiceModel.setAuthorities(Set.of(roleServiceModel));
+        when(this.userService.changeRoleToStudent(userServiceModel)).thenReturn(userServiceModel);
+
+        this.mockMvc.perform(get("/admins/demote-admin-student/{id}", VALID_USER_ID)
+                .session(session)
+                .with(csrf()))
+                .andExpect(view().name("redirect:/admins/all-admins"));
     }
 
+
     @Test
-    void allStudents() {
+    @WithMockUser(username = "rusevrado", password = "1234", roles = "ROOT_ADMIN")
+    public void demoteAdminToTeacher() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("user", userServiceModel);
+
+        when(this.userService.findById(VALID_USER_ID)).thenReturn(userServiceModel);
+
+        RoleServiceModel roleServiceModel = this.modelMapper.map(teacher, RoleServiceModel.class);
+        this.userServiceModel.setAuthorities(Set.of(roleServiceModel));
+        when(this.userService.changeRoleToTeacher(userServiceModel)).thenReturn(userServiceModel);
+
+        this.mockMvc.perform(get("/admins/demote-admin-teacher/{id}", VALID_USER_ID)
+                .session(session)
+                .with(csrf()))
+                .andExpect(view().name("redirect:/admins/all-admins"));
+    }
+
+ /*    @Test
+   void allStudents() {
     }
 
     @Test

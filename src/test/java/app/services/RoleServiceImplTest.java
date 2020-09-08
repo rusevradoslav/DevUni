@@ -45,7 +45,7 @@ public class RoleServiceImplTest {
         testRepository = new ArrayList<>();
 
         //instead of saving in db add in fake repository
-        when(roleRepository.saveAndFlush(isA(Role.class)))
+        when(roleRepository.save(isA(Role.class)))
                 .thenAnswer(invocation -> {
 
                     testRepository.add((Role) invocation.getArguments()[0]);

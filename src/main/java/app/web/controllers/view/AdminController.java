@@ -54,6 +54,7 @@ public class AdminController {
     }
 
     @GetMapping("/block-admin/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ROOT_ADMIN')")
     public String blockAdminProfile(@PathVariable("id") String id) {
         UserServiceModel userServiceModel = this.userService.findById(id);
         this.userService.blockUser(userServiceModel);
@@ -61,6 +62,7 @@ public class AdminController {
     }
 
     @GetMapping("/activate-admin/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ROOT_ADMIN')")
     public String activateAdminProfile(@PathVariable("id") String id) {
         UserServiceModel userServiceModel = this.userService.findById(id);
         this.userService.activateUser(userServiceModel);
@@ -68,6 +70,7 @@ public class AdminController {
     }
 
     @GetMapping("/demote-admin-student/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ROOT_ADMIN')")
     public String demoteAdminToStudent(@PathVariable("id") String id) throws RoleNotFoundException {
         UserServiceModel userServiceModel = this.userService.findById(id);
         this.userService.changeRoleToStudent(userServiceModel);
@@ -76,6 +79,7 @@ public class AdminController {
     }
 
     @GetMapping("/demote-admin-teacher/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ROOT_ADMIN')")
     public String demoteAdminToTeacher(@PathVariable("id") String id) throws RoleNotFoundException {
         UserServiceModel userServiceModel = this.userService.findById(id);
         this.userService.changeRoleToTeacher(userServiceModel);

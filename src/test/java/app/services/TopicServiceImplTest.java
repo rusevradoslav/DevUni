@@ -50,7 +50,7 @@ public class TopicServiceImplTest {
     @Before
     public void setUp() {
 
-        when(topicRepository.saveAndFlush(isA(Topic.class)))
+        when(topicRepository.save(isA(Topic.class)))
                 .thenAnswer(invocationOnMock -> {
                     testTopicRepository.add((Topic) invocationOnMock.getArguments()[0]);
                     return null;
