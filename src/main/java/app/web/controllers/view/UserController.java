@@ -104,6 +104,7 @@ public class UserController {
             return "redirect:/users/register";
         }
         try {
+            System.out.println();
             userService.registerNewUserAccount(this.modelMapper.map(userRegisterBindingModel, UserServiceModel.class));
         } catch (UserAlreadyExistException | RoleNotFoundException e) {
             redirectAttributes.addFlashAttribute("userRegisterBindingModel", userRegisterBindingModel);
@@ -135,7 +136,7 @@ public class UserController {
                               BindingResult bindingResult,
                               RedirectAttributes redirectAttributes) {
         UserServiceModel user = this.userService.findByName(principal.getName());
-
+        System.out.println();
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("userAddProfilePictureBindingModel", userAddProfilePictureBindingModel);
             redirectAttributes.addFlashAttribute(String.format(BINDING_RESULT + "userAddProfilePictureBindingModel"), bindingResult);
@@ -170,6 +171,7 @@ public class UserController {
                                      RedirectAttributes redirectAttributes,
                                      Principal principal
     ) {
+        System.out.println();
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("userChangeEmailBindingModel", userChangeEmailBindingModel);
             redirectAttributes.addFlashAttribute(String.format(BINDING_RESULT + "userChangeEmailBindingModel"), bindingResult);
@@ -213,7 +215,7 @@ public class UserController {
                                         RedirectAttributes redirectAttributes,
                                         Principal principal,
                                         BCryptPasswordEncoder bCryptPasswordEncoder) {
-
+        System.out.println();
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("userChangePasswordBindingModel", userChangePasswordBindingModel);
             redirectAttributes.addFlashAttribute(String.format(BINDING_RESULT + "userChangePasswordBindingModel"), bindingResult);
@@ -236,6 +238,7 @@ public class UserController {
     @GetMapping("/teacher-request/{id}")
     @PreAuthorize("hasAnyRole('ROLE_STUDENT')")
     public String sentTeacherRequest(@PathVariable("id") String id) {
+        System.out.println();
         UserServiceModel userServiceModel = this.userService.findById(id);
         this.userService.sentTeacherRequest(userServiceModel);
         return "redirect:/users/user-details";
@@ -273,10 +276,11 @@ public class UserController {
     @PageTitle("Checked Assignments")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_STUDENT')")
     public String getUserCheckedAssignments(Model model, Principal principal) {
+        System.out.println();
         UserServiceModel userServiceModel = userService.findByName(principal.getName());
 
         model.addAttribute("allCheckedAssignments", assignmentService.getCheckedAssignmentsByUser(userServiceModel));
-        return "users/user-checked-assignments-tabel";
+        return "users/user-checked-assignments-table";
     }
 }
 

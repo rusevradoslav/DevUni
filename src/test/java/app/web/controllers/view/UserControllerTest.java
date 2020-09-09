@@ -1,14 +1,14 @@
 package app.web.controllers.view;
 
+import app.error.UserAlreadyExistException;
 import app.models.entity.*;
 import app.models.service.*;
-import app.models.view.AboutMeViewModel;
 import app.models.view.UserDetailsViewModel;
 import app.repositories.*;
+import app.services.impl.AboutMeServiceImpl;
 import app.services.impl.CourseServiceImpl;
-import app.services.impl.RoleServiceImpl;
-import app.services.impl.TopicServiceImpl;
 import app.services.impl.UserServiceImpl;
+import com.google.common.net.MediaType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +21,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -37,16 +39,14 @@ import static app.models.entity.Difficulty.ADVANCE;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-public class AdminControllerTest {
+public class UserControllerTest {
     private static String VALID_KNOWLEDGE_LEVEL = "Java Master";
     private static String VALID_ABOUT_ME_DESCRIPTION = "Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
             " Donec id arcu eu lacus semper gravida vulputate ut " +
@@ -76,9 +76,11 @@ public class AdminControllerTest {
     private String VALID_USER_ID;
     private static final String VALID_USERNAME = "rusevrado";
     private static final String VALID_PASSWORD = "1234";
+    private static final String VALID_NEW_PASSWORD = "12345";
     private static final String VALID_FIRST_NAME = "Radoslav";
     private static final String VALID_LAST_NAME = "Rusev";
     private static final String VALID_EMAIL = "radorusevcrypto@gmail.com";
+    private static final String VALID_NEW_EMAIL = "radorusevcryptoNEW@gmail.com";
     private static final String VALID_IMAGE_URL = "[random_url]";
     private Role admin;
     private Role teacher;
@@ -119,20 +121,18 @@ public class AdminControllerTest {
     @MockBean
     private CourseServiceImpl courseService;
     @MockBean
-    private TopicServiceImpl topicService;
-    @MockBean
-    private RoleServiceImpl roleService;
-
+    private AboutMeServiceImpl aboutMeService;
     private ModelMapper modelMapper;
 
     private MockMvc mockMvc;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @BeforeEach
-    void setUp() {
-        admin = roleRepository.save(new Role("ROLE_ADMIN"));
-        teacher = roleRepository.save(new Role("ROLE_TEACHER"));
-        student = roleRepository.save(new Role("ROLE_STUDENT"));
-        root_admin = roleRepository.save(new Role("ROLE_ROOT_ADMIN"));
+    public void setUp() {
+        admin = roleRepository.findFirstByAuthority("ROLE_ADMIN").orElse(null);
+        teacher = roleRepository.findFirstByAuthority("ROLE_TEACHER").orElse(null);
+        student = roleRepository.findFirstByAuthority("ROLE_STUDENT").orElse(null);
+        root_admin = roleRepository.findFirstByAuthority("ROLE_ROOT_ADMIN").orElse(null);
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .apply(springSecurity())
@@ -202,349 +202,76 @@ public class AdminControllerTest {
         this.roleRepository.deleteAll();
     }
 
-    @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
-    public void adminHomePage() throws Exception {
-        MockHttpSession session = new MockHttpSession();
-        session.setAttribute("user", userServiceModel);
-        UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(userServiceModel, UserDetailsViewModel.class);
-        AboutMeViewModel aboutMeViewModel = this.modelMapper.map(aboutMe, AboutMeViewModel.class);
-        userDetailsViewModel.setAboutMeViewModel(aboutMeViewModel);
-        when(this.userService.findByName(VALID_USERNAME)).thenReturn(userServiceModel);
-        when(this.userService.findAllAdmins()).thenReturn(List.of(userDetailsViewModel));
-
-        this.mockMvc.perform(get("/admins/home-page")
-                .session(session)
-                .with(csrf()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("admins/admin-home"));
-    }
 
     @Test
     @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
-    public void allAdmins() throws Exception {
-        this.mockMvc.perform(get("/admins/all-admins")
-                .with(csrf()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("admins/root-all-admins"));
-    }
-
-    @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "ROOT_ADMIN")
-    public void blockAdminProfile() throws Exception {
+    public void login() throws Exception {
         MockHttpSession session = new MockHttpSession();
         session.setAttribute("user", userServiceModel);
 
-        when(this.userService.findById(VALID_USER_ID)).thenReturn(userServiceModel);
-        userServiceModel.setStatus(false);
-        when(this.userService.blockUser(userServiceModel)).thenReturn(userServiceModel);
 
-        this.mockMvc.perform(get("/admins/block-admin/{id}", VALID_USER_ID)
+        this.mockMvc.perform(get("/users/login")
                 .session(session)
                 .with(csrf()))
-                .andExpect(view().name("redirect:/admins/all-admins"));
+                .andExpect(view().name("redirect:/home"));
     }
 
     @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "ROOT_ADMIN")
-    public void activateAdminProfile() throws Exception {
+    public void loginError() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("user", userServiceModel);
+
+
+        this.mockMvc.perform(get("/users/login")
+                .session(session)
+                .with(csrf()))
+                .andExpect(view().name("users/login"));
+    }
+
+    @Test
+    public void loginShouldReturnLoginPageWhenUserIsAnonymous() throws Exception {
 
         MockHttpSession session = new MockHttpSession();
         session.setAttribute("user", userServiceModel);
 
-        when(this.userService.findById(VALID_USER_ID)).thenReturn(userServiceModel);
 
-        when(this.userService.activateUser(userServiceModel)).thenReturn(userServiceModel);
-
-        this.mockMvc.perform(get("/admins/activate-admin/{id}", VALID_USER_ID)
+        this.mockMvc.perform(get("/users/login")
                 .session(session)
                 .with(csrf()))
-                .andExpect(view().name("redirect:/admins/all-admins"));
+                .andExpect(view().name("users/login"));
     }
 
-
     @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "ROOT_ADMIN")
-    public void demoteAdminToStudent() throws Exception {
+    public void register() throws Exception {
         MockHttpSession session = new MockHttpSession();
         session.setAttribute("user", userServiceModel);
 
-        when(this.userService.findById(VALID_USER_ID)).thenReturn(userServiceModel);
-
-        RoleServiceModel roleServiceModel = this.modelMapper.map(root_admin, RoleServiceModel.class);
-        this.userServiceModel.setAuthorities(Set.of(roleServiceModel));
-        when(this.userService.changeRoleToStudent(userServiceModel)).thenReturn(userServiceModel);
-
-        this.mockMvc.perform(get("/admins/demote-admin-student/{id}", VALID_USER_ID)
+        this.mockMvc.perform(get("/users/register")
                 .session(session)
                 .with(csrf()))
-                .andExpect(view().name("redirect:/admins/all-admins"));
-    }
-
-
-    @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "ROOT_ADMIN")
-    public void demoteAdminToTeacher() throws Exception {
-        MockHttpSession session = new MockHttpSession();
-        session.setAttribute("user", userServiceModel);
-
-        when(this.userService.findById(VALID_USER_ID)).thenReturn(userServiceModel);
-        RoleServiceModel roleServiceModel = this.modelMapper.map(teacher, RoleServiceModel.class);
-        this.userServiceModel.setAuthorities(Set.of(roleServiceModel));
-        when(this.userService.changeRoleToTeacher(userServiceModel)).thenReturn(userServiceModel);
-
-        this.mockMvc.perform(get("/admins/demote-admin-teacher/{id}", VALID_USER_ID)
-                .session(session)
-                .with(csrf()))
-                .andExpect(view().name("redirect:/admins/all-admins"));
-    }
-
-    @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
-    public void allStudents() throws Exception {
-        this.mockMvc.perform(get("/admins/all-students")
-                .with(csrf()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("admins/admin-all-students"));
-    }
-
-    @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
-    public void blockStudentProfile() throws Exception {
-        MockHttpSession session = new MockHttpSession();
-        session.setAttribute("user", userServiceModel);
-
-        RoleServiceModel roleServiceModel = this.modelMapper.map(student, RoleServiceModel.class);
-        this.userServiceModel.setAuthorities(Set.of(roleServiceModel));
-        when(this.userService.findById(VALID_USER_ID)).thenReturn(userServiceModel);
-        userServiceModel.setStatus(false);
-        when(this.userService.blockUser(userServiceModel)).thenReturn(userServiceModel);
-
-        this.mockMvc.perform(get("/admins/block-student/{id}", VALID_USER_ID)
-                .session(session)
-                .with(csrf()))
-                .andExpect(view().name("redirect:/admins/all-students"));
-    }
-
-
-    @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
-    public void activateStudentProfile() throws Exception {
-        MockHttpSession session = new MockHttpSession();
-        session.setAttribute("user", userServiceModel);
-
-        RoleServiceModel roleServiceModel = this.modelMapper.map(student, RoleServiceModel.class);
-        this.userServiceModel.setAuthorities(Set.of(roleServiceModel));
-        when(this.userService.findById(VALID_USER_ID)).thenReturn(userServiceModel);
-        userServiceModel.setStatus(true);
-        when(this.userService.activateUser(userServiceModel)).thenReturn(userServiceModel);
-
-        this.mockMvc.perform(get("/admins/activate-student/{id}", VALID_USER_ID)
-                .session(session)
-                .with(csrf()))
-                .andExpect(view().name("redirect:/admins/all-students"));
-    }
-
-
-    @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
-    public void promoteStudentToTeacher() throws Exception {
-        MockHttpSession session = new MockHttpSession();
-        session.setAttribute("user", userServiceModel);
-
-        RoleServiceModel roleServiceModel = this.modelMapper.map(student, RoleServiceModel.class);
-        this.userServiceModel.setAuthorities(Set.of(roleServiceModel));
-        when(this.userService.findById(VALID_USER_ID)).thenReturn(userServiceModel);
-
-
-        RoleServiceModel teacherRoleServiceModel = this.modelMapper.map(teacher, RoleServiceModel.class);
-        this.userServiceModel.setAuthorities(Set.of(teacherRoleServiceModel));
-        when(this.userService.changeRoleToTeacher(userServiceModel)).thenReturn(userServiceModel);
-
-        this.mockMvc.perform(get("/admins/promote-student-teacher/{id}", VALID_USER_ID)
-                .session(session)
-                .with(csrf()))
-                .andExpect(view().name("redirect:/admins/all-students"));
-    }
-
-    @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
-    public void promoteStudentToAdmin() throws Exception {
-        MockHttpSession session = new MockHttpSession();
-        session.setAttribute("user", userServiceModel);
-
-        RoleServiceModel roleServiceModel = this.modelMapper.map(student, RoleServiceModel.class);
-        this.userServiceModel.setAuthorities(Set.of(roleServiceModel));
-        when(this.userService.findById(VALID_USER_ID)).thenReturn(userServiceModel);
-
-
-        RoleServiceModel teacherRoleServiceModel = this.modelMapper.map(admin, RoleServiceModel.class);
-        this.userServiceModel.setAuthorities(Set.of(teacherRoleServiceModel));
-        when(this.userService.changeRoleToAdmin(userServiceModel)).thenReturn(userServiceModel);
-
-        this.mockMvc.perform(get("/admins/promote-student-admin/{id}", VALID_USER_ID)
-                .session(session)
-                .with(csrf()))
-                .andExpect(view().name("redirect:/admins/all-students"));
-    }
-
-    @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
-    public void allTeachers() throws Exception {
-        this.mockMvc.perform(get("/admins/all-teachers")
-                .with(csrf()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("admins/admin-all-teachers"));
-    }
-
-    @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
-    public void blockTeacherProfile() throws Exception {
-        MockHttpSession session = new MockHttpSession();
-        session.setAttribute("user", userServiceModel);
-
-        RoleServiceModel roleServiceModel = this.modelMapper.map(teacher, RoleServiceModel.class);
-        this.userServiceModel.setAuthorities(Set.of(roleServiceModel));
-        when(this.userService.findById(VALID_USER_ID)).thenReturn(userServiceModel);
-        userServiceModel.setStatus(false);
-        when(this.userService.blockUser(userServiceModel)).thenReturn(userServiceModel);
-
-        this.mockMvc.perform(get("/admins/block-teacher/{id}", VALID_USER_ID)
-                .session(session)
-                .with(csrf()))
-                .andExpect(view().name("redirect:/admins/all-teachers"));
-    }
-
-    @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
-    public void activateTeacherProfile() throws Exception {
-        MockHttpSession session = new MockHttpSession();
-        session.setAttribute("user", userServiceModel);
-
-        RoleServiceModel roleServiceModel = this.modelMapper.map(teacher, RoleServiceModel.class);
-        this.userServiceModel.setAuthorities(Set.of(roleServiceModel));
-        when(this.userService.findById(VALID_USER_ID)).thenReturn(userServiceModel);
-        userServiceModel.setStatus(true);
-        when(this.userService.activateUser(userServiceModel)).thenReturn(userServiceModel);
-
-        this.mockMvc.perform(get("/admins/activate-teacher/{id}", VALID_USER_ID)
-                .session(session)
-                .with(csrf()))
-                .andExpect(view().name("redirect:/admins/all-teachers"));
-    }
-
-    @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
-    public void demoteTeacherToStudent() throws Exception {
-        MockHttpSession session = new MockHttpSession();
-        session.setAttribute("user", userServiceModel);
-
-        RoleServiceModel roleServiceModel = this.modelMapper.map(teacher, RoleServiceModel.class);
-        this.userServiceModel.setAuthorities(Set.of(roleServiceModel));
-        when(this.userService.findById(VALID_USER_ID)).thenReturn(userServiceModel);
-
-
-        RoleServiceModel studentRoleServiceModel = this.modelMapper.map(student, RoleServiceModel.class);
-        this.userServiceModel.setAuthorities(Set.of(studentRoleServiceModel));
-        when(this.userService.changeRoleToStudent(userServiceModel)).thenReturn(userServiceModel);
-
-        this.mockMvc.perform(get("/admins/demote-teacher-student/{id}", VALID_USER_ID)
-                .session(session)
-                .with(csrf()))
-                .andExpect(view().name("redirect:/admins/all-teachers"));
-
+                .andExpect(view().name("/users/register"));
 
     }
 
     @Test
     @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
-    public void promoteTeacherToAdmin() throws Exception {
+    public void registerShouldRedirectToHome() throws Exception {
         MockHttpSession session = new MockHttpSession();
         session.setAttribute("user", userServiceModel);
 
-        RoleServiceModel roleServiceModel = this.modelMapper.map(teacher, RoleServiceModel.class);
-        this.userServiceModel.setAuthorities(Set.of(roleServiceModel));
-        when(this.userService.findById(VALID_USER_ID)).thenReturn(userServiceModel);
-
-
-        RoleServiceModel adminRoleServiceModel = this.modelMapper.map(admin, RoleServiceModel.class);
-        this.userServiceModel.setAuthorities(Set.of(adminRoleServiceModel));
-        when(this.userService.changeRoleToStudent(userServiceModel)).thenReturn(userServiceModel);
-
-        this.mockMvc.perform(get("/admins/promote-teacher-admin/{id}", VALID_USER_ID)
+        this.mockMvc.perform(get("/users/register")
                 .session(session)
                 .with(csrf()))
-                .andExpect(view().name("redirect:/admins/all-teachers"));
+                .andExpect(view().name("redirect:/home"));
+
     }
 
     @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
-    public void allTeacherRequests() throws Exception {
-        this.mockMvc.perform(get("/admins/all-teacher-requests")
-                .with(csrf()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("admins/admin-all-teacher-requests"));
-    }
-
-    @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
-    public void confirmTeacherRequest() throws Exception {
+    public void registerConfirm() throws Exception {
         MockHttpSession session = new MockHttpSession();
         session.setAttribute("user", userServiceModel);
 
-        RoleServiceModel roleServiceModel = this.modelMapper.map(teacher, RoleServiceModel.class);
-        this.userServiceModel.setAuthorities(Set.of(roleServiceModel));
-        when(this.userService.findById(VALID_USER_ID)).thenReturn(userServiceModel);
-        this.userServiceModel.setTeacherRequest(false);
-        when(this.userService.confirmTeacherRequest(userServiceModel)).thenReturn(userServiceModel);
-
-
-        this.mockMvc.perform(get("/admins/confirm-teacher-request/{id}", VALID_USER_ID)
-                .session(session)
-                .with(csrf()))
-                .andExpect(view().name("redirect:/admins/all-teacher-requests"));
-    }
-
-    @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
-    public void cancelTeacherRequest() throws Exception {
-        MockHttpSession session = new MockHttpSession();
-        session.setAttribute("user", userServiceModel);
-
-        RoleServiceModel roleServiceModel = this.modelMapper.map(teacher, RoleServiceModel.class);
-        this.userServiceModel.setAuthorities(Set.of(roleServiceModel));
-        when(this.userService.findById(VALID_USER_ID)).thenReturn(userServiceModel);
-        this.userServiceModel.setTeacherRequest(true);
-        when(this.userService.cancelTeacherRequest(userServiceModel)).thenReturn(userServiceModel);
-
-
-        this.mockMvc.perform(get("/admins/cancel-teacher-request/{id}", VALID_USER_ID)
-                .session(session)
-                .with(csrf()))
-                .andExpect(view().name("redirect:/admins/all-teacher-requests"));
-    }
-
-    @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "ROOT_ADMIN")
-    public void createAdmin() throws Exception {
-        MockHttpSession session = new MockHttpSession();
-        session.setAttribute("user", userServiceModel);
-
-        this.mockMvc.perform(get("/admins/create-admin")
-                .session(session)
-                .with(csrf()))
-                .andExpect(view().name("admins/create-admin"));
-    }
-
-    @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "ROOT_ADMIN")
-    public void createAdminConfirm() throws Exception {
-        MockHttpSession session = new MockHttpSession();
-        session.setAttribute("user", userServiceModel);
-
-        when(this.userService.createNewAdminAccount(userServiceModel)).thenReturn(userServiceModel);
-
-        this.mockMvc.perform(post("/admins/create-admin")
+        this.mockMvc.perform(post("/users/register")
                 .param("username", VALID_USERNAME)
                 .param("firstName", VALID_FIRST_NAME)
                 .param("lastName", VALID_LAST_NAME)
@@ -553,70 +280,329 @@ public class AdminControllerTest {
                 .param("confirmPassword", VALID_PASSWORD)
                 .session(session)
                 .with(csrf()))
-                .andExpect(view().name("redirect:/admins/all-admins"));
+                .andExpect(view().name("redirect:/users/login"));
     }
 
     @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "ROOT_ADMIN")
-    public void createAdminShouldThrowException() throws Exception {
+    public void registerConfirmShouldRedirectToRegisterPage() throws Exception {
         MockHttpSession session = new MockHttpSession();
         session.setAttribute("user", userServiceModel);
 
-        this.mockMvc.perform(post("/admins/create-admin")
+
+        this.mockMvc.perform(post("/users/register")
                 .param("username", VALID_USERNAME)
                 .param("firstName", VALID_FIRST_NAME)
                 .param("lastName", VALID_LAST_NAME)
                 .param("email", VALID_EMAIL)
-                .param("password", VALID_PASSWORD)
-                .param("confirmPassword", "123")
+                .param("password", "123")
+                .param("confirmPassword", VALID_PASSWORD)
                 .session(session)
                 .with(csrf()))
-                .andExpect(view().name("redirect:/admins/create-admin"));
-    }
-
-
-    @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
-    public void allCourses() throws Exception {
-        MockHttpSession session = new MockHttpSession();
-        session.setAttribute("user", userServiceModel);
-
-        when(courseService.getAllCourses()).thenReturn(List.of(courseServiceModel));
-
-
-        this.mockMvc.perform(get("/admins/all-courses-details")
-                .session(session)
-                .with(csrf()))
-                .andExpect(view().name("admins/admin-all-courses"));
+                .andExpect(view().name("redirect:/users/register"));
     }
 
     @Test
-    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
-    public void enableCourse() throws Exception {
+    public void registerConfirmShouldRedirectToRegisterPageAndThrowUserAlreadyExistException() throws Exception {
         MockHttpSession session = new MockHttpSession();
         session.setAttribute("user", userServiceModel);
-        courseServiceModel.setStatus(true);
-        when(courseService.enableCourse(VALID_COURSE_ID)).thenReturn(courseServiceModel);
 
-        this.mockMvc.perform(get("/admins/enable-course/{id}",VALID_COURSE_ID)
+        when(userService.registerNewUserAccount(userServiceModel)).thenThrow(UserAlreadyExistException.class);
+
+        this.mockMvc.perform(post("/users/register")
+                .param("username", VALID_USERNAME)
+                .param("firstName", VALID_FIRST_NAME)
+                .param("lastName", VALID_LAST_NAME)
+                .param("email", VALID_EMAIL)
+                .param("password", "123")
+                .param("confirmPassword", VALID_PASSWORD)
                 .session(session)
                 .with(csrf()))
-                .andExpect(view().name("redirect:/admins/all-courses-details"));
-
+                .andExpect(view().name("redirect:/users/register"));
     }
 
     @Test
     @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
-    public void disableCourse() throws Exception {
+    public void userDetails() throws Exception {
         MockHttpSession session = new MockHttpSession();
         session.setAttribute("user", userServiceModel);
-        courseServiceModel.setStatus(false);
-        when(courseService.disableCourse(VALID_COURSE_ID)).thenReturn(courseServiceModel);
 
-        this.mockMvc.perform(get("/admins/disable-course/{id}",VALID_COURSE_ID)
+        UserDetailsViewModel userDetailsViewModel = this.modelMapper.map(userServiceModel, UserDetailsViewModel.class);
+
+        when(this.userService.getUserDetailsByUsername(VALID_USERNAME)).thenReturn(userDetailsViewModel);
+
+        this.mockMvc.perform(get("/users/user-details")
                 .session(session)
                 .with(csrf()))
-                .andExpect(view().name("redirect:/admins/all-courses-details"));
+                .andExpect(view().name("users/user-details"));
+    }
+
+    @Test
+    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
+    public void userDetailsAddProfilePicture() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("user", userServiceModel);
+
+        when(userService.findByName(VALID_USERNAME)).thenReturn(userServiceModel);
+        MockMultipartFile profilePicture = new MockMultipartFile("file",
+                "hello.txt",
+                String.valueOf(MediaType.ANY_IMAGE_TYPE),
+                "Hello, World!" .getBytes());
+        when(userService.addProfilePicture(userServiceModel, profilePicture)).thenReturn(userServiceModel);
+
+        this.mockMvc.perform(multipart("/users/user-details")
+                .file(profilePicture)
+                .session(session)
+                .with(csrf()))
+                .andExpect(view().name("redirect:/home"));
+    }
+
+    @Test
+    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
+    public void userDetailsAddProfilePictureUserDetailsPage() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("user", userServiceModel);
+
+        when(userService.findByName(VALID_USERNAME)).thenReturn(userServiceModel);
+        MockMultipartFile profilePicture = new MockMultipartFile("file",
+                "hello.zip",
+                String.valueOf(MediaType.ZIP),
+                "Hello, World!" .getBytes());
+        when(userService.addProfilePicture(userServiceModel, profilePicture)).thenReturn(userServiceModel);
+
+        this.mockMvc.perform(multipart("/users/user-details")
+                .file(profilePicture)
+                .session(session)
+                .with(csrf()))
+                .andExpect(view().name("redirect:/home"));
+    }
+
+    @Test
+    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
+    public void userDetailsAddProfilePictureShouldReturnErrorPage() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("user", userServiceModel);
+
+        when(userService.findByName(VALID_USERNAME)).thenReturn(userServiceModel);
+        MockMultipartFile profilePicture = new MockMultipartFile("file",
+                "hello.txt",
+                String.valueOf(MediaType.ANY_IMAGE_TYPE),
+                "Hello, World!" .getBytes());
+        when(userService.addProfilePicture(userServiceModel, profilePicture)).thenReturn(userServiceModel);
+
+        this.mockMvc.perform(multipart("/users/user-details")
+                .param("profilePicture", "INVALID_INPUT_DATA")
+                .session(session)
+                .with(csrf()))
+                .andExpect(view().name("error"));
+    }
+
+    @Test
+    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
+    public void changeEmail() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("user", userServiceModel);
+
+        this.mockMvc.perform(get("/users/change-email")
+                .session(session)
+                .with(csrf()))
+                .andExpect(view().name("users/change-email"));
+    }
+
+    @Test
+    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
+    void changeEmailConfirm() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("user", userServiceModel);
+
+        when(this.userService.findByName(VALID_USERNAME)).thenReturn(userServiceModel);
+        when(this.userService.changeEmail(userServiceModel, VALID_NEW_EMAIL)).thenReturn(userServiceModel);
+
+        this.mockMvc.perform(post("/users/change-email")
+                .param("oldEmail", VALID_EMAIL)
+                .param("newEmail", VALID_NEW_EMAIL)
+                .param("confirmNewEmail", VALID_NEW_EMAIL)
+                .session(session)
+                .with(csrf()))
+                .andExpect(view().name("redirect:/users/user-details"));
+    }
+
+    @Test
+    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
+    void changeEmailConfirmShouldThrowInvalidEmailExcetion() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("user", userServiceModel);
+
+        when(this.userService.findByName(VALID_USERNAME)).thenReturn(userServiceModel);
+        when(this.userService.changeEmail(userServiceModel, VALID_NEW_EMAIL)).thenReturn(userServiceModel);
+
+        this.mockMvc.perform(post("/users/change-email")
+                .param("oldEmail", VALID_EMAIL)
+                .param("newEmail", "InvalidEmail")
+                .param("confirmNewEmail", "InvalidEmail")
+                .session(session)
+                .with(csrf()))
+                .andExpect(view().name("redirect:/users/change-email"));
+    }
+
+    @Test
+    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
+    void changeEmailConfirmShouldThrowInvalidOldEmailExcetion() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("user", userServiceModel);
+
+        when(this.userService.findByName(VALID_USERNAME)).thenReturn(userServiceModel);
+        when(this.userService.changeEmail(userServiceModel, VALID_NEW_EMAIL)).thenReturn(userServiceModel);
+
+        this.mockMvc.perform(post("/users/change-email")
+                .param("oldEmail", VALID_NEW_EMAIL)
+                .param("newEmail", VALID_NEW_EMAIL)
+                .param("confirmNewEmail", VALID_NEW_EMAIL)
+                .session(session)
+                .with(csrf()))
+                .andExpect(view().name("redirect:/users/change-email"));
+    }
+
+    @Test
+    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
+    void changeEmailConfirmShouldThrowUserAlreadyExistException() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("user", userServiceModel);
+
+        when(this.userService.findByName(VALID_USERNAME)).thenReturn(userServiceModel);
+        when(this.userService.changeEmail(userServiceModel, VALID_NEW_EMAIL)).thenThrow(UserAlreadyExistException.class);
+
+        this.mockMvc.perform(post("/users/change-email")
+                .param("oldEmail", VALID_EMAIL)
+                .param("newEmail", VALID_NEW_EMAIL)
+                .param("confirmNewEmail", VALID_NEW_EMAIL)
+                .session(session)
+                .with(csrf()))
+                .andExpect(view().name("redirect:/users/change-email"));
+    }
+
+    @Test
+    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
+    public void changePassword() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("user", userServiceModel);
+
+        this.mockMvc.perform(get("/users/change-password")
+                .session(session)
+                .with(csrf()))
+                .andExpect(view().name("users/change-password"));
+    }
+
+    @Test
+    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
+    public void changePasswordConfirm() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("user", userServiceModel);
+
+        when(this.userService.findByName(VALID_USERNAME)).thenReturn(userServiceModel);
+        when(this.userService.changePassword(userServiceModel, VALID_NEW_PASSWORD)).thenReturn(userServiceModel);
+
+
+        this.mockMvc.perform(post("/users/change-password")
+                .param("oldPassword", "1")
+                .param("newPassword", "1")
+                .param("confirmNewPassword", "2")
+                .session(session)
+                .with(csrf()))
+                .andExpect(view().name("redirect:/users/change-password"));
+    }
+
+    @Test
+    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
+    public void changePasswordConfirmShouldThrowInvalidOldPasswordException() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("user", userServiceModel);
+
+        when(this.userService.findByName(VALID_USERNAME)).thenReturn(userServiceModel);
+        when(this.userService.changePassword(userServiceModel, VALID_NEW_PASSWORD)).thenReturn(userServiceModel);
+
+        this.mockMvc.perform(post("/users/change-password")
+                .param("oldPassword", VALID_PASSWORD)
+                .param("newPassword", VALID_NEW_PASSWORD)
+                .param("confirmNewPassword", VALID_NEW_PASSWORD)
+                .session(session)
+                .with(csrf()))
+                .andExpect(view().name("redirect:/users/change-password"));
+    }
+
+    @Test
+    @WithMockUser(username = "rusevrado", password = "1234", roles = "STUDENT")
+    public void sentTeacherRequest() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("user", userServiceModel);
+
+        when(this.userService.findById(VALID_USER_ID)).thenReturn(userServiceModel);
+
+        this.mockMvc.perform(get("/users/teacher-request/{id}", VALID_USER_ID)
+                .session(session)
+                .with(csrf()))
+                .andExpect(view().name("redirect:/users/user-details"));
+    }
+
+
+    @Test
+    @WithMockUser(username = "rusevrado", password = "1234", roles = "TEACHER")
+    public void writeAboutMe() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("user", userServiceModel);
+
+
+        this.mockMvc.perform(get("/users/about-me")
+                .session(session)
+                .with(csrf()))
+                .andExpect(view().name("users/about-me"));
+    }
+
+    @Test
+    @WithMockUser(username = "rusevrado", password = "1234", roles = "TEACHER")
+    public void writeAboutMeConfirm() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("user", userServiceModel);
+
+        when(this.userService.findByName(VALID_USERNAME)).thenReturn(userServiceModel);
+        when(this.aboutMeService.addTeacherAboutMe(userServiceModel, aboutMeServiceModel)).thenReturn(aboutMeServiceModel);
+
+        this.mockMvc.perform(post("/users/about-me")
+                .param("knowledgeLevel", VALID_KNOWLEDGE_LEVEL)
+                .param("selfDescription", VALID_SHORT_DESCRIPTION)
+                .session(session)
+                .with(csrf()))
+                .andExpect(view().name("redirect:/home"));
+    }
+
+    @Test
+    @WithMockUser(username = "rusevrado", password = "1234", roles = "TEACHER")
+    public void writeAboutMeConfirmShouldThrowException() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("user", userServiceModel);
+
+        when(this.userService.findByName(VALID_USERNAME)).thenReturn(userServiceModel);
+        when(this.aboutMeService.addTeacherAboutMe(userServiceModel, aboutMeServiceModel)).thenReturn(aboutMeServiceModel);
+
+        this.mockMvc.perform(post("/users/about-me")
+                .param("knowledgeLevel", "Invalid_data")
+                .param("selfDescription", VALID_SHORT_DESCRIPTION)
+                .session(session)
+                .with(csrf()))
+                .andExpect(view().name("redirect:/home"));
+    }
+
+    @Test
+    @WithMockUser(username = "rusevrado", password = "1234", roles = "ADMIN")
+    public void getUserCheckedAssignments() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("user", userServiceModel);
+
+        when(this.userService.findByName(VALID_USERNAME)).thenReturn(userServiceModel);
+
+        this.mockMvc.perform(get("/users/userCheckedAssignments")
+                .session(session)
+                .with(csrf()))
+                .andExpect(view().name("users/user-checked-assignments-table"));
     }
 
     private Course getCourse() {
@@ -636,10 +622,7 @@ public class AdminControllerTest {
         author = userRepository.save(getAuthor());
         author.setCreatedCourses(new HashSet<>());
         course.setEnrolledStudents(new ArrayList<>());
-        Role role = admin;
-        Set<Role> roles = new HashSet<>();
-        roles.add(role);
-        author.setAuthorities(roles);
+        author.setAuthorities(Set.of(admin));
         course.setAuthor(author);
         topic = topicRepository.findFirstByName(VALID_TOPIC_NAME).orElse(null);
         return course;
@@ -652,10 +635,7 @@ public class AdminControllerTest {
         user.setUsername(VALID_USERNAME);
         user.setEmail(VALID_EMAIL);
         user.setPassword(VALID_PASSWORD);
-        Set<Role> roles = new HashSet<>();
-        Role role = admin;
-        roles.add(role);
-        user.setAuthorities(roles);
+        user.setAuthorities(Set.of(admin));
         user.setRegistrationDate(LocalDateTime.now());
         user.setProfilePicture(VALID_IMAGE_URL);
         return user;
@@ -668,10 +648,7 @@ public class AdminControllerTest {
         user.setUsername("validAuthor");
         user.setEmail("validauthoremail@gmail.com");
         user.setPassword(VALID_PASSWORD);
-        Set<Role> roles = new HashSet<>();
-        Role role = teacher;
-        roles.add(role);
-        user.setAuthorities(roles);
+        user.setAuthorities(Set.of(admin));
         user.setRegistrationDate(LocalDateTime.now());
         user.setProfilePicture(VALID_IMAGE_URL);
         return user;

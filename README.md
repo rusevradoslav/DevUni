@@ -206,7 +206,7 @@ URLs | Description
    ![teacherprofilepage](/src/main/resources/static/screenshots/teacher_profile.png)
       
   - Create About Me Page 
-   ![createaboutmepage](/src/main/resources/static/screenshots/abour_me.jpg) 
+   ![createaboutmepage](/src/main/resources/static/screenshots/about_me.jpg) 
      
   - Teacher Courses Page
    ![teachercoursespage](/src/main/resources/static/screenshots/teacher_courses.jpg)  
