@@ -208,8 +208,7 @@ public class CourseController {
     @PageTitle("Course Details")
     public String courseDetails(@PathVariable("id") String id,
                                 Model model,
-                                Principal principal,
-                                AssignmentSolutionAddBindingModel solutionAddBindingModel) {
+                                Principal principal) {
 
         CourseServiceModel courseServiceModel = this.courseService.findCourseById(id);
 
@@ -235,6 +234,7 @@ public class CourseController {
             model.addAttribute("isRoot", isRoot);
             model.addAttribute("isAdmin", isAdmin);
         }
+
         model.addAttribute("course", courseServiceModel);
         model.addAttribute("teacher", this.userService.findTeacher(courseServiceModel.getAuthor().getId()));
         model.addAttribute("lectures", courseService.findAllLecturesForCourse(id));
