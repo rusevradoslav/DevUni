@@ -3,7 +3,6 @@
 
 # DevUni
 
-![Build](https://github.com/rusevradoslav/DevUni/workflows/Build/badge.svg?branch=master) 
 [![codecov](https://codecov.io/gh/rusevradoslav/DevUni/branch/master/graph/badge.svg)](https://codecov.io/gh/rusevradoslav/DevUni)
 
 
