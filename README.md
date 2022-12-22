@@ -3,9 +3,6 @@
 
 # DevUni
 
-[![codecov](https://codecov.io/gh/rusevradoslav/DevUni/branch/master/graph/badge.svg)](https://codecov.io/gh/rusevradoslav/DevUni)
-
-
 **Contributor:**
 
 *  Radoslav Rusev
